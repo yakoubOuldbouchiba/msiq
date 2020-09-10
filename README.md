@@ -1,6 +1,6 @@
 # msiq-v-1.0.0
 
-##info
+## info
 ```
 1- make sure you have nodejs installed
 2- you should have git installed in your pc 
