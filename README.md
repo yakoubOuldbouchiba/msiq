@@ -1,5 +1,12 @@
 # msiq-v-1.0.0
 
+##info
+```
+1- make sure you have nodejs installed
+2- you should have git installed in your pc 
+3- install vue cli 3 using this command 'npm install -g @vue/cli'
+```
+
 ## Project setup
 ```
 npm install
