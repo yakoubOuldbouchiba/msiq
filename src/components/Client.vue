@@ -1,8 +1,8 @@
 <template>
     <v-dialog 
             v-model="dialog" 
+            fullscreen
             persistent
-            width="900"
     >
         <v-card tile>
             <v-toolbar flat dark :color='color'  >
@@ -10,27 +10,45 @@
                 <v-spacer></v-spacer>
                 <v-btn text @click="close()"> <v-icon> clear </v-icon></v-btn>
             </v-toolbar>
-            <v-card>
+            <v-card flat>
                     <v-card-text>
                         <v-form class="px-3">
-                            <v-menu class="my-0">
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-text-field 
-                                        label="Date de creation"
-                                        v-on=on
-                                        v-bind="attrs"
-                                        prepend-icon="date_range"
-                                        :value="demandeClient.dateCreation"
-                                    >
-                                    </v-text-field>
-                                </template>
-                                <v-date-picker v-model="demandeClient.dateCreation"></v-date-picker>
-                            </v-menu>
-                            <v-checkbox v-model="demandeClient.nature1" class="mx-0" label="Produit"></v-checkbox>
-                            <v-checkbox v-model="demandeClient.nature2"  label="Presentation de service"></v-checkbox>
-                            <v-text-field v-model="demandeClient.objet" label="Objet" prepend-icon="title" ></v-text-field>
-                            <v-textarea v-model="demandeClient.description" label="Description" prepend-icon="notes">Description</v-textarea>
-                            <v-btn class="pink white--text mx-0 my-4">Envoyer demande</v-btn>
+                            <v-row>
+                                <v-col cols="12" sm="6" md="4">
+                                    <Date @date="DateCreation" label="date de création" icon="date_range"/>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col cols="12" sm="6" md="4">  
+                                    <v-checkbox v-model="demandeClient.nature1" class="mx-0" label="Produit"></v-checkbox>
+                                </v-col> 
+                                <v-col cols="12" sm="6" md="4">
+                                    <v-checkbox v-model="demandeClient.nature2"  label="Presentation de service"></v-checkbox>
+                                </v-col>
+                            </v-row>
+                            <v-row> 
+                                <v-col cols="12" sm="8"> 
+                                    <v-text-field v-model="demandeClient.objet" label="Objet" prepend-icon="title" ></v-text-field>
+                                </v-col>  
+                            </v-row>
+                            <v-row>  
+                                <v-col cols="12" sm="8"> 
+                                    <v-textarea v-model="demandeClient.description" label="Description" prepend-icon="notes">Description</v-textarea>
+                                </v-col>  
+                            </v-row>  
+                            <v-row> 
+                                <v-spacer></v-spacer>
+                                <v-col cols="12" sm="8">
+                                    <v-btn class="pink white--text mx-4">
+                                        <v-icon left>send</v-icon>
+                                       <span>Envoyer la demande</span> 
+                                    </v-btn>
+                                    <v-btn class="grey white--text" @click="close()">
+                                        <v-icon left>close</v-icon>
+                                       <span>Annuler la demande</span>  
+                                    </v-btn>
+                                </v-col>
+                            </v-row> 
                         </v-form>
                     </v-card-text>
 
@@ -40,8 +58,11 @@
 </template>
 
 <script>
+import Date from '../components/Date.vue'
+
 export default {
   props:['dialogClient','name','color','icon' ],
+  components :{Date},
   data(){
       return{
           demandeClient :{
@@ -56,7 +77,7 @@ export default {
   ,methods:{
       close:function(){
           var value = {name :'demande de client', dialog:!this.dialog }
-          this.$emit('updateDialog',value)
+          this.$emit('closeDemande',value)
       }
   },computed :{
       dialog :{ 

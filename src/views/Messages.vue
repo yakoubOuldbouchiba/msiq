@@ -6,8 +6,8 @@
        <v-col :sm="8">
          <v-card tile>
            <v-list>
-             <v-subheader>
-               <v-icon left small>mail</v-icon>
+             <v-subheader class="display-1">
+               <v-icon left >mail</v-icon>
                <span>Messages</span>
             </v-subheader>
              <v-list-item-group>
@@ -26,9 +26,9 @@
        </v-col>
        <v-col :sm="4">
          <v-card tile>
-           <v-list>
-             <v-subheader>
-               <v-icon left small>person</v-icon>
+           <v-list >
+             <v-subheader class="display-1">
+               <v-icon left>person</v-icon>
                <span>Relations</span>
             </v-subheader>
              <v-list-item-group>
@@ -50,6 +50,8 @@
 </template>
 
 <script>
+
+import axios from 'axios';
 export default {
   name:'messages',
   data(){
@@ -60,10 +62,11 @@ export default {
         {name:'Riad Bouaicha',role:'softdevelp',avatar:'/avatar3.png'},
         {name:'alex bun',role:'graohic disgner',avatar:'/avatar4.png'}
       ],
-      messages :[
-        {sender:'Yacine Lalmi' , avatar:'/avatar2.jpg', content :'bli blo bli blo bli'}
-      ]
+      messages :[]
     }
+  },
+  async  created() {
+    this.messages = (await  axios.get("http://localhost:3000/messages")).data
   }
 }
 </script>

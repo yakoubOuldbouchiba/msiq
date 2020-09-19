@@ -18,7 +18,7 @@
             </template>
             <span>trie par le titre de la demande</span>
           </v-tooltip>
-         <Pupupdemandes/>
+         <Pupupdemandes @recieveDemande='updateDemande(value)'/>
         </v-row>
       </div>
       <v-card  class="my-6" v-for="Demande in Demandes" :key="Demande.id" >
@@ -63,12 +63,16 @@ data(){
        {id:'3',title:'Demande de sytlo',dateDebut:'24-08-2020',status:'isUnderStudy' , dateReception:'-'},
        {id:'4',title:'Demande de tiriage',dateDebut:'23-08-2020',status:'accepted' , dateReception:'23-08-2020'},
        {id:'5',title:'Demande de papier',dateDebut:'10-08-2020',status:'accepted' , dateReception:'10-08-2020'}
-     ]
+     ],
+     DVs:[]
    }
  },
  methods:{
    sortBy(p){
      this.Demandes.sort((a,b)=>a[p]>b[p] ? -1 : 1)
+   },
+   updateDemande :function(value) {
+     this.DVs.push(value);
    }
  }
 }

@@ -7,9 +7,10 @@
                 :label="label"
                 :prepend-icon="icon"
                 :value="heure"
+                
             ></v-text-field>
         </template>
-        <v-time-picker v-model="heure"  @click:minute="$refs.menu.save(time)"></v-time-picker>
+        <v-time-picker v-model="heure" @change="$emit('heure' , heure)" ></v-time-picker>
     </v-menu>
 </template>
 

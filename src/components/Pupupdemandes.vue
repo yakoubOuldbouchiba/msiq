@@ -41,33 +41,39 @@
             :name='demandes[0].name'
             :color='demandes[0].color'
             :icon='demandes[0].icon'
-             @updateDialog="updateDialog" />
+            @closeDemande="close"
+              />
 
     <Fourniture :dialogFourniture='dialogFourniture'
             :name='demandes[1].name'
             :color='demandes[1].color'
             :icon='demandes[1].icon' 
-            @updateDialog="updateDialog"  />
+             />
 
     <Tirage :dialogTirage='dialogTirage'
             :name='demandes[3].name'
             :color='demandes[3].color'
-            :icon='demandes[3].icon' @updateDialog="updateDialog"/>
+            :icon='demandes[3].icon' 
+            />
 
     <Vehicule :dialogVehicule='dialogVehicule'
             :name='demandes[2].name'
             :color='demandes[2].color'
-            :icon='demandes[2].icon' @updateDialog="updateDialog"/>
+            :icon='demandes[2].icon'
+            @closeDemande="close" 
+            />
 
     <Relex :dialogRelex='dialogRelex' 
             :name='demandes[5].name'
             :color='demandes[5].color'
-            :icon='demandes[5].icon' @updateDialog="updateDialog"/>
+            :icon='demandes[5].icon' 
+            />
 
     <PEC :dialogPEC='dialogPEC' 
             :name='demandes[4].name'
             :color='demandes[4].color'
-            :icon='demandes[4].icon' @updateDialog="updateDialog"/>
+            :icon='demandes[4].icon' 
+            />
 </div>
 </template>
 
@@ -122,7 +128,7 @@ export default {
                 this.dialogPEC=!this.dialogPEC;
             }
         },
-        updateDialog : function(value){
+        close : function(value){
             if(value.name==this.demandes[0].name){
                 this.dialogClient=value.dialog;
             }else if(value.name==this.demandes[1].name){

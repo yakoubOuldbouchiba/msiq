@@ -7,10 +7,11 @@
                 v-bind="attrs"
                 v-on="on"
                 :value="date"
+                
                 >
             </v-text-field>
         </template>
-        <v-date-picker v-model="date"></v-date-picker>
+        <v-date-picker v-model="date" @change="$emit('date' , date)" ></v-date-picker>
     </v-menu>
 </template>
 <script>
