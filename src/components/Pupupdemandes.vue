@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-dialog v-model="dialog"  width="700">
+    <v-dialog v-model="$store.state.dialog"  width="700">
         <template v-slot:activator="{on , attrs}">
             <v-btn 
                 v-bind="attrs"
@@ -37,39 +37,38 @@
                     </v-container>
                 </v-card>
     </v-dialog> 
-    <Client :dialogClient='dialogClient' 
+    <Client  
             :name='demandes[0].name'
             :color='demandes[0].color'
             :icon='demandes[0].icon'
-            @closeDemande="close"
               />
 
-    <Fourniture :dialogFourniture='dialogFourniture'
+    <Fourniture 
             :name='demandes[1].name'
             :color='demandes[1].color'
             :icon='demandes[1].icon' 
              />
 
-    <Tirage :dialogTirage='dialogTirage'
+    <Tirage 
             :name='demandes[3].name'
             :color='demandes[3].color'
             :icon='demandes[3].icon' 
             />
 
-    <Vehicule :dialogVehicule='dialogVehicule'
+    <Vehicule 
             :name='demandes[2].name'
             :color='demandes[2].color'
             :icon='demandes[2].icon'
-            @closeDemande="close" 
+           
             />
 
-    <Relex :dialogRelex='dialogRelex' 
+    <Relex 
             :name='demandes[5].name'
             :color='demandes[5].color'
             :icon='demandes[5].icon' 
             />
 
-    <PEC :dialogPEC='dialogPEC' 
+    <PEC 
             :name='demandes[4].name'
             :color='demandes[4].color'
             :icon='demandes[4].icon' 
@@ -89,13 +88,6 @@ export default {
     components:{Client , Fourniture , Tirage , Vehicule , Relex , PEC},
     data(){
         return{
-            dialog:false ,
-            dialogClient:false,
-            dialogFourniture : false,
-            dialogTirage :false,
-            dialogVehicule :false,
-            dialogRelex:false,
-            dialogPEC:false,
             demandes :[
                 {name:'demande de client',icon:'devices',color:'pink'},
                 {name:'demande de fourniture',icon:'edit',color:'red'},
@@ -109,42 +101,25 @@ export default {
     },methods:{
         lancerDialog : function(demande){
             if(demande==='demande de client'){
-                this.dialog=!this.dialog;
-                this.dialogClient=!this.dialogClient;
+                this.$store.commit('updateDialog')
+                this.$store.commit('updateDialogClient')
             }else if (demande==='demande de fourniture'){
-                this.dialog=!this.dialog;
-                this.dialogFourniture=!this.dialogFourniture;
+                this.$store.commit('updateDialog')
+                this.$store.commit('updateDialogFourniture')
             }else if (demande==='demande de véhicule'){
-                this.dialog=!this.dialog;
-                this.dialogVehicule=!this.dialogVehicule;
+                this.$store.commit('updateDialog')
+                this.$store.commit('updateDialogVehicule')
             }else if (demande==='demande tirage'){
-                this.dialog=!this.dialog;
-                this.dialogTirage=!this.dialogTirage;
+                this.$store.commit('updateDialog')
+                this.$store.commit('updateDialogTirage')
             }else if (demande==='demande de relex'){
-                this.dialog=!this.dialog;
-                this.dialogRelex=!this.dialogRelex;
+                this.$store.commit('updateDialog')
+                this.$store.commit('updateDialogRelex')
             }else if (demande==='demande de prise en chare'){
-                this.dialog=!this.dialog;
-                this.dialogPEC=!this.dialogPEC;
-            }
-        },
-        close : function(value){
-            if(value.name==this.demandes[0].name){
-                this.dialogClient=value.dialog;
-            }else if(value.name==this.demandes[1].name){
-                this.dialogFourniture=value.dialog;
-            }else if(value.name==this.demandes[2].name){
-                this.dialogVehicule=value.dialog;
-            }else if(value.name==this.demandes[3].name){
-                this.dialogTirage=value.dialog;
-            }else if(value.name==this.demandes[4].name){
-                this.dialogPEC=value.dialog;
-            }else if(value.name==this.demandes[5].name){
-                this.dialogRelex=value.dialog;
+                this.$store.commit('updateDialog')
+                this.$store.commit('updateDialogPEC')
             }
         }
-    },computed :{
-
     }
 }
 </script>

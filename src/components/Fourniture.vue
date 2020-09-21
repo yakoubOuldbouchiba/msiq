@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" 
+    <v-dialog v-model="$store.state.dialogFourniture" 
         persistent 
         width="900">
             <v-card tile >
@@ -24,23 +24,13 @@
 <script>
 export default {
     name:"Fourniture",
-    props:['dialogFourniture' ,'name','icon','color'] ,
+    props:['name','icon','color'] ,
     methods :{
         close : function(){
-            var value = {name : this.name , dialog:!this.dialog}
-            this.$emit('updateDialog',value)
+            //var value = {name : this.name , dialog:!this.dialog}
+            this.$store.commit('updateDialogFourniture');
         }
     },
-    computed : {
-        dialog  :{
-            get : function(){
-                return this.dialogFourniture
-            },
-            set :function(a){
-                this.dialogFourniture=a;
-            }
-        }
-    }
 }
 </script>
 

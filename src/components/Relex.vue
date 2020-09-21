@@ -1,5 +1,5 @@
 <template>
-    <v-dialog tile v-model="dialog" width="900" persistent>
+    <v-dialog tile v-model="$store.state.dialogRelex" width="900" persistent>
             <v-card >
                 <v-toolbar flat dark :color='color'  >
                     <v-toolbar-title> 
@@ -35,8 +35,8 @@ export default {
     },
     methods : {
         close : function(){
-            var value = {name : this.name , dialog : !this.dialog};
-            this.$emit('updateDialog',value)
+            //var value = {name : this.name , dialog : !this.dialog};
+            this.$store.commit('updateDialogRelex');
         }
     }
 }

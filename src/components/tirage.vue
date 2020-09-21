@@ -1,5 +1,5 @@
 <template>
-    <v-dialog tile v-model="dialog" fullscreen persistent>
+    <v-dialog tile v-model="$store.state.dialogTirage" fullscreen persistent>
             <v-card>
                 <v-toolbar flat dark :color='color'  >
                     <v-toolbar-title> 
@@ -47,21 +47,11 @@ import Date from '../components/Date'
 export default {
     name:"Tirage",
     components:{Date},
-    props:['dialogTirage' ,'name' , 'icon' ,'color'] ,
-    computed : {
-        dialog : {
-            set : function(a) {
-               this.dialogTirage=a 
-            },
-            get : function() {
-                return this.dialogTirage
-            }
-        }
-    },
+    props:['name' , 'icon' ,'color'] ,
     methods : {
         close : function(){
-            var value = {name : this.name , dialog : !this.dialog};
-            this.$emit('updateDialog',value)
+            //var value = {name : this.name , dialog : !this.dialog};
+            this.$store.commit('updateDialogTirage')
         }
     }
 }

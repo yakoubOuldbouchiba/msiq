@@ -11,7 +11,7 @@
                <span>Messages</span>
             </v-subheader>
              <v-list-item-group>
-               <v-list-item v-for="message in messages" :key="message.name">
+               <v-list-item v-for="message in $store.state.messages" :key="message.name">
                  <v-list-item-avatar>
                    <img :src="message.avatar" alt="">
                  </v-list-item-avatar>
@@ -32,14 +32,19 @@
                <span>Relations</span>
             </v-subheader>
              <v-list-item-group>
-               <v-list-item v-for="person in team" :key="person.name">
-                 <v-list-item-avatar>
+               <v-list-item 
+                  v-for="person in team" 
+                  :key="person.name">
+                 <v-list-item-avatar @click="open()">
                    <img :src="person.avatar" alt="">
                  </v-list-item-avatar>
-                 <v-list-item-content>
+                 <v-list-item-content >
                    <v-list-item-title>{{person.name}}</v-list-item-title>
                  </v-list-item-content>
                </v-list-item>
+               <NewMessage 
+                  :dialogNewMessage='$store.state.dialogNewMessage'
+                />
              </v-list-item-group>
            </v-list>
          </v-card>
@@ -51,9 +56,10 @@
 
 <script>
 
-import axios from 'axios';
+import NewMessage from '../components/NewMessage'
 export default {
   name:'messages',
+  components:{NewMessage},
   data(){
     return{
       team :[
@@ -61,12 +67,16 @@ export default {
         {name:'Yacine Lalmi',role:'backend',avatar:'/avatar2.jpg'},
         {name:'Riad Bouaicha',role:'softdevelp',avatar:'/avatar3.png'},
         {name:'alex bun',role:'graohic disgner',avatar:'/avatar4.png'}
-      ],
-      messages :[]
+      ]
     }
   },
   async  created() {
-    this.messages = (await  axios.get("http://localhost:3000/messages")).data
+    this.$store.dispatch('getMessages');
+  },
+  methods:{
+    open:function(){
+      this.$store.commit('updateDialogNewMessage')
+    }
   }
 }
 </script>

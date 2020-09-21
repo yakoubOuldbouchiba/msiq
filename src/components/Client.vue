@@ -1,6 +1,6 @@
 <template>
     <v-dialog 
-            v-model="dialog" 
+            v-model="$store.state.dialogClient" 
             fullscreen
             persistent
     >
@@ -20,20 +20,20 @@
                             </v-row>
                             <v-row>
                                 <v-col cols="12" sm="6" md="4">  
-                                    <v-checkbox v-model="demandeClient.nature1" class="mx-0" label="Produit"></v-checkbox>
+                                    <v-checkbox v-model="DC.nature1" class="mx-0" label="Produit"></v-checkbox>
                                 </v-col> 
                                 <v-col cols="12" sm="6" md="4">
-                                    <v-checkbox v-model="demandeClient.nature2"  label="Presentation de service"></v-checkbox>
+                                    <v-checkbox v-model="DC.nature2"  label="Presentation de service"></v-checkbox>
                                 </v-col>
                             </v-row>
                             <v-row> 
                                 <v-col cols="12" sm="8"> 
-                                    <v-text-field v-model="demandeClient.objet" label="Objet" prepend-icon="title" ></v-text-field>
+                                    <v-text-field v-model="DC.objet" label="Objet" prepend-icon="title" ></v-text-field>
                                 </v-col>  
                             </v-row>
                             <v-row>  
                                 <v-col cols="12" sm="8"> 
-                                    <v-textarea v-model="demandeClient.description" label="Description" prepend-icon="notes">Description</v-textarea>
+                                    <v-textarea v-model="DC.description" label="Description" prepend-icon="notes">Description</v-textarea>
                                 </v-col>  
                             </v-row>  
                             <v-row> 
@@ -65,7 +65,7 @@ export default {
   components :{Date},
   data(){
       return{
-          demandeClient :{
+          DC :{
               nature1:'',
               objet:'',
               description:'',
@@ -76,17 +76,11 @@ export default {
   }
   ,methods:{
       close:function(){
-          var value = {name :'demande de client', dialog:!this.dialog }
-          this.$emit('closeDemande',value)
-      }
-  },computed :{
-      dialog :{ 
-       get: function(){
-          return this.dialogClient
-        },
-        set : function(a){
-            this.dialogClient=a;
-        }
+          //var value = {name :'demande de client', dialog:!this.dialog }
+          this.$store.commit('updateDialogClient')
+      },
+      DateCreation :function(value){
+          this.DC.dateCreation=value
       }
   }
 }

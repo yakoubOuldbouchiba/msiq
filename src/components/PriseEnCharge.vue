@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" persistent width="900">
+    <v-dialog v-model="$store.state.dialogPEC" persistent width="900">
             <v-card tile >
                 <v-toolbar flat dark :color='color'  >
                     <v-toolbar-title> 
@@ -21,22 +21,12 @@
 
 <script>
 export default {
-    name:"fourniture",
-    props:['dialogPEC' , 'name' ,'color','icon'] ,
-    computed : {
-        dialog : {
-            get : function(){
-                return this.dialogPEC
-            },
-            set : function(a){
-                this.dialogPEC=a;
-            }
-        }
-    },
+    name:"PEC",
+    props:[ 'name' ,'color','icon'] ,
     methods:{
         close : function(){
-            var value = {name : this.name , dialog:!this.dialog};
-            this.$emit('updateDialog',value)
+            //var value = {name : this.name , dialog:!this.dialog};
+            this.$store.commit('updateDialogPEC')
         }
     }
   

@@ -1,5 +1,5 @@
 <template>
-    <v-dialog tile v-model="dialog" width="900" persistent fullscreen >
+    <v-dialog tile v-model="$store.state.dialogVehicule" width="900" persistent fullscreen >
             <v-card >
                 <v-toolbar flat dark :color='color' class="my-0" >
                     <v-toolbar-title> 
@@ -172,7 +172,7 @@ import Date from '../components/Date'
 import Heure from '../components/Heure'
 export default {
     name:"Vehicule",
-    props:['dialogVehicule','name','color','icon'] ,
+    props:['name','color','icon'] ,
     components:{Date , Heure},
     computed :{
         dialog : {
@@ -201,8 +201,8 @@ export default {
         },
         closeDemande :function(){
             //to implement
-            var value = {name : this.name , dialog : !this.dialog}
-            this.$emit('closeDemande',value);
+            //var value = {name : this.name , dialog : !this.dialog}
+            this.$store.commit('updateDialogVehicule');
         },
         // the date & the hour actions which means getting its values 
         dateRetour : function(value){
