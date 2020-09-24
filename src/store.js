@@ -63,7 +63,7 @@ export default new Vuex.Store({
     actions:{
         async getMessages ({commit}){
             let messages =  (await  axios.get("http://localhost:3030/messages")).data
-            console.log(messages)
+            //console.log(messages)
             commit('updatemessages',messages);
         },
         async getTeam ({commit}){
@@ -75,7 +75,7 @@ export default new Vuex.Store({
             msg.content=content;
             msg.reciever_ID=this.state.reciever_ID;
             let new_message = (await axios.post("http://localhost:3030/messages",msg)).data;
-            commit('newMessage', new_message);
+            commit('newMessage', new_message.msg);
         },
         async creeCompte({commit},userData){
             let token =(await axios.post("http://localhost:3030/register",userData)).data;

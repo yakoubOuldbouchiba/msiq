@@ -11,7 +11,7 @@
                <span>Messages</span>
             </v-subheader>
              <v-list-item-group>
-               <v-list-item v-for="message in $store.state.messages" :key="message.name">
+               <v-list-item v-for="(message) in $store.state.messages" :key="message.content">
                  <v-list-item-avatar>
                    <img  :src="message.avatar" alt="">
                  </v-list-item-avatar>
