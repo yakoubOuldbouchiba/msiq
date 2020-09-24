@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" width="600">
+    <v-dialog v-model="$store.state.dialogNewMessage" width="600">
         <v-card class="pa-4">
             <v-card-title>
                 <v-icon left>message</v-icon>
@@ -8,9 +8,9 @@
                 <v-icon>close</v-icon>
             </v-card-title>
             <v-card-text>
-                <v-text-field v-model="msg.objet" label="objet"></v-text-field>
+                <v-text-field  label="objet"></v-text-field>
                 <v-textarea
-                    v-model="msg.content"
+                    v-model="content"
                     label="type your message"
                 >
                 </v-textarea>
@@ -33,22 +33,11 @@
 
 export default {
     name : 'NewMessage',
-    props : ['dialogNewMessage'],
-    computed :{
-      dialog :{ 
-       get: function(){
-          return this.dialogNewMessage
-        },
-        set : function(a){
-            this.dialogNewMessage=a;
-        }
-      }
-    },
     methods : {
        async submit (){
            try{
-               this.$store.dispatch('newMessage' , this.msg)
-                this.$store.commit('updateDialog')
+               this.$store.dispatch('newMessage' , this.content)
+               this.$store.commit('updateDialogNewMessage')
                 
            }catch(error){
                console.error(error);
@@ -58,11 +47,7 @@ export default {
     },
     data(){
         return{
-            msg : {
-                sender:'Yakoub Ould bouchiba',
-                avatar:'avatar1.jpg',
-                content:'' 
-            }
+                content:''    
         }
     }
 }

@@ -4,6 +4,8 @@ import Dashboard from '../views/Dashboard.vue'
 import Messages from '../views/Messages.vue'
 import Notifications from '../views/Notifications.vue'
 import Profile from '../views/Profile.vue'
+import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
 import Test from '../views/Test.vue'
 import "animate.css/animate.css"
 
@@ -12,6 +14,16 @@ Vue.use(VueRouter)
   const routes = [
   {
     path: '/',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
+  },
+  {
+    path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard
   },

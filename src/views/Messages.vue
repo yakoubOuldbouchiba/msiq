@@ -13,10 +13,10 @@
              <v-list-item-group>
                <v-list-item v-for="message in $store.state.messages" :key="message.name">
                  <v-list-item-avatar>
-                   <img :src="message.avatar" alt="">
+                   <img  :src="message.avatar" alt="">
                  </v-list-item-avatar>
                  <v-list-item-content>
-                   <v-list-item-title>{{message.sender}}</v-list-item-title>
+                   <v-list-item-title>{{message.userName}}</v-list-item-title>
                    <v-list-item-subtitle>{{message.content}}</v-list-item-subtitle>
                  </v-list-item-content>
                </v-list-item>
@@ -33,18 +33,16 @@
             </v-subheader>
              <v-list-item-group>
                <v-list-item 
-                  v-for="person in team" 
-                  :key="person.name">
-                 <v-list-item-avatar @click="open()">
+                  v-for="(person, index) in $store.state.users" 
+                  :key="person.name" @click="open(index)">
+                 <v-list-item-avatar >
                    <img :src="person.avatar" alt="">
                  </v-list-item-avatar>
                  <v-list-item-content >
-                   <v-list-item-title>{{person.name}}</v-list-item-title>
+                   <v-list-item-title>{{person.userName}}</v-list-item-title>
                  </v-list-item-content>
                </v-list-item>
-               <NewMessage 
-                  :dialogNewMessage='$store.state.dialogNewMessage'
-                />
+               <NewMessage />
              </v-list-item-group>
            </v-list>
          </v-card>
@@ -62,20 +60,16 @@ export default {
   components:{NewMessage},
   data(){
     return{
-      team :[
-        {name:'Yakoub Ould bouchiba',role:'fontend',avatar:'/avatar1.jpg'},
-        {name:'Yacine Lalmi',role:'backend',avatar:'/avatar2.jpg'},
-        {name:'Riad Bouaicha',role:'softdevelp',avatar:'/avatar3.png'},
-        {name:'alex bun',role:'graohic disgner',avatar:'/avatar4.png'}
-      ]
+      
     }
   },
-  async  created() {
+  async created(){
     this.$store.dispatch('getMessages');
+    this.$store.dispatch('getTeam');
   },
   methods:{
-    open:function(){
-      this.$store.commit('updateDialogNewMessage')
+    open:function(index){
+      this.$store.commit('updateDialogNewMessage',index);
     }
   }
 }
