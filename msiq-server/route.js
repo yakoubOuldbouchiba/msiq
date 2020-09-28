@@ -18,7 +18,9 @@ var users =[
     {userName:'Yakoub Ould bouchiba',role:'Chef de parc',avatar:'/avatar1.jpg',password:'11'},
     {userName:'Yacine Lalmi',role:'Directeur',avatar:'/avatar2.jpg',password:'12'},
     {userName:'Riad Bouaicha',role:'Client',avatar:'/avatar3.png',password:'13'},
-    {userName:'alex bun',role:'Chef de parc',avatar:'/avatar4.png',password:'14'}
+    {userName:'alex bun',role:'Chef de parc',avatar:'/avatar4.png',password:'14'},
+    {userName:'Youpi' , role:'Agent de magasin' , avatar:'/avatar4.png',password:'15'}
+ 
 ]
 const router = express.Router();
 

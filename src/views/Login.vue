@@ -35,14 +35,16 @@ export default {
       userName: '',
       password: '',
       items: ['Administrator', 'Chef de parc', 'Directeur', 
-      'Client','Agent de Tirage'],
+      'Client','Agent de Tirage','Agent de magasin'],
       role:''
     }),
     methods:{
        login : function(){
         this.$store.dispatch("login",{userName:this.userName ,password:this.password , role : this.role })
         if(!this.$store.state.token){
-          return this.$router.push('/dashboard')
+          this.$router.push('/dashboard');
+        }else{
+          this.$router.push('/');
         }
       }
     }

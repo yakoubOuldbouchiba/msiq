@@ -8,6 +8,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Vehicules from '../views/Vehicules.vue'
 import Chauffeurs from '../views/Chauffeurs.vue'
+import Repporting from '../views/Repporting.vue'
 import Test from '../views/Test.vue'
 import "animate.css/animate.css"
 
@@ -48,7 +49,8 @@ Vue.use(VueRouter)
     path: '/test',
     name: 'Test',
     component:Test 
-  },{
+  },
+  {
     path: '/Vehicules',
     name: 'Vehicules',
     component:Vehicules 
@@ -57,6 +59,11 @@ Vue.use(VueRouter)
     path: '/Chauffeurs',
     name: 'Chauffeurs',
     component:Chauffeurs 
+  }, 
+  {
+    path: '/repporting',
+    name: 'Repporting',
+    component:Repporting 
   }
 ]
 

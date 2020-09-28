@@ -11,12 +11,16 @@
          </v-toolbar-title>
          <v-spacer></v-spacer>
          <!--icons-->
-          <v-btn v-if="$store.state.token" icon>
+          <v-btn v-if="$store.state.token" 
+               icon
+               route
+               to="/notifications"
+               >
                <v-icon class="indigo--text">
                     notification_important
                </v-icon>
          </v-btn>
-         <v-btn v-if="$store.state.token" icon>
+         <v-btn v-if="$store.state.token" icon route to="/messages">
                <v-icon class="indigo--text">
                     mail
                </v-icon>
@@ -24,7 +28,7 @@
          <v-btn 
           v-if="$store.state.token" 
           icon
-          @click="$store.commit('logout')"
+          @click="logout"
           >
                <v-icon class="indigo--text">
                exit_to_app
@@ -47,15 +51,74 @@
                    <div>{{$store.state.user.role}}</div>
               </v-flex>
          </v-row>
+         
          <v-list>
-              <v-list-item  v-for="link in links" :key="link.text" >
-                              
-                         <v-list-item-icon v-if="link.isShow"  route :to="link.route">
-                              <v-icon class="indigo--text">{{link.icon}}</v-icon>
+              <v-list-item route to='/dashboard'  >   
+                         <v-list-item-icon>
+                              <v-icon class="indigo--text">dashboard</v-icon>
                          </v-list-item-icon>
-                         <v-list-item-content v-if="link.isShow" class="indigo--text">{{link.text}}</v-list-item-content>
-                     
+                         <v-list-item-content  class="indigo--text">Dashboard</v-list-item-content>
+              </v-list-item>
+              <v-list-item route to='/profile'>   
+                         <v-list-item-icon >
+                              <v-icon class="indigo--text">account_circle</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content  class="indigo--text">Profile</v-list-item-content>
+              </v-list-item>
+              <v-list-item route to='/notifications'>   
+                         <v-list-item-icon>
+                              <v-icon class="indigo--text">notification_important</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content  class="indigo--text">Notifications</v-list-item-content>
+              </v-list-item>
+              <v-list-item route :to="'/messages'">   
+                         <v-list-item-icon  >
+                              <v-icon class="indigo--text">mail</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content  class="indigo--text">messages</v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="$store.state.user.role!='Client'"  route :to="'/demandes'" >   
+                         <v-list-item-icon  >
+                              <v-icon class="indigo--text">layers</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content  class="indigo--text">Liste demandes a traiter</v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="$store.state.user.role=='Directeur'"  route :to="'/repporting'" >   
+                         <v-list-item-icon  >
+                              <v-icon class="indigo--text">insert_chart</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content  class="indigo--text">Repporting</v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="$store.state.user.role=='Chef de parc'"  route :to="'/chauffeurs'" >   
+                         <v-list-item-icon  >
+                              <v-icon class="indigo--text">airline_seat_recline_normal</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content  class="indigo--text">List des chauffeurs</v-list-item-content>
               </v-list-item> 
+              <v-list-item v-if="$store.state.user.role=='Chef de parc'"  route :to="'/vehicules'" >   
+                         <v-list-item-icon  >
+                              <v-icon class="indigo--text">commute</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content  class="indigo--text">List des véhicules</v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="$store.state.user.role=='Agent de magasin'"  route :to="'/fourniture'" >   
+                         <v-list-item-icon  >
+                              <v-icon class="indigo--text">edit</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content  class="indigo--text">List des fournitures</v-list-item-content>
+              </v-list-item>
+               <v-list-item v-if="$store.state.user.role=='Agent de magasin'"  route :to="'/produit'" >   
+                         <v-list-item-icon  >
+                              <v-icon class="indigo--text">devices</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content  class="indigo--text">Listes des produits</v-list-item-content>
+              </v-list-item>
+                        <v-list-item @click="logout" >   
+                         <v-list-item-icon  >
+                              <v-icon class="indigo--text">exit_to_app</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content  class="indigo--text">Logout</v-list-item-content>
+              </v-list-item>
          </v-list>     
     </v-navigation-drawer>    
   </nav>
@@ -66,16 +129,12 @@ export default {
     data(){
          return{
               menu:false,
-              links:[
-                   {icon:'dashboard',text:'Dashboard',route:'/dashboard',iscount:true,isShow:true},
-                   {icon:'account_circle',text:'Profile',route:'/profile',iscount:true,isShow:true},
-                   {icon:'notification_important',text:'notifications',route:'/notifications',iscount:true,isShow:true},
-                   {icon:'mail',text:'messages',route:'/messages',iscount:true,isShow:true},
-                   {icon:'commute',text:'List des véhicules',route:'/vehicules',iscount:true,isShow:(this.$store.state.user.role=='Chef de parc')},
-                   {icon:'airline_seat_recline_normal',text:'List des chauffeurs',route:'/chauffeurs',iscount:true,isShow:(this.$store.state.user.role=='Chef de parc')},
-                   {icon:'exit_to_app',text:'logout',route:'/hellopage',iscount:true, isShow:true},
-   
-              ]
+         }
+    },
+    methods:{
+         logout(){
+            this.$store.commit('logout');
+            this.$router.push('/',()=>{})
          }
     }
 }
