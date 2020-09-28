@@ -44,7 +44,7 @@ export default {
         if(!this.$store.state.token){
           this.$router.push('/dashboard');
         }else{
-          this.$router.push('/');
+          this.$router.push('/' , ()=>{});
         }
       }
     }

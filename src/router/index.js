@@ -9,6 +9,9 @@ import Register from '../views/Register.vue'
 import Vehicules from '../views/Vehicules.vue'
 import Chauffeurs from '../views/Chauffeurs.vue'
 import Repporting from '../views/Repporting.vue'
+import Fourniture from '../views/Fourniture.vue'
+import Produit from '../views/Produit.vue'
+import Demandes from '../views/Demandes'
 import Test from '../views/Test.vue'
 import "animate.css/animate.css"
 
@@ -64,6 +67,21 @@ Vue.use(VueRouter)
     path: '/repporting',
     name: 'Repporting',
     component:Repporting 
+  }, 
+  {
+    path: '/fourniture',
+    name: 'Fourniture',
+    component:Fourniture 
+  }, 
+  {
+    path: '/produit',
+    name: 'Produit',
+    component:Produit 
+  }, 
+  {
+    path: '/demandes',
+    name: 'Demandes',
+    component:Demandes 
   }
 ]
 

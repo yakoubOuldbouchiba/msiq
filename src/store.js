@@ -103,6 +103,6 @@ export default new Vuex.Store({
             axios.defaults.headers.common['Authorization']=user.token;
             commit('auth',user.token);
             commit('getUser',user)       
-        }
+        },
     }
 })
