@@ -67,6 +67,11 @@ export default {
     this.$store.dispatch('getMessages');
     this.$store.dispatch('getTeam');
   },
+  mounted(){
+    this.$store.state.sokect.on('message',(message)=>{
+      this.$store.commit('newMessage', message);
+    }) 
+  },
   methods:{
     open:function(index){
       this.$store.commit('updateDialogNewMessage',index);

@@ -1,9 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import io from 'socket.io-client'
+
 Vue.use(Vuex);
 export default new Vuex.Store({
     state : {
+        sokect:io('http://localhost:3030/'),
+        user:{
+            userName :'',
+            role :'',
+            avatar :'',
+        },
         messages :[],
         users : [],
         token:!!localStorage.getItem('token')|| '',
@@ -18,6 +26,9 @@ export default new Vuex.Store({
         dialogPEC:false,
     },
     mutations:{
+        getUser(state , user){
+            state.user=user;
+        },
         updateTeam(state, users){
             state.users=users
         },
@@ -58,24 +69,27 @@ export default new Vuex.Store({
         },
         updateDialogPEC(state){
             state.dialogPEC= !state.dialogPEC
+        },
+        send(){
+
         }
     },
     actions:{
         async getMessages ({commit}){
             let messages =  (await  axios.get("http://localhost:3030/messages")).data
-            //console.log(messages)
             commit('updatemessages',messages);
-        },
-        async getTeam ({commit}){
-            let users  =  (await  axios.get("http://localhost:3030/team")).data
-            commit('updateTeam',users);
         },
         async newMessage({commit},content){
             let msg = {}
             msg.content=content;
             msg.reciever_ID=this.state.reciever_ID;
-            let new_message = (await axios.post("http://localhost:3030/messages",msg)).data;
-            commit('newMessage', new_message.msg);
+            (await axios.post("http://localhost:3030/messages",msg)).data;
+            commit('send')
+            
+        },
+        async getTeam ({commit}){
+            let users  =  (await  axios.get("http://localhost:3030/team")).data
+            commit('updateTeam',users);
         },
         async creeCompte({commit},userData){
             let token =(await axios.post("http://localhost:3030/register",userData)).data;
@@ -84,10 +98,11 @@ export default new Vuex.Store({
             commit('auth',token);       
         },
         async login({commit},userData){
-            let token =(await axios.post("http://localhost:3030/login",userData)).data;
-            localStorage.setItem('token',token);
-            axios.defaults.headers.common['Authorization']=token;
-            commit('auth',token);       
+            let user =(await axios.post("http://localhost:3030/login",userData)).data;
+            localStorage.setItem('token',user.token);
+            axios.defaults.headers.common['Authorization']=user.token;
+            commit('auth',user.token);
+            commit('getUser',user)       
         }
     }
 })

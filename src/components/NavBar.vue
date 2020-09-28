@@ -38,21 +38,23 @@
               <v-flex xs12 >
                    <v-responsive>
                         <v-avatar size="150" class="blue">
-                             <img src="/yakoub.jpg" alt="" />
+                             <img :src="$store.state.user.avatar" alt="" />
                         </v-avatar>
                    </v-responsive>
               </v-flex>
               <v-flex xs12>
-                   <div class="capation  gery--text  mt-1">Yakoub Ould Bouchiba</div>
-                   <div>Directeur</div>
+                   <div class="capation  gery--text  mt-1">{{$store.state.user.userName}}</div>
+                   <div>{{$store.state.user.role}}</div>
               </v-flex>
          </v-row>
          <v-list>
-              <v-list-item  v-for="link in links" :key="link.text" route :to="link.route">
-                    <v-list-item-icon>
-                         <v-icon class="indigo--text">{{link.icon}}</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content class="indigo--text">{{link.text}}</v-list-item-content>  
+              <v-list-item  v-for="link in links" :key="link.text" >
+                              
+                         <v-list-item-icon v-if="link.isShow"  route :to="link.route">
+                              <v-icon class="indigo--text">{{link.icon}}</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content v-if="link.isShow" class="indigo--text">{{link.text}}</v-list-item-content>
+                     
               </v-list-item> 
          </v-list>     
     </v-navigation-drawer>    
@@ -65,11 +67,14 @@ export default {
          return{
               menu:false,
               links:[
-                   {icon:'dashboard',text:'Dashboard',route:'/dashboard',iscount:true},
-                   {icon:'account_circle',text:'Profile',route:'/profile',iscount:true},
-                   {icon:'notification_important',text:'notifications',route:'/notifications',iscount:true},
-                   {icon:'mail',text:'messages',route:'/messages',iscount:true},
-                   {icon:'exit_to_app',text:'logout',route:'/hellopage',iscount:true},
+                   {icon:'dashboard',text:'Dashboard',route:'/dashboard',iscount:true,isShow:true},
+                   {icon:'account_circle',text:'Profile',route:'/profile',iscount:true,isShow:true},
+                   {icon:'notification_important',text:'notifications',route:'/notifications',iscount:true,isShow:true},
+                   {icon:'mail',text:'messages',route:'/messages',iscount:true,isShow:true},
+                   {icon:'commute',text:'List des véhicules',route:'/vehicules',iscount:true,isShow:(this.$store.state.user.role=='Chef de parc')},
+                   {icon:'airline_seat_recline_normal',text:'List des chauffeurs',route:'/chauffeurs',iscount:true,isShow:(this.$store.state.user.role=='Chef de parc')},
+                   {icon:'exit_to_app',text:'logout',route:'/hellopage',iscount:true, isShow:true},
+   
               ]
          }
     }

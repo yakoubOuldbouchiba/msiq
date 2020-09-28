@@ -27,9 +27,11 @@
 </template>
 
 <script>
+
 export default {
     name:'Login'
     ,data: () => ({
+      socket:null,
       userName: '',
       password: '',
       items: ['Administrator', 'Chef de parc', 'Directeur', 
