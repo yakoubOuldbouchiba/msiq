@@ -13,6 +13,7 @@ import Fourniture from '../views/Fourniture.vue'
 import Produit from '../views/Produit.vue'
 import Demandes from '../views/Demandes'
 import Test from '../views/Test.vue'
+import store from '../store/store'
 import "animate.css/animate.css"
 
 Vue.use(VueRouter)
@@ -31,57 +32,145 @@ Vue.use(VueRouter)
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: Dashboard
+    component: Dashboard,
+    beforeEnter: (to, from, next) => {
+      console.log("console okey");
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    }
   },
   {
     path: '/messages',
     name: 'Messages',
-    component:Messages 
+    component:Messages ,
+    beforeEnter: (to, from, next) => {
+      // ...
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    }
   },
   {
     path: '/notifications',
     name: 'Notifications',
-    component:Notifications 
+    component:Notifications ,
+    beforeEnter: (to, from, next) => {
+      // ...
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    }
   },
   {
     path: '/profile',
     name: 'Profile',
-    component:Profile 
+    component:Profile ,
+    beforeEnter: (to, from, next) => {
+      // ...
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    }
   },
   {
     path: '/test',
     name: 'Test',
-    component:Test 
+    component:Test ,
+    beforeEnter: (to, from, next) => {
+      // ...
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    }
   },
   {
     path: '/Vehicules',
     name: 'Vehicules',
-    component:Vehicules 
+    component:Vehicules ,
+    beforeEnter: (to, from, next) => {
+      // ...
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    }
   }, 
   {
     path: '/Chauffeurs',
     name: 'Chauffeurs',
-    component:Chauffeurs 
+    component:Chauffeurs ,
+    beforeEnter: (to, from, next) => {
+      // ...
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    }
   }, 
   {
     path: '/repporting',
     name: 'Repporting',
-    component:Repporting 
+    component:Repporting,
+    beforeEnter: (to, from, next) => {
+      // ...
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    } 
   }, 
   {
     path: '/fourniture',
     name: 'Fourniture',
-    component:Fourniture 
+    component:Fourniture ,
+    beforeEnter: (to, from, next) => {
+      // ...
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    }
   }, 
   {
     path: '/produit',
     name: 'Produit',
-    component:Produit 
+    component:Produit ,
+    beforeEnter: (to, from, next) => {
+      // ...
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    }
   }, 
   {
     path: '/demandes',
     name: 'Demandes',
-    component:Demandes 
+    component:Demandes ,
+    beforeEnter: (to, from, next) => {
+      // ...
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    }
   }
 ]
 

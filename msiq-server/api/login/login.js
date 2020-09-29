@@ -16,7 +16,6 @@ module.exports = (users)=>{
             dataUser.userName = users[userID].userName;
             dataUser.role = users[userID].role;
             dataUser.avatar = users[userID].avatar;
-            /*token=jwt.sign(userID,'123');*/
             res.json(dataUser);
         }
     })

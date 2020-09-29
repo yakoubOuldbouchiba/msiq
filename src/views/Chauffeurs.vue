@@ -2,10 +2,10 @@
     <div class="Chauffeurs">
         <v-container>
              <v-data-table 
-                :headers ="headers"
-                :items="Chauffeurs" 
-                class="elevation-1"
-                :search="search"
+                    :headers ="headers"
+                    :items="Chauffeurs" 
+                    class="elevation-1"
+                    :search="search"
                 >
                 <template
                     v-slot:top

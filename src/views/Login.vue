@@ -39,12 +39,14 @@ export default {
       role:''
     }),
     methods:{
-       login : function(){
-        this.$store.dispatch("login",{userName:this.userName ,password:this.password , role : this.role })
-        if(!this.$store.state.token){
-          this.$router.push('/dashboard');
+      async login (){
+        await this.$store.dispatch("login",{userName:this.userName ,password:this.password , role : this.role })
+        if(this.$store.state.authenticed==true){
+          console.log('I am login')
+          this.$router.replace({name:"Dashboard"});
         }else{
-          this.$router.push('/' , ()=>{});
+          console.log('I am not login')
+          
         }
       }
     }

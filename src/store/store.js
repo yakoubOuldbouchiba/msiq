@@ -76,9 +76,6 @@ export default new Vuex.Store({
         },
         updateDialogPEC(state){
             state.dialogPEC= !state.dialogPEC
-        },
-        send(){
-
         }
     },
     actions:{
@@ -86,12 +83,12 @@ export default new Vuex.Store({
             let messages =  (await  axios.get("http://localhost:3030/messages")).data
             commit('updatemessages',messages);
         },
-        async newMessage({commit},content){
+        async newMessage(_,content){
             let msg = {}
             msg.content=content;
             msg.reciever_ID=this.state.reciever_ID;
             (await axios.post("http://localhost:3030/messages",msg)).data;
-            commit('send')
+            
             
         },
         async getTeam ({commit}){
