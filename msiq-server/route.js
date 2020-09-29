@@ -1,9 +1,13 @@
 const express = require('express')
 
-const login = require('./api/login/login.js');
-const register = require('./api/register/register.js');
-const team = require('./api/team/team.js');
-const message = require('./api/messages/message.js');
+
+const chauffeurs = require('./api/chauffeurs/chauffeur.js');
+const demandes = require('./api/demandes/demandes.js');
+const fournitures = require('./api/fournitures/fourniture.js')
+const messages = require('./api/messages/messages.js');
+const produits = require('./api/produits/produit.js');
+const users = require('./api/users/user');
+const vehicules = require('./api/vehicules/vehicules.js');
 
 var messages =[
     {
@@ -29,9 +33,12 @@ module.exports = (io)=>{
     io.on('connection', (socket)=>{
         console.log('someone is onligne');
     })
-    router.use('/messages',message(messages , users,io));
-    router.use('/team',team(users));
-    router.use('/register',register(users));
-    router.use('/login', login(users));
+    router.use(chauffeurs());
+    router.use(demandes());
+    router.use(fournitures());
+    router.use(messages(messages , users,io));
+    router.use(produits());
+    router.use(users(users));
+    router.use(vehicules());
     return router
 }

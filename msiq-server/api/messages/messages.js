@@ -3,11 +3,12 @@ const jwt = require('jsonwebtoken')
 const router = express.Router()
 
 module.exports = (messages,users,io)=>{
-    router.get('/',(req , res)=>{
+    //send list messages
+    router.get('/messages',(req , res)=>{
         res.send(messages);
     });
-    
-    router.post('/' , (req , res)=>{
+    //add new message
+    router.post('/messages' , (req , res)=>{
         let msg = {};
         msg=req.body;
         let token = req.header('Authorization')
@@ -18,7 +19,14 @@ module.exports = (messages,users,io)=>{
         messages.push(msg);
         io.emit('message',req.body);
         res.sendStatus(200); 
+    });
+    // update a message
+    router.put('/message/:id',(req , res)=>{
+        res.send({title : 'new a message'})
     })
-
+    // delete a message
+    router.delete('message/:id',(req,res)=>{
+        res.send({title:'delete a message'})
+    })
     return router;
 }

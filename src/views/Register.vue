@@ -37,11 +37,14 @@ export default {
       'Client','Agent de Tirage']
     }),
     methods : {
-        creeCompte : function(){
-            this.$store.dispatch('creeCompte' , this.user)
-            if(!this.$store.state.token){
-              return this.$router.push('/dashboard')
-            }
+        async creeCompte(){
+            await this.$store.dispatch('creeCompte' , this.user)
+            if(this.$store.state.authenticed==true){
+              console.log('I am login')
+              this.$router.replace({name:"Dashboard"});
+            }else{
+              console.log('I am not login')
+           }  
         }
     }
 }
