@@ -16,6 +16,7 @@ export function setEnvironement(app){
 function setDevEnv(app){
     process.env.NODE_ENV="developement"
     console.log("setting developement env");
+    app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
     app.use(morgan());
     app.use(function(req,res,next){

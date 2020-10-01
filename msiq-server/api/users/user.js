@@ -1,14 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-
+const dbOperationsClient = require('../../objects/users/dboperations.js');
 module.exports=(users)=>{
     //get a list of users
     router.get('/team',(req , res)=>{ 
-        res.send(users);
+        dbOperationsClient.getUsers().then(result=>{
+            res.send(result[0]);
+        }); 
+        //res.send(users);
     });
     //add a new user
     router.post('/register' , (req , res)=>{
+        //console.log('register');
         let user = (req.body);
         let index = users.push(user);
         let userId = index - 1;

@@ -9,7 +9,7 @@ const produits = require('./api/produits/produit.js');
 const users = require('./api/users/user');
 const vehicules = require('./api/vehicules/vehicules.js');
 
-var messages =[
+var Messages =[
     {
         sender_ID:'0' ,
         reciever_ID:'1' ,
@@ -18,7 +18,7 @@ var messages =[
         avatar:'/avatar1.jpg'
     }
 ]
-var users =[
+var Users =[
     {userName:'Yakoub Ould bouchiba',role:'Chef de parc',avatar:'/avatar1.jpg',password:'11'},
     {userName:'Yacine Lalmi',role:'Directeur',avatar:'/avatar2.jpg',password:'12'},
     {userName:'Riad Bouaicha',role:'Client',avatar:'/avatar3.png',password:'13'},
@@ -36,9 +36,9 @@ module.exports = (io)=>{
     router.use(chauffeurs());
     router.use(demandes());
     router.use(fournitures());
-    router.use(messages(messages , users,io));
+    router.use(messages(Messages , Users,io));
     router.use(produits());
-    router.use(users(users));
+    router.use(users(Users));
     router.use(vehicules());
     return router
 }
