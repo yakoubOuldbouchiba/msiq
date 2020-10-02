@@ -14,7 +14,7 @@ function getProduits() {
 
 function _getProduits() {
   _getProduits = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var pool;
+    var pool, users;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -25,56 +25,64 @@ function _getProduits() {
 
           case 3:
             pool = _context.sent;
-            _context.next = 9;
-            break;
+            _context.next = 6;
+            return pool.request().query("SELECT * FROM produit");
 
           case 6:
-            _context.prev = 6;
+            users = _context.sent;
+            return _context.abrupt("return", users.recordsets);
+
+          case 10:
+            _context.prev = 10;
             _context.t0 = _context["catch"](0);
             console.log(_context.t0);
 
-          case 9:
+          case 13:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 6]]);
+    }, _callee, null, [[0, 10]]);
   }));
   return _getProduits.apply(this, arguments);
 }
 
-function setProduit() {
+function setProduit(_x) {
   return _setProduit.apply(this, arguments);
 } //edit Produit
 
 
 function _setProduit() {
-  _setProduit = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+  _setProduit = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(produit) {
     var pool;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             _context2.prev = 0;
-            _context2.next = 3;
+            console.log(produit);
+            _context2.next = 4;
             return sql.connect(config);
 
-          case 3:
+          case 4:
             pool = _context2.sent;
-            _context2.next = 9;
-            break;
+            _context2.next = 7;
+            return pool.request().input('cp', sql.VarChar, produit.code_produit).input('desig', sql.VarChar, produit.designation).input('qty', sql.VarChar, parseInt(produit.quantite)).query("INSERT INTO produit VALUES(" + "@cp,@desig,@qty);");
 
-          case 6:
-            _context2.prev = 6;
+          case 7:
+            return _context2.abrupt("return", true);
+
+          case 10:
+            _context2.prev = 10;
             _context2.t0 = _context2["catch"](0);
-            console.log(_context2.t0);
+            return _context2.abrupt("return", false);
 
-          case 9:
+          case 13:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 6]]);
+    }, _callee2, null, [[0, 10]]);
   }));
   return _setProduit.apply(this, arguments);
 }
@@ -115,12 +123,12 @@ function _editProduit() {
   return _editProduit.apply(this, arguments);
 }
 
-function deleteProduit() {
+function deleteProduit(_x2) {
   return _deleteProduit.apply(this, arguments);
 }
 
 function _deleteProduit() {
-  _deleteProduit = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+  _deleteProduit = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(code_objet) {
     var pool;
     return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
@@ -132,20 +140,23 @@ function _deleteProduit() {
 
           case 3:
             pool = _context4.sent;
-            _context4.next = 9;
-            break;
+            _context4.next = 6;
+            return pool.request().input("code_produit", sql.VarChar, code_objet).query("DELETE FROM produit where code_produit = @code_produit");
 
           case 6:
-            _context4.prev = 6;
-            _context4.t0 = _context4["catch"](0);
-            console.log(_context4.t0);
+            return _context4.abrupt("return", true);
 
           case 9:
+            _context4.prev = 9;
+            _context4.t0 = _context4["catch"](0);
+            return _context4.abrupt("return", false);
+
+          case 12:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, null, [[0, 6]]);
+    }, _callee4, null, [[0, 9]]);
   }));
   return _deleteProduit.apply(this, arguments);
 }

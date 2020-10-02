@@ -96,7 +96,7 @@ export default {
              this.item = {
                 code_objet : 'xxxxx',
                 designation :'xxxx',
-                quantite :'xxx'
+                quantite :'0'
             };
             this.dialog=false;
         },
@@ -104,7 +104,7 @@ export default {
             this.item = {
                 code_objet : 'xxxxx',
                 designation :'xxxx',
-                quantite :'xxx'
+                quantite :'0'
             };
             this.dialog=false;
         }
@@ -116,7 +116,7 @@ export default {
         item : {
             code_objet : 'xxxxx',
             designation :'xxxx',
-            quantite :'xxx'
+            quantite :'0'
         },
         dialog :false,
         headers: [
