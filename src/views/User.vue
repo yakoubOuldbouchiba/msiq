@@ -1,9 +1,9 @@
 <template>
-    <div class="Chauffeurs">
+    <div class="user">
         <v-container>
              <v-data-table 
                     :headers ="headers"
-                    :items="Chauffeurs" 
+                    :items="$store.state.users" 
                     class="elevation-1"
                     :search="search"
                 >
@@ -12,8 +12,8 @@
                 >
                 <v-toolbar flat class="pa-3">
                     <h3 class="blue--text my-3 mx-3">
-                        <v-icon left class="blue--text">airline_seat_recline_normal</v-icon>
-                        La liste des chauffeurs
+                        <v-icon left class="blue--text">group</v-icon>
+                        La liste des employees
                     </h3>
                     <v-spacer></v-spacer>
                     <v-text-field
@@ -24,7 +24,7 @@
                     </v-text-field>
                     <v-btn text large color="blue" @click="edit">
                         <v-icon left class="blue--text">add_box</v-icon>
-                        <span class="blue--text"> ajouter chauffeur </span>
+                        <span class="blue--text"> ajouter employee </span>
                     </v-btn>
                     <Edit 
                         name='Chauffeur'
@@ -48,11 +48,13 @@
 </template>
 
 <script>
-import Axios from 'axios';
 import Edit from '../components/Edit'
 export default {
     name : "Chauffeurs",
     components :{Edit},
+    async created(){
+        this.$store.dispatch('getTeam');
+    },
     methods:{
         //edit & editItem use to open pupup & close use to close pupup 
         edit : function(){
@@ -66,67 +68,57 @@ export default {
         close : function(){
             this.dialog=false;
         },
-        async deleteItem (item){
+        deleteItem : function(item){
             // 1- we should assigne an anthors cars for the demandesV have this car    
             // 2- deleting for db nodejs part
-            Axios.delete("http://localhost:3030/chauffeur/"+item.chauffeur_id);
-            var index = this.Chauffeurs.indexOf(item);
-            this.Chauffeurs.splice(index ,1)
+            var userName = item.userName;
+            this.$store.dispatch('deleteUser',userName);
         },
-        async ajouterChauffeur(value){
-            (await Axios.post("http://localhost:3030/chauffeur",value));
-            this.Chauffeurs=(await Axios.get("http://localhost:3030/chauffeurs")).data
+        ajouterChauffeur : function(value){
+            //bdd function nodejs
+            this.Chauffeurs.push(value);
             this.item={
+                idChauffeur : "xxxx",
                 nom : "xxxxxx",
                 prenom : "xxxxx",
-                type_permis : "xxxx x",
-                telephone : "x xxx xx xx xx",
-                email : "xxxxxxxxxxxxxxxxx"
+                permis : "xxxx x"
            }
            this.dialog=false;
         },
         editerChauffeur : function(){
             //add bdd function nodejs
             this.item={
+                idChauffeur : "xxxx",
                 nom : "xxxxxx",
                 prenom : "xxxxx",
-                type_permis : "xxxx x",
-                telephone : "x xxx xx xx xx",
-                email : "xxxxxxxxxxxxxxxxx"
+                permis : "xxxx x"
            }
            this.dialog=false;  
         }
     },
-    async created(){
-        this.Chauffeurs=(await Axios.get("http://localhost:3030/chauffeurs")).data
-    }
-    ,
     data(){
         return{
         search:'',
         dialog : false,
         editedIndex : '-1',
         item :{
+            idChauffeur : "xxxx",
             nom : "xxxxxx",
             prenom : "xxxxx",
-            type_permis : "xxxx x",
-            telephone : "x xxx xx xx xx",
-            email : "xxxxxxxxxxxxxxxxx"
+            permis : "xxxx x"
         }
         ,headers: [
           {
-            text: 'Chauffeur ID',
+            text: 'user name',
             align: 'start',
-            value: 'chauffeur_id',
+            value: 'userName',
           },
-          { text: 'Nom', value: 'nom' },
-          { text: 'Prénom', value: 'prenom' },
-          { text: 'Permis', value: 'type_permis' },
-          { text: 'Telephone', value: 'telephone' },
+          { text: 'Nom', value: 'nomClient' },
+          { text: 'Prénom', value: 'prenomClient' },
+          { text: 'fonction', value: 'fonction' },
           { text: 'email', value: 'email' },
           { text: 'actions', value: 'actions' }
-        ],
-        Chauffeurs : []
+        ]
         }
     }
 }

@@ -155,7 +155,7 @@ export default {
     methods : {
         async submit(){
             (this.$refs.form.validate());
-            await this.$store.dispatch('creeCompte' , this.user).then(this.$refs.form.reset())
+            await this.$store.dispatch('creeCompte' , this.user)
             if(this.$store.state.authenticed==true){
               console.log('I am login')
               this.$router.replace({name:"Dashboard"});

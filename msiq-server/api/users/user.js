@@ -2,45 +2,47 @@ const express = require("express");
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const dbOperationsClient = require('../../objects/users/dboperations.js');
-module.exports=(users)=>{
+module.exports=()=>{
     //get a list of users
     router.get('/team',(req , res)=>{ 
         dbOperationsClient.getUsers().then(result=>{
             res.send(result[0]);
         }); 
-        //res.send(users);
+    });
+    //get a specific  user
+    router.get('/users/:id',(req , res)=>{ 
+        dbOperationsClient.getUser(req.params.id).then(result=>{
+            res.send(result[0]);
+        }); 
     });
     //add a new user
     router.post('/register' , (req , res)=>{
-        //console.log('register');
         let user = (req.body);
-        let index = users.push(user);
-        let userId = index - 1;
-        let token;
-        token=jwt.sign(userId,'123');
-        res.json(token);
+        let result=dbOperationsClient.setUser(user);
+        console.log(result);
+        if(result){
+            token=jwt.sign(user,'123');
+            res.json(token);
+        }
     })
     //login user
     router.post('/login' , (req , res)=>{
-        let loginData = (req.body);
-        let dataUser = {}
-        console.log(loginData);
-        let userID = users.findIndex(user => user.userName ==loginData.userName);
-        if(userID !='-1'&&users[userID].password==loginData.password && users[userID].role ==loginData.role ){
-            dataUser.token = (jwt.sign(userID,'123'));
-            dataUser.userName = users[userID].userName;
-            dataUser.role = users[userID].role;
-            dataUser.avatar = users[userID].avatar;
-            res.json(dataUser);
-        }
+        
+        let user  = (req.body);
+        dbOperationsClient.Login(user).then(result=>{
+            console.log(result);
+            res.json(result);
+        })
     })
     //update a user
-    router.put('/:id',(req , res)=>{ 
+    router.put('/users/:id',(req , res)=>{ 
         res.send({title : 'update a user'});
     });
     // delete a user
-    router.delete('/:id',(req , res)=>{ 
-        res.send({method : 'delete a user'});
+    router.delete('/users/:id',(req , res)=>{ 
+        dbOperationsClient.deleteUser(req.params.id).then(result=>{
+            res.send(result);
+        }); 
     });
     return router;
 }

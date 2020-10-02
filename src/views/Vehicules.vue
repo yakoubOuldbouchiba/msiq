@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import axios from '../../node_modules/axios'
 import Edit from '../components/Edit'
 export default {
     name : "Vehicules",
@@ -62,6 +63,9 @@ export default {
             return newHeaders;
         }
     },
+    async created(){
+        this.Vehicules =(await axios.get("http://localhost:3030/vehicules/")).data
+    },
     methods:{
         // edit & editItem use to lancer the pupup
         edit : function(){
@@ -72,20 +76,19 @@ export default {
             this.editedIndex = this.Vehicules.indexOf(item);
             this.dialog=true;
         },
-        deleteItem : function(item){
-            // 1- we should assigne an anthors cars for the demandesV have this car    
-            // 2- deleting for db nodejs part
+        async deleteItem (item){
+            axios.delete("http://localhost:3030/vehicule/"+item.matricule)
             const index = this.Vehicules.indexOf(item)
             confirm('vous êtes sur que vous voulez supprimer cette véhicule ?') && this.Vehicules.splice(index, 1)
         },
-        ajouterVehicule : function(value){
-            //treatement au niveau de la base des donnees
+        async ajouterVehicule  (value){
+            (await axios.post("http://localhost:3030/vehicule",value));
             this.Vehicules.push(value);
              this.item = {
-                name :'xxxx',
                 matricule : 'xxxxx-xxx-xx',
+                nom :'xxxx',
                 annee: 'xxxx',
-                type : 'xxxx'
+                type_vehicule : 'xxxx'
             };
             this.dialog=false;
         },
@@ -114,46 +117,24 @@ export default {
         search:'',
         editedIndex:'-1',
         item : {
-            name :'xxxx',
             matricule : 'xxxxx-xxx-xx',
+            nom :'xxxx',
             annee: 'xxxx',
-            type : 'xxxx'
+            type_vehicule : 'xxxx'
         },
         dialog :false,
         headers: [
           {
             text: 'name',
             align: 'start',
-            value: 'name',
+            value: 'nom',
           },
           { text: 'Matricule', value: 'matricule' },
           { text: 'année', value: 'annee' },
-          { text: 'type', value: 'type' },
+          { text: 'type', value: 'type_vehicule' },
           { text: 'actions' , value :'actions' ,sortable : false}
         ],
-        Vehicules : [
-                {
-                    name : "206",
-                    matricule: "31100-206-35",
-                    annee : "2006",
-                    type: "normal"
-                },                {
-                    name : "207",
-                    matricule: "31101-207-16",
-                    annee : "2007",
-                    type: "normal"
-                },                {
-                    name : "208",
-                    matricule: "31102-207-09",
-                    annee : "2007",
-                    type: "normal"
-                },                {
-                    name : "308",
-                    matricule: "31103-208-16",
-                    annee : "2008",
-                    type: "lord"
-                }
-            ]
+        Vehicules : []
         }
     }
 }

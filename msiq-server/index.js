@@ -25,13 +25,4 @@ http.listen(port, () => {
   console.log(`Msiq app listening at http://localhost:${port}`+ ' and in '+process.env.NODE_ENV+' mode')
 })
 
-/*async function alluser(){
-  console.log(user);
-}
-alluser();*/
-
-const dbOperationsClient = require('./objects/users/dboperations.js');
-dbOperationsClient.getUsers().then(result=>{
-  console.log(result);
-});
 

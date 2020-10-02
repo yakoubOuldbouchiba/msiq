@@ -28,7 +28,6 @@ export default new Vuex.Store({
     },
     mutations:{
         setAuth(state,authenticed){
-            console.log('i set the authen '+authenticed);
             state.authenticed=authenticed;
         },
         getUser(state , user){
@@ -48,7 +47,6 @@ export default new Vuex.Store({
         },
         logout(state){
             state.authenticed=false;
-            console.log('i set the authen '+false);
             state.token='';
             localStorage.clear('token');
         },
@@ -80,35 +78,52 @@ export default new Vuex.Store({
     },
     actions:{
         async getMessages ({commit}){
+
             let messages =  (await  axios.get("http://localhost:3030/messages")).data
             commit('updatemessages',messages);
+        
         },
         async newMessage(_,content){
+
             let msg = {}
             msg.content=content;
             msg.reciever_ID=this.state.reciever_ID;
-            (await axios.post("http://localhost:3030/messages",msg)).data;
-            
-            
+            (await axios.post("http://localhost:3030/messages",msg)).data; 
+
         },
         async getTeam ({commit}){
             let users  =  (await  axios.get("http://localhost:3030/team")).data
             commit('updateTeam',users);
         },
+        async deleteUser({state},userName){
+            let deleted = (await axios.delete("http://localhost:3030/users/"+userName)).data;
+            if(deleted){
+                var index = state.users.indexOf(userName);
+                state.users.splice(index,1);
+            }
+        }
+        ,
         async creeCompte({commit},userData){
+
             let token =(await axios.post("http://localhost:3030/register",userData)).data;
-            localStorage.setItem('token',token);
-            axios.defaults.headers.common['Authorization']=token;
-            commit('auth',token);
-            commit('setAuth',true);       
+            if(typeof token !== "undefined")
+            {
+                localStorage.setItem('token',token);
+                axios.defaults.headers.common['Authorization']=token;
+                commit('auth',token);
+                commit('setAuth',true);  
+            }     
         },
         async login({commit},userData){
-            let user =(await axios.post("http://localhost:3030/login",userData)).data;
-            localStorage.setItem('token',user.token);
-            axios.defaults.headers.common['Authorization']=user.token;
-            commit('auth',user.token);
-            commit('setAuth',true);
-            commit('getUser',user)       
-        },
+
+            let res =(await axios.post("http://localhost:3030/login",userData)).data;
+            if(typeof res.token !== "undefined"){
+                localStorage.setItem('token',res.token);
+                axios.defaults.headers.common['Authorization']=res.token;
+                commit('auth',res.token);
+                commit('setAuth',true);
+                commit('getUser',userData) 
+            }
+        }
     }
 })

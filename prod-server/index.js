@@ -28,13 +28,3 @@ app.get('/', function (rep, res) {
 http.listen(port, function () {
   console.log("Msiq app listening at http://localhost:".concat(port) + ' and in ' + process.env.NODE_ENV + ' mode');
 });
-/*async function alluser(){
-  console.log(user);
-}
-alluser();*/
-
-var dbOperationsClient = require('./objects/users/dboperations.js');
-
-dbOperationsClient.getUsers().then(function (result) {
-  console.log(result);
-});

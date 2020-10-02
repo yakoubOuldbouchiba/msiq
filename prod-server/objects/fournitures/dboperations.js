@@ -17,7 +17,7 @@ function getObjects() {
 
 function _getObjects() {
   _getObjects = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var pool;
+    var pool, users;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -28,31 +28,35 @@ function _getObjects() {
 
           case 3:
             pool = _context.sent;
-            _context.next = 9;
-            break;
+            _context.next = 6;
+            return pool.request().query("SELECT * FROM objet");
 
           case 6:
-            _context.prev = 6;
+            users = _context.sent;
+            return _context.abrupt("return", users.recordsets);
+
+          case 10:
+            _context.prev = 10;
             _context.t0 = _context["catch"](0);
             console.log(_context.t0);
 
-          case 9:
+          case 13:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 6]]);
+    }, _callee, null, [[0, 10]]);
   }));
   return _getObjects.apply(this, arguments);
 }
 
-function setObject() {
+function setObject(_x) {
   return _setObject.apply(this, arguments);
 } //edit object
 
 
 function _setObject() {
-  _setObject = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+  _setObject = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(objet) {
     var pool;
     return regeneratorRuntime.wrap(function _callee2$(_context2) {
       while (1) {
@@ -64,20 +68,23 @@ function _setObject() {
 
           case 3:
             pool = _context2.sent;
-            _context2.next = 9;
-            break;
+            _context2.next = 6;
+            return pool.request().input('co', sql.VarChar, objet.code_objet).input('desig', sql.VarChar, objet.designation).input('qty', sql.VarChar, parseInt(objet.quantite)).query("INSERT INTO objet VALUES(" + "@co,@desig,@qty);");
 
           case 6:
-            _context2.prev = 6;
-            _context2.t0 = _context2["catch"](0);
-            console.log(_context2.t0);
+            return _context2.abrupt("return", true);
 
           case 9:
+            _context2.prev = 9;
+            _context2.t0 = _context2["catch"](0);
+            return _context2.abrupt("return", false);
+
+          case 12:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 6]]);
+    }, _callee2, null, [[0, 9]]);
   }));
   return _setObject.apply(this, arguments);
 }
@@ -118,12 +125,12 @@ function _editObject() {
   return _editObject.apply(this, arguments);
 }
 
-function deleteObject() {
+function deleteObject(_x2) {
   return _deleteObject.apply(this, arguments);
 }
 
 function _deleteObject() {
-  _deleteObject = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
+  _deleteObject = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(code_objet) {
     var pool;
     return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
@@ -135,20 +142,23 @@ function _deleteObject() {
 
           case 3:
             pool = _context4.sent;
-            _context4.next = 9;
-            break;
+            _context4.next = 6;
+            return pool.request().input("code_objet", sql.VarChar, code_objet).query("DELETE FROM objet where code_objet = @code_objet");
 
           case 6:
-            _context4.prev = 6;
-            _context4.t0 = _context4["catch"](0);
-            console.log(_context4.t0);
+            return _context4.abrupt("return", true);
 
           case 9:
+            _context4.prev = 9;
+            _context4.t0 = _context4["catch"](0);
+            return _context4.abrupt("return", false);
+
+          case 12:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, null, [[0, 6]]);
+    }, _callee4, null, [[0, 9]]);
   }));
   return _deleteObject.apply(this, arguments);
 }

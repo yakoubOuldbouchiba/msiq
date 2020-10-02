@@ -6,38 +6,16 @@
                 <span class="headline grey--text">{{formTitle}}</span>
             </v-card-title>
             <v-card-text>
-                <v-container v-if="name=='Vehicule'">
-                    <v-row>
-                      <v-col cols="12"  sm="6" md="4" >
-                        <v-text-field v-model="item.nom" label="Nom"></v-text-field>
-                      </v-col>
-                    <v-col cols="12"  sm="6" md="4" >
-                        <v-text-field v-model="item.matricule" label="Matricule"></v-text-field>
-                    </v-col>
-                    <v-col cols="12"  sm="6" md="4" >
-                        <v-text-field v-model="item.annee" label="Année"></v-text-field>
-                    </v-col>
-                    <v-col cols="12"  sm="6" md="4" >
-                        <v-text-field v-model="item.type_vehicule" label="Type"></v-text-field>
-                      </v-col>
-                    </v-row>
-                </v-container>
-                <v-container v-if="name=='Chauffeur'">
+            <v-container>
                 <v-row>
                     <v-col cols="12"  sm="6" md="4" >
-                        <v-text-field v-model="item.nom" label="Nom"></v-text-field>
+                        <v-text-field v-model="item.code_objet" label="code objet"></v-text-field>
                     </v-col>
                     <v-col cols="12"  sm="6" md="4" >
-                        <v-text-field v-model="item.prenom" label="Prenom"></v-text-field>
+                        <v-text-field v-model="item.designation" label="designation"></v-text-field>
                     </v-col>
                     <v-col cols="12"  sm="6" md="4" >
-                        <v-text-field v-model="item.type_permis" label="Premis"></v-text-field>
-                      </v-col>
-                    <v-col cols="12"  sm="6" md="4" >
-                        <v-text-field v-model="item.telephone" label="telephone"></v-text-field>
-                      </v-col>
-                    <v-col cols="12"  sm="6" md="4" >
-                        <v-text-field v-model="item.email" label="email"></v-text-field>
+                        <v-text-field v-model="item.quantite" label="quantite"></v-text-field>
                     </v-col>
                     </v-row>
                 </v-container>

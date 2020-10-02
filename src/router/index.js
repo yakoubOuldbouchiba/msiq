@@ -12,6 +12,7 @@ import Repporting from '../views/Repporting.vue'
 import Fourniture from '../views/Fourniture.vue'
 import Produit from '../views/Produit.vue'
 import Demandes from '../views/Demandes'
+import User from '../views/User.vue'
 import Test from '../views/Test.vue'
 import store from '../store/store'
 import "animate.css/animate.css"
@@ -119,6 +120,19 @@ Vue.use(VueRouter)
         next({name:'Login'});
       }
     }
+  },
+  {
+    path: '/user',
+    name: 'User',
+    component:User,
+    beforeEnter: (to, from, next) => {
+      // ...
+      if(store.state.authenticed){
+        next();
+      }else{
+        next({name:'Login'});
+      }
+    } 
   }, 
   {
     path: '/repporting',

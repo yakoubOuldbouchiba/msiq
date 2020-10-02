@@ -58,7 +58,7 @@ module.exports = function (io) {
   router.use(fournitures());
   router.use(messages(Messages, Users, io));
   router.use(produits());
-  router.use(users(Users));
+  router.use(users());
   router.use(vehicules());
   return router;
 };

@@ -84,6 +84,12 @@
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">Liste demandes a traiter</v-list-item-content>
               </v-list-item>
+              <v-list-item v-if="$store.state.user.role=='Directeur'"  route :to="'/user'" >   
+                         <v-list-item-icon  >
+                              <v-icon class="amber--text text--darken-1">group</v-icon>
+                         </v-list-item-icon>
+                         <v-list-item-content  class="indigo--text text--darken-4">List des employee</v-list-item-content>
+              </v-list-item>
               <v-list-item v-if="$store.state.user.role=='Directeur'"  route :to="'/repporting'" >   
                          <v-list-item-icon  >
                               <v-icon class="amber--text text--darken-1">insert_chart</v-icon>
