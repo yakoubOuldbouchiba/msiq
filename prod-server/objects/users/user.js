@@ -1,4 +1,4 @@
-var _classCallCheck = require("C:/Users/Yak/Desktop/MSIQ/msiq-v-1.0.0/node_modules/@babel/runtime/helpers/classCallCheck");
+var _classCallCheck = require("C:/Users/Yacin/Desktop/MyProjects/msiq/node_modules/@babel/runtime/helpers/classCallCheck");
 
 var User = function User(userName, userPassword, nomClient, prenomClient, dateNaissance, mobile, email, fonction, structure, departement) {
   "use strict";
