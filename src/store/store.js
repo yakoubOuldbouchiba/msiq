@@ -48,6 +48,7 @@ export default new Vuex.Store({
         logout(state){
             state.authenticed=false;
             state.token='';
+            state.user=null;
             localStorage.clear('token');
         },
         updateDialogNewMessage(state ,index){
