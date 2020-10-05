@@ -1,0 +1,5 @@
+CREATE PROCEDURE GetUsers 
+AS
+BEGIN
+SELECT * FROM utilisateurs;
+END
