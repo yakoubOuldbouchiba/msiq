@@ -7,7 +7,7 @@ const sql = require('mssql');
 async function  getObjects(){
     try{
         let pool = await (sql.connect(config));
-        let users = await (pool.request().query("SELECT * FROM objet"));
+        let users = await (pool.request().query("GETOBJETS"));
         return users.recordsets;
     }catch(error){
         console.log(error);
@@ -20,9 +20,8 @@ async function  setObject(objet){
         await pool.request()
         .input('co', sql.VarChar, objet.code_objet)
         .input('desig', sql.VarChar, objet.designation)
-        .input('qty', sql.VarChar, parseInt(objet.quantite))
-        .query("INSERT INTO objet VALUES("+
-                    "@co,@desig,@qty);");
+        .input('qty', sql.Int, parseInt(objet.quantite))
+        .execute("SETOBJETS");
         return true;
     }catch(error){ 
         return false;

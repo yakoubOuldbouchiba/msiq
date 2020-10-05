@@ -6,7 +6,7 @@ const sql = require('mssql');
 async function getVehicules(){
     try{
         let pool = await (sql.connect(config));
-        let users = await (pool.request().query("SELECT * FROM vehicule"));
+        let users = await (pool.request().query("GETVEHICULE"));
         return users.recordsets;
     }catch(error){
         console.log(error);
@@ -35,8 +35,7 @@ async function  setVehicule(vehicule){
         .input('nom',sql.VarChar, vehicule.nom )
         .input('annee',sql.Int,parseInt(vehicule.annee))
         .input('type_vehicule',sql.VarChar,vehicule.type_vehicule)
-        .query("INSERT INTO vehicule VALUES("+
-                    "@matricule,@nom,@annee,@type_vehicule);");      
+        .execute("SETVEHICULE");      
         console.log("we inserted");
          return true;
     }catch(error){ 
@@ -58,7 +57,7 @@ async function  deleteVehicule(matricule){
         let pool = await (sql.connect(config));
          await pool.request()
         .input("matricule", sql.VarChar, matricule)
-        .query("DELETE FROM vehicule where matricule = @matricule");
+        .query("DELETEVEHICULE");
         return true;
     }catch(error){
         return false;

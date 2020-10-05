@@ -71,8 +71,8 @@ export default {
         deleteItem : function(item){
             // 1- we should assigne an anthors cars for the demandesV have this car    
             // 2- deleting for db nodejs part
-            var userName = item.userName;
-            this.$store.dispatch('deleteUser',userName);
+            //var email = item.email;
+            this.$store.dispatch('deleteUser',item);
         },
         ajouterChauffeur : function(value){
             //bdd function nodejs
@@ -109,14 +109,13 @@ export default {
         }
         ,headers: [
           {
-            text: 'user name',
+            text: 'email',
             align: 'start',
-            value: 'userName',
+            value: 'email',
           },
-          { text: 'Nom', value: 'nomClient' },
-          { text: 'Prénom', value: 'prenomClient' },
+          { text: 'Nom', value: 'nomUtilisateur' },
+          { text: 'Prénom', value: 'prenomUtilisateur' },
           { text: 'fonction', value: 'fonction' },
-          { text: 'email', value: 'email' },
           { text: 'actions', value: 'actions' }
         ]
         }

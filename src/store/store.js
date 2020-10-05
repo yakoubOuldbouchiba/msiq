@@ -48,7 +48,7 @@ export default new Vuex.Store({
         logout(state){
             state.authenticed=false;
             state.token='';
-            state.user=null;
+            //state.user=null;
             localStorage.clear('token');
         },
         updateDialogNewMessage(state ,index){
@@ -96,10 +96,10 @@ export default new Vuex.Store({
             let users  =  (await  axios.get("http://localhost:3030/team")).data
             commit('updateTeam',users);
         },
-        async deleteUser({state},userName){
-            let deleted = (await axios.delete("http://localhost:3030/users/"+userName)).data;
+        async deleteUser({state},item){
+            let deleted = (await axios.delete("http://localhost:3030/users/"+item.email)).data;
             if(deleted){
-                var index = state.users.indexOf(userName);
+                var index = state.users.indexOf(item);
                 state.users.splice(index,1);
             }
         }

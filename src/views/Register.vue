@@ -4,16 +4,7 @@
           <v-form v-model="valid" ref="form">
             <v-container>
                 <v-row>
-                    <v-col cols="12" md="4">
-                        <v-text-field 
-                        v-model="user.userName" 
-                        label="Nom d'utilisateur*"
-                        :rules="[v => !!v || 'Cet champs est obligatoire']" 
-                        prepend-icon="mdi-account" 
-                        required>
-                        </v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="4">
+                    <v-col cols="12" md="6">
                         <v-text-field 
                         v-model="user.lastName" 
                         label="Nom*" 
@@ -22,7 +13,7 @@
                         required>
                         </v-text-field>
                     </v-col>
-                    <v-col cols="12" md="4">
+                    <v-col cols="12" md="6">
                         <v-text-field 
                         v-model="user.firstName" 
                         label="Prénom*" 
@@ -55,7 +46,7 @@
                     </v-col>
                 </v-row>
                 <v-row>
-                    <v-col cols="12" md="6">
+                    <v-col cols="12" md="4">
                         <v-text-field 
                         v-model="user.fonction" 
                         label="Fonction*" 
@@ -63,7 +54,15 @@
                         prepend-icon="mdi-briefcase" 
                         required></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="6">
+                    <v-col cols="12" md="4">
+                        <v-text-field 
+                        v-model="user.tu" 
+                        label="type d'utilisateur*" 
+                        :rules="[v => !!v || 'Cet champs est obligatoire']"
+                        prepend-icon="mdi-briefcase" 
+                        required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="4">
                         <v-menu max-width="290px" :close-on-content-click="false" ref="menu">
                             <template v-slot:activator="{on}">
                                 <v-text-field 
@@ -143,6 +142,7 @@ export default {
         firstName: '',
         passWord: '',
         passWordConfirm: '',
+        tu:'',
         fonction: '',
         ddn: null,
         structure: '',

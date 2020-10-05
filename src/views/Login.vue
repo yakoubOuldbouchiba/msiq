@@ -11,7 +11,7 @@
             </v-card-title>
             <v-form  class="pa-5">
               <v-select :items="items" label="fonction" prepend-icon="mdi-briefcase" outlined v-model="role" ></v-select>
-              <v-text-field v-model="userName"  label="Nom d'utilisateur" type="text" prepend-icon="mdi-account" required outlined></v-text-field>
+              <v-text-field v-model="email"  label="Email" type="text" prepend-icon="mdi-account" required outlined></v-text-field>
               <v-text-field v-model="password"  label="Mot de passe" type="password" prepend-icon="mdi-lock" required outlined></v-text-field>
               <v-flex row class="justify-center">
                 <v-btn class="primary" @click="login">Connexion</v-btn>
@@ -32,7 +32,7 @@ export default {
     name:'Login'
     ,data: () => ({
       socket:null,
-      userName: '',
+      email: '',
       password: '',
       items: ['Administrator', 'Chef de parc', 'Directeur', 
       'Client','Agent de Tirage','Agent de magasin'],
@@ -40,7 +40,7 @@ export default {
     }),
     methods:{
       async login (){
-        await this.$store.dispatch("login",{userName:this.userName ,password:this.password , role : this.role })
+        await this.$store.dispatch("login",{email:this.email , password:this.password , role : this.role })
         if(this.$store.state.authenticed==true){
           console.log('I am login')
           this.$router.replace({name:"Dashboard"});

@@ -4,7 +4,7 @@ const sql = require('mssql');
 async function  getProduits(){
     try{
         let pool = await (sql.connect(config));
-        let users = await (pool.request().query("SELECT * FROM produit"));
+        let users = await (pool.request().query("GETPRODUITS"));
         return users.recordsets;
     }catch(error){
         console.log(error);
@@ -18,9 +18,8 @@ async function  setProduit(produit){
         await pool.request()
         .input('cp', sql.VarChar, produit.code_produit)
         .input('desig', sql.VarChar, produit.designation)
-        .input('qty', sql.VarChar, parseInt(produit.quantite))
-        .query("INSERT INTO produit VALUES("+
-                    "@cp,@desig,@qty);");
+        .input('qty', sql.Int, parseInt(produit.quantite))
+        .execute("SETPRODUIT");
         return true;
     }catch(error){ 
         return false;
@@ -40,7 +39,7 @@ async function  deleteProduit(code_objet){
         let pool = await (sql.connect(config));
          await pool.request()
         .input("code_produit", sql.VarChar, code_objet)
-        .query("DELETE FROM produit where code_produit = @code_produit");
+        .execute("DELETEPRODUIT");
         return true;
     }catch(error){
         return false;

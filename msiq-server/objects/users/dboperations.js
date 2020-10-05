@@ -6,7 +6,7 @@ const sql = require('mssql');
 async function getUsers(){
     try{
         let pool = await (sql.connect(config));
-        let users = await (pool.request().query("SELECT * FROM client"));
+        let users = await (pool.request().execute("GetUsers"));
         return users.recordsets;
     }catch(error){
         console.log(error);
@@ -18,7 +18,7 @@ async function getUser(userID){
         let pool = await (sql.connect(config));
         let user = await pool.request()
         .input("user_name", sql.VarChar, userID)
-        .query("SELECT * FROM client where userName = @user_name");
+        .execute("GetUsers")
         return user.recordsets;
     }catch(error){
         return 0;
@@ -31,18 +31,17 @@ async function  setUser(user){
     try{
         let pool = await (sql.connect(config));
         let insertUser = await pool.request()
-        .input('un', sql.VarChar, user.userName)
+        .input('email', sql.VarChar, user.email)
         .input('pw', sql.VarChar, user.passWord)
         .input('ln', sql.VarChar, user.lastName)
         .input('fn', sql.VarChar, user.firstName)
+        .input('tu', sql.VarChar, user.tu)
         .input('bd', sql.DateTimeOffset, user.ddn)
         .input('tel', sql.VarChar, user.mobile)
-        .input('email', sql.VarChar, user.email)
         .input('job', sql.VarChar, user.fonction)
         .input('struc', sql.VarChar, user.structure)
         .input('depart', sql.VarChar, user.departement)
-        .query("INSERT INTO client VALUES("+
-                    "@un,@pw,@ln,@fn,@bd,@tel,@email,@job,@struc,@depart);");           
+        .execute('SetUsers');         
         return insertUser.recordsets;
     }catch(error){ 
         return 0;
@@ -53,19 +52,19 @@ async function  Login(user){
     try{
         let pool = await sql.connect(config);
         let user_data = await pool.request()
-        .input("user_name",sql.VarChar,user.userName)
-        .query("SELECT userPassword , fonction FROM client where userName = @user_name");
+        .input("email",sql.VarChar,user.email)
+        .execute("LOGIN");
         if(user_data.recordset.length == 0){
             return {
                 title: 'User not found',
                 error: 'User not found'
             }
         }else{
-            if(user_data.recordset[0].userPassword ==user.password){
-                if(user_data.recordset[0].fonction==user.role){
+            if(user_data.recordset[0].userPassword==user.password){
+                if(user_data.recordset[0].typeUtilisateur==user.role){
                     return {
                         title: 'User in',
-                        token: jwt.sign(user.userName, 'TMPK3Y')
+                        token: jwt.sign(user.email, 'TMPK3Y')
                     }
                 }else{
                     return {
@@ -80,8 +79,7 @@ async function  Login(user){
                 }
             }
             
-        }
-        console.log("request done");    
+        }  
     }catch(error){
         return {
             title: 'Something went wrong',
@@ -98,12 +96,12 @@ async function  editUser(){
     }
 }
 // delete user
-async function  deleteUser(userName){
+async function  deleteUser(email){
     try{
         let pool = await (sql.connect(config));
          await pool.request()
-        .input("user_name", sql.VarChar, userName)
-        .query("DELETE FROM client where userName = @user_name");
+        .input("email", sql.VarChar, email)
+        .execute("DeleteUser");
         return true;
     }catch(error){
         return false;
