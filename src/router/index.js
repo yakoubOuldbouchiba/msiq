@@ -20,12 +20,12 @@ import "animate.css/animate.css"
 Vue.use(VueRouter)
 
   const routes = [
-  {
-    path: '/',
-    name: 'Login',
-    component: Login
-  },
-  {
+    {
+      path: '/Login',
+      name: 'Login',
+      component: Login
+    }  
+    ,{
     path: '/register',
     name: 'Register',
     component: Register
@@ -35,8 +35,7 @@ Vue.use(VueRouter)
     name: 'Dashboard',
     component: Dashboard,
     beforeEnter: (to, from, next) => {
-      console.log("console okey");
-      if(store.state.authenticed){
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -48,8 +47,7 @@ Vue.use(VueRouter)
     name: 'Messages',
     component:Messages ,
     beforeEnter: (to, from, next) => {
-      // ...
-      if(store.state.authenticed){
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -61,8 +59,8 @@ Vue.use(VueRouter)
     name: 'Notifications',
     component:Notifications ,
     beforeEnter: (to, from, next) => {
-      // ...
-      if(store.state.authenticed){
+      
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -74,8 +72,7 @@ Vue.use(VueRouter)
     name: 'Profile',
     component:Profile ,
     beforeEnter: (to, from, next) => {
-      // ...
-      if(store.state.authenticed){
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -87,8 +84,7 @@ Vue.use(VueRouter)
     name: 'Test',
     component:Test ,
     beforeEnter: (to, from, next) => {
-      // ...
-      if(store.state.authenticed){
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -101,7 +97,7 @@ Vue.use(VueRouter)
     component:Vehicules ,
     beforeEnter: (to, from, next) => {
       // ...
-      if(store.state.authenticed){
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -113,8 +109,8 @@ Vue.use(VueRouter)
     name: 'Chauffeurs',
     component:Chauffeurs ,
     beforeEnter: (to, from, next) => {
-      // ...
-      if(store.state.authenticed){
+      
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -127,7 +123,7 @@ Vue.use(VueRouter)
     component:User,
     beforeEnter: (to, from, next) => {
       // ...
-      if(store.state.authenticed){
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -140,7 +136,7 @@ Vue.use(VueRouter)
     component:Repporting,
     beforeEnter: (to, from, next) => {
       // ...
-      if(store.state.authenticed){
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -153,7 +149,7 @@ Vue.use(VueRouter)
     component:Fourniture ,
     beforeEnter: (to, from, next) => {
       // ...
-      if(store.state.authenticed){
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -166,7 +162,7 @@ Vue.use(VueRouter)
     component:Produit ,
     beforeEnter: (to, from, next) => {
       // ...
-      if(store.state.authenticed){
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -181,6 +177,18 @@ Vue.use(VueRouter)
       // ...
       if(store.state.authenticed){
         next();
+      }else{
+        next({name:'Login'});
+      }
+    }
+  },
+  {
+    path: '/',
+    beforeEnter: (to, from, next) => {
+      console.log(store.state.token);
+      if(store.state.token){
+        console.log(store.state.token);
+        next({name:'Dashboard'});
       }else{
         next({name:'Login'});
       }

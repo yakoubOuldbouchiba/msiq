@@ -78,43 +78,43 @@
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">messages</v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="$store.state.user.role!='Client'"  route :to="'/demandes'" >   
+              <v-list-item v-if="$store.state.typeUtilisateur!='Client'"  route :to="'/demandes'" >   
                          <v-list-item-icon  >
                               <v-icon class="amber--text text--darken-1">layers</v-icon>
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">Liste demandes a traiter</v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="$store.state.user.role=='Directeur'"  route :to="'/user'" >   
+              <v-list-item v-if="$store.state.user.typeUtilisateur=='Directeur'"  route :to="'/$store.state.user.$store.state.user.$store.state.user.$store.state.user.user...'" >   
                          <v-list-item-icon  >
                               <v-icon class="amber--text text--darken-1">group</v-icon>
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">List des employee</v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="$store.state.user.role=='Directeur'"  route :to="'/repporting'" >   
+              <v-list-item v-if="$store.state.user.typeUtilisateur=='Directeur'"  route :to="'/repporting'" >   
                          <v-list-item-icon  >
                               <v-icon class="amber--text text--darken-1">insert_chart</v-icon>
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">Repporting</v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="$store.state.user.role=='Chef de parc'"  route :to="'/chauffeurs'" >   
+              <v-list-item v-if="$store.state.user.typeUtilisateur=='Chef de parc'"  route :to="'/chauffeurs'" >   
                          <v-list-item-icon  >
                               <v-icon class="amber--text text--darken-1">airline_seat_recline_normal</v-icon>
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">List des chauffeurs</v-list-item-content>
               </v-list-item> 
-              <v-list-item v-if="$store.state.user.role=='Chef de parc'"  route :to="'/vehicules'" >   
+              <v-list-item v-if="$store.state.user.typeUtilisateur=='Chef de parc'"  route :to="'/vehicules'" >   
                          <v-list-item-icon  >
                               <v-icon class="amber--text text--darken-1">commute</v-icon>
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">List des véhicules</v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="$store.state.user.role=='Agent de magasin'"  route :to="'/fourniture'" >   
+              <v-list-item v-if="$store.state.user.typeUtilisateur=='Agent de magasin'"  route :to="'/fourniture'" >   
                          <v-list-item-icon  >
                               <v-icon class="amber--text text--darken-1">edit</v-icon>
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">List des fournitures</v-list-item-content>
               </v-list-item>
-               <v-list-item v-if="$store.state.user.role=='Agent de magasin'"  route :to="'/produit'" >   
+               <v-list-item v-if="$store.state.user.typeUtilisateur=='Agent de magasin'"  route :to="'/produit'" >   
                          <v-list-item-icon  >
                               <v-icon class="amber--text text--darken-1">devices</v-icon>
                          </v-list-item-icon>
@@ -131,11 +131,13 @@
   </nav>
 </template>
 <script>
+
 export default {
     name:'NavBar',
     data(){
          return{
               menu:false,
+              
          }
     },
     methods:{

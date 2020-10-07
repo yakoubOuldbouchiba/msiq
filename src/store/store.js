@@ -2,17 +2,18 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import io from 'socket.io-client'
-
+import jwt from 'jsonwebtoken'
 Vue.use(Vuex);
 export default new Vuex.Store({
     state : {
-        authenticed : false,
-        sokect:io('http://localhost:3030/'),
+        
         user:{
-            userName :'',
-            role :'',
-            avatar :'',
+            avatar : '',
+            userName : '',
+            role : '',
+            typeUtilisateur:''
         },
+        sokect:io('http://localhost:3030/'),
         messages :[],
         users : [],
         token:!!localStorage.getItem('token')|| '',
@@ -27,12 +28,7 @@ export default new Vuex.Store({
         dialogPEC:false,
     },
     mutations:{
-        setAuth(state,authenticed){
-            state.authenticed=authenticed;
-        },
-        getUser(state , user){
-            state.user=user;
-        },
+        
         updateTeam(state, users){
             state.users=users
         },
@@ -48,7 +44,6 @@ export default new Vuex.Store({
         logout(state){
             state.authenticed=false;
             state.token='';
-            //state.user=null;
             localStorage.clear('token');
         },
         updateDialogNewMessage(state ,index){
@@ -102,8 +97,7 @@ export default new Vuex.Store({
                 var index = state.users.indexOf(item);
                 state.users.splice(index,1);
             }
-        }
-        ,
+        },
         async creeCompte({commit},userData){
 
             let token =(await axios.post("http://localhost:3030/register",userData)).data;
@@ -115,15 +109,15 @@ export default new Vuex.Store({
                 commit('setAuth',true);  
             }     
         },
-        async login({commit},userData){
-
-            let res =(await axios.post("http://localhost:3030/login",userData)).data;
-            if(typeof res.token !== "undefined"){
-                localStorage.setItem('token',res.token);
-                axios.defaults.headers.common['Authorization']=res.token;
-                commit('auth',res.token);
-                commit('setAuth',true);
-                commit('getUser',userData) 
+        getuser ({state}){
+            const token = localStorage.getItem("token");
+            console.log(token);
+            if(token!=null){
+                let userData =jwt.decode(token , 'TMPK3Y');
+                state.user.userName = userData.user.nomUtilisateur + " " + userData.user.prenomUtilisateur
+                state.user.role = userData.user.fonction;
+                state.user.typeUtilisateur = userData.user.typeUtilisateur;
+                console.log(userData)
             }
         }
     }
