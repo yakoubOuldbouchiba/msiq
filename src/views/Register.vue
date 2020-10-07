@@ -157,10 +157,10 @@ export default {
             (this.$refs.form.validate());
             await this.$store.dispatch('creeCompte' , this.user)
             if(this.$store.state.authenticed==true){
-              console.log('I am login')
+              console.log('logged in')
               this.$router.replace({name:"Dashboard"});
             }else{
-              console.log('I am not login')
+              console.log('not logged in')
            }  
         },
         colse(){
