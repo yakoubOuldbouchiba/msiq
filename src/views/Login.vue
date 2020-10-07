@@ -16,7 +16,7 @@
               <v-flex row class="justify-center">
                 <v-btn class="primary" @click="login">Connexion</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn  text class="blue--text"  to="/register">cree un nouveau compte</v-btn>
+                <v-btn  text class="blue--text"  to="/register">créer un nouveau compte</v-btn>
               </v-flex>
             </v-form>
           </v-card>
