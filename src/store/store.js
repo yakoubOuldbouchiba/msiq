@@ -97,18 +97,7 @@ export default new Vuex.Store({
                 var index = state.users.indexOf(item);
                 state.users.splice(index,1);
             }
-        },
-        async creeCompte({commit},userData){
-
-            let token =(await axios.post("http://localhost:3030/register",userData)).data;
-            if(typeof token !== "undefined")
-            {
-                localStorage.setItem('token',token);
-                axios.defaults.headers.common['Authorization']=token;
-                commit('auth',token);
-                commit('setAuth',true);  
-            }     
-        },
+        }, 
         getuser ({state}){
             const token = localStorage.getItem("token");
             console.log(token);

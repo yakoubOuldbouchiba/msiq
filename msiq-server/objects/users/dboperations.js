@@ -1,3 +1,4 @@
+const BCRYPT = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
@@ -27,25 +28,36 @@ async function getUser(email){
 
 // set new user
 async function  setUser(user){
-    console.log(user);
-    try{
-        let pool = await (sql.connect(config));
-        let insertUser = await pool.request()
-        .input('email', sql.VarChar, user.email)
-        .input('pw', sql.VarChar, user.passWord)
-        .input('ln', sql.VarChar, user.lastName)
-        .input('fn', sql.VarChar, user.firstName)
-        .input('tu', sql.VarChar, user.tu)
-        .input('bd', sql.DateTimeOffset, user.ddn)
-        .input('tel', sql.VarChar, user.mobile)
-        .input('job', sql.VarChar, user.fonction)
-        .input('struc', sql.VarChar, user.structure)
-        .input('depart', sql.VarChar, user.departement)
-        .execute('SetUsers');         
-        return insertUser.recordsets;
-    }catch(error){ 
-        return 0;
+    
+    try {
+        await sql.connect(config)
+        try {
+            let PW = BCRYPT.hashSync(user.passWord, 10);
+             await new sql.Request()
+            .input('pw', sql.NVarChar, PW)
+            .input('ln', sql.VarChar, user.lastName)
+            .input('fn', sql.VarChar, user.firstName)
+            .input('bd', sql.DateTimeOffset, user.ddn)
+            .input('tu', sql.VarChar, 'Client')
+            .input('tel', sql.VarChar, user.mobile)
+            .input('email', sql.VarChar, user.email)
+            .input('job', sql.VarChar, user.fonction)
+            .input('struc', sql.VarChar, user.structure)
+            .input('depart', sql.VarChar, user.departement)
+            .execute('SetUsers');
+            console.log('User Inserted');
+            sql.close();
+            return  'UI' //user inserted
+        } catch (error) {
+            console.log('can not instert user');
+            sql.close();
+            return 'CNIU'; // can not insert user
+        }
+    } catch (error) {
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
     }
+
 }
 // Login user
 async function  Login(user){
