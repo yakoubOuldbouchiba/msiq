@@ -206,6 +206,7 @@ export default {
     methods : {
         submit(){
             (this.$refs.form.validate());
+
             axios.post("http://localhost:3030/register",this.user)
             .then(
                 res =>{
@@ -219,6 +220,7 @@ export default {
                     this.msg = err.response.data.title
                 })
  
+
 
         },
     }

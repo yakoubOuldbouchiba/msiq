@@ -16,7 +16,9 @@
               <v-flex row class="justify-center">
                 <v-btn class="primary" @click="login">Connexion</v-btn>
                 <v-spacer></v-spacer>
+
                 <Register/>
+
               </v-flex>
             </v-form>
           </v-card>
@@ -43,10 +45,10 @@ export default {
       async login (){
         await this.$store.dispatch("login",{email:this.email , password:this.password , role : this.role })
         if(this.$store.state.authenticed==true){
-          console.log('I am login')
+          console.log('logged in')
           this.$router.replace({name:"Dashboard"});
         }else{
-          console.log('I am not login')
+          console.log('not logged in')
           
         }
       }
