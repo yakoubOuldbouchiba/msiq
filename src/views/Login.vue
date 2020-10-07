@@ -2,7 +2,7 @@
     <div class="mt-8">
     <v-container class="fill-height" fluid>
       <v-layout class="justify-center align-center">
-        <v-flex xs10 sm6 md4 >
+        <v-flex class="Login-box" xs10 sm6 md4 >
           <v-card>
             <v-card-title class="amber darken-1 indigo--text text--darken-4"> 
               <v-flex row class="justify-center">
@@ -16,7 +16,6 @@
               <v-flex row class="justify-center">
                 <v-btn class="primary" @click="login">Connexion</v-btn>
                 <v-spacer></v-spacer>
-
                 <Register/>
 
               </v-flex>
@@ -29,29 +28,43 @@
 </template>
 
 <script>
+import Axios from 'axios';
 import Register from './Register'
 export default {
     name:'Login'
     ,data: () => ({
       socket:null,
-      email: '',
-      password: '',
+      valid: true,
+      showError:false,
+      titleError:'',
+      user:
+      {
+        email: '',
+        password: '',
+        role:''
+      },
       items: ['Administrator', 'Chef de parc', 'Directeur', 
       'Client','Agent de Tirage','Agent de magasin'],
-      role:''
+      
     }),
     components: {Register},
     methods:{
       async login (){
-        await this.$store.dispatch("login",{email:this.email , password:this.password , role : this.role })
-        if(this.$store.state.authenticed==true){
-          console.log('logged in')
-          this.$router.replace({name:"Dashboard"});
-        }else{
-          console.log('not logged in')
-          
-        }
+         let res =(await Axios.post("http://localhost:3030/login",this.user)).data;
+            if(typeof res.token !== "undefined"){
+                localStorage.setItem('token',res.token);
+                this.showError=false;
+                Axios.defaults.headers.common['Authorization']=res.token;
+                this.$store.commit('auth',res.token);
+                this.$store.dispatch('getuser');
+                this.$router.push('/dashboard');
+            }else{
+                this.showError=true;
+                this.titleError=res.title
+            }
+
       }
     }
 }
 </script>
+

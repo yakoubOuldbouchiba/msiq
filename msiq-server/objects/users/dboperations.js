@@ -2,7 +2,7 @@ const BCRYPT = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
-
+const {generateJWT} = require ('../../services/auth-service.js')
 // getting all users.
 async function getUsers(){
     try{
@@ -14,13 +14,13 @@ async function getUsers(){
     }
 }
 // get a single user.
-async function getUser(userID){
+async function getUser(email){
     try{
         let pool = await (sql.connect(config));
         let user = await pool.request()
-        .input("user_name", sql.VarChar, userID)
-        .execute("GetUsers")
-        return user.recordsets;
+        .input("email", sql.VarChar, email)
+        .execute("GetUser")
+        return user.recordset[0];
     }catch(error){
         return 0;
     }
@@ -68,25 +68,26 @@ async function  Login(user){
         .execute("LOGIN");
         if(user_data.recordset.length == 0){
             return {
-                title: 'User not found',
+                title: "Ce utilisateur n'est n'exister pas",
                 error: 'User not found'
             }
         }else{
             if(user_data.recordset[0].userPassword==user.password){
                 if(user_data.recordset[0].typeUtilisateur==user.role){
+                    let userInfo = await getUser(user.email);
                     return {
                         title: 'User in',
-                        token: jwt.sign(user.email, 'TMPK3Y')
+                        token: generateJWT(userInfo)
                     }
                 }else{
                     return {
-                        title: 'Wrong Function',
+                        title: 'verifiez votre type',
                         error: 'Wrong Function'
                     }
                 }
             }else{
                 return {
-                    title: 'Wrong Password',
+                    title: 'Verifiez votre mot de passe',
                     error: 'Wrong Password'
                 }
             }
@@ -94,7 +95,7 @@ async function  Login(user){
         }  
     }catch(error){
         return {
-            title: 'Something went wrong',
+            title: 'desolé, erreur de serveur',
             error: 'Something went wrong'
         }
     }

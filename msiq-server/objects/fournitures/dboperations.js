@@ -41,7 +41,7 @@ async function  deleteObject(code_objet){
         let pool = await (sql.connect(config));
          await pool.request()
         .input("code_objet", sql.VarChar, code_objet)
-        .query("DELETE FROM objet where code_objet = @code_objet");
+        .execute("DELETEOBJET");
         return true;
     }catch(error){
         return false;
