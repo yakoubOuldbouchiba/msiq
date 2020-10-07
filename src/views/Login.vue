@@ -16,7 +16,9 @@
               <v-flex row class="justify-center">
                 <v-btn class="primary" @click="login">Connexion</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn  text class="blue--text"  to="/register">créer un nouveau compte</v-btn>
+
+                <Register/>
+
               </v-flex>
             </v-form>
           </v-card>
@@ -27,7 +29,7 @@
 </template>
 
 <script>
-
+import Register from './Register'
 export default {
     name:'Login'
     ,data: () => ({
@@ -38,6 +40,7 @@ export default {
       'Client','Agent de Tirage','Agent de magasin'],
       role:''
     }),
+    components: {Register},
     methods:{
       async login (){
         await this.$store.dispatch("login",{email:this.email , password:this.password , role : this.role })

@@ -18,12 +18,24 @@ module.exports=()=>{
     //add a new user
     router.post('/register' , (req , res)=>{
         let user = (req.body);
-        let result=dbOperationsClient.setUser(user);
-        console.log(result);
-        if(result){
-            token=jwt.sign(user,'123');
-            res.json(token);
-        }
+        dbOperationsClient.setUser(user)
+        .then(result => {
+            if(result ==='UI'){
+                res.status(200).json({
+                    title: 'Votre compte a été bien cree'
+                })
+            }else if (result ==='CNIU') {
+                res.status(401).json({
+                    title: 'Email déja prit ou quelque information est incorrect. Veuillez verifier vous données',
+                    error: 'CNIU'
+                })
+            } else {
+                res.status(401).json({
+                    title: 'quelque chose s\'est mal passé',
+                    error: 'CNCTDB' 
+                })
+            }
+        });       
     })
     //login user
     router.post('/login' , (req , res)=>{
