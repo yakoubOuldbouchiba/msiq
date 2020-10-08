@@ -32,23 +32,25 @@ async function  setUser(user){
     try {
         await sql.connect(config)
         try {
-            console.log(user.passWord)
-            let PW = await BCRYPT.hash(user.passWord, saltRounds);
-             await new sql.Request()
-            .input('pw', sql.NVarChar, PW)
-            .input('ln', sql.VarChar, user.lastName)
-            .input('fn', sql.VarChar, user.firstName)
-            .input('bd', sql.DateTimeOffset, user.ddn)
-            .input('tu', sql.VarChar, user.usertype)
-            .input('tel', sql.VarChar, user.mobile)
-            .input('email', sql.VarChar, user.email)
-            .input('job', sql.VarChar, user.fonction)
-            .input('struc', sql.VarChar, user.structure)
-            .input('depart', sql.VarChar, user.departement)
-            .execute('setAccountDemand');
-            console.log('User Inserted');
-            sql.close();
-            return  'UI' //user inserted
+            console.log(user.passWord);
+            await BCRYPT.hash(user.passWord, saltRounds, function(err, hash) {
+                await new sql.Request()
+                    .input('pw', sql.NVarChar, hash)
+                    .input('ln', sql.VarChar, user.lastName)
+                    .input('fn', sql.VarChar, user.firstName)
+                    .input('bd', sql.DateTimeOffset, user.ddn)
+                    .input('tu', sql.VarChar, user.usertype)
+                    .input('tel', sql.VarChar, user.mobile)
+                    .input('email', sql.VarChar, user.email)
+                    .input('job', sql.VarChar, user.fonction)
+                    .input('struc', sql.VarChar, user.structure)
+                    .input('depart', sql.VarChar, user.departement)
+                    .execute('setAccountDemand');
+                    console.log('User Inserted');
+                    sql.close();
+                    return  'UI'            
+            });
+              //user inserted
         } catch (error) {
             console.log('can not instert user');
             sql.close();
@@ -73,7 +75,11 @@ async function  Login(user){
                 error: 'User not found'
             }
         }else{
-            let auth = await BCRYPT.compare(user.password , user_data.recordset[0].userPassword);
+
+            /*BCRYPT.compare(user.password , user_data.recordset[0].userPassword, function(err, result) {
+                console.log(result)
+            });
+            /*let auth = await BCRYPT.compare(user.password , user_data.recordset[0].userPassword);
             console.log(auth);
             if(auth){
                 if(user_data.recordset[0].typeUtilisateur==user.role){ 
@@ -93,7 +99,7 @@ async function  Login(user){
                     title: 'Verifiez votre mot de passe',
                     error: 'Wrong Password'
                 }
-            }
+            }*/
             
         }  
     }catch(error){
