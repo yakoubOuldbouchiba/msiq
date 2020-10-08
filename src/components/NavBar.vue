@@ -136,9 +136,11 @@ export default {
     name:'NavBar',
     data(){
          return{
-              menu:false,
-              
+              menu:false,   
          }
+    },
+    created(){
+         this.$store.dispatch('getuser');
     },
     methods:{
          logout(){
