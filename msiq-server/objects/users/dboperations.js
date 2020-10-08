@@ -27,8 +27,7 @@ async function getUser(email){
 }
 
 // set new user
-async function  setUser(user){
-    
+async function  setUser(user){   
     try {
         await sql.connect(config)
         try {
@@ -38,13 +37,13 @@ async function  setUser(user){
             .input('ln', sql.VarChar, user.lastName)
             .input('fn', sql.VarChar, user.firstName)
             .input('bd', sql.DateTimeOffset, user.ddn)
-            .input('tu', sql.VarChar, 'Client')
+            .input('tu', sql.VarChar, user.usertype)
             .input('tel', sql.VarChar, user.mobile)
             .input('email', sql.VarChar, user.email)
             .input('job', sql.VarChar, user.fonction)
             .input('struc', sql.VarChar, user.structure)
             .input('depart', sql.VarChar, user.departement)
-            .execute('SetUsers');
+            .execute('setAccountDemand');
             console.log('User Inserted');
             sql.close();
             return  'UI' //user inserted
@@ -126,5 +125,5 @@ module.exports = {
     setUser,
     editUser,
     deleteUser,
-    Login
+    Login,
 }

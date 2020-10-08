@@ -25,7 +25,7 @@ module.exports=()=>{
         .then(result => {
             if(result ==='UI'){
                 res.status(200).json({
-                    title: 'Votre compte a été bien cree'
+                    title: 'Voter demande de compte a été envoyée'
                 })
             }else if (result ==='CNIU') {
                 res.status(401).json({

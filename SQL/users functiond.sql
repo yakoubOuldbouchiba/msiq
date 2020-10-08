@@ -49,8 +49,22 @@ FROM utilisateurs
 WHERE email=@email
 END
 
-
-
+CREATE PROCEDURE setAccountDemand
+	@email AS varChar(50),
+	@pw AS nvarchar(50),
+	@ln AS varChar(50),
+	@fn AS varChar(50),
+	@tu AS varChar(50),
+	@bd AS DATE ,
+	@tel AS varChar(50),
+	@job AS varChar(50),
+	@struc AS varChar(50),
+	@depart AS varChar(50)
+	AS
+BEGIN 
+	INSERT INTO demande_compte
+	Values(@email , @pw , @ln , @fn , @tu , @bd , @tel , @job , @struc , @depart)
+END
 
 
 
