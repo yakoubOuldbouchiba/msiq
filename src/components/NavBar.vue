@@ -139,8 +139,10 @@ export default {
               menu:false,
               
          }
-    },
-    methods:{
+    },created(){
+         this.$store.dispatch('getuser')
+    }
+    ,methods:{
          logout(){
             this.$store.commit('logout');
             this.$router.push('/',()=>{})

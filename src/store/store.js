@@ -100,13 +100,11 @@ export default new Vuex.Store({
         }, 
         getuser ({state}){
             const token = localStorage.getItem("token");
-            console.log(token);
             if(token!=null){
                 let userData =jwt.decode(token , 'TMPK3Y');
                 state.user.userName = userData.user.nomUtilisateur + " " + userData.user.prenomUtilisateur
                 state.user.role = userData.user.fonction;
                 state.user.typeUtilisateur = userData.user.typeUtilisateur;
-                console.log(userData)
             }
         }
     }

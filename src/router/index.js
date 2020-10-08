@@ -175,7 +175,7 @@ Vue.use(VueRouter)
     component:Demandes ,
     beforeEnter: (to, from, next) => {
       // ...
-      if(store.state.authenticed){
+      if(store.state.token){
         next();
       }else{
         next({name:'Login'});
@@ -185,9 +185,7 @@ Vue.use(VueRouter)
   {
     path: '/',
     beforeEnter: (to, from, next) => {
-      console.log(store.state.token);
       if(store.state.token){
-        console.log(store.state.token);
         next({name:'Dashboard'});
       }else{
         next({name:'Login'});

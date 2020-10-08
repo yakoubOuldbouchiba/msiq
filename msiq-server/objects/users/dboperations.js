@@ -1,8 +1,8 @@
-const BCRYPT = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
-const {generateJWT} = require ('../../services/auth-service.js')
+const {generateJWT} = require ('../../services/auth-service.js');
+const { password } = require('../../config/dbconfig.js');
 // getting all users.
 async function getUsers(){
     try{
@@ -32,7 +32,7 @@ async function  setUser(user){
     try {
         await sql.connect(config)
         try {
-            let PW = BCRYPT.hashSync(user.passWord, 10);
+            let PW = user.passWord/*BCRYPT.hashSync(user.passWord, 10);*/
              await new sql.Request()
             .input('pw', sql.NVarChar, PW)
             .input('ln', sql.VarChar, user.lastName)
