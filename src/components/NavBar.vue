@@ -84,7 +84,7 @@
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">Liste demandes a traiter</v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="$store.state.user.typeUtilisateur=='Directeur'"  route :to="'/$store.state.user.$store.state.user.$store.state.user.$store.state.user.user...'" >   
+              <v-list-item v-if="$store.state.user.typeUtilisateur=='Directeur'"  route :to="'/user'" >   
                          <v-list-item-icon  >
                               <v-icon class="amber--text text--darken-1">group</v-icon>
                          </v-list-item-icon>
@@ -131,7 +131,7 @@
   </nav>
 </template>
 <script>
-
+import Axios from 'axios'
 export default {
     name:'NavBar',
     data(){
@@ -141,6 +141,7 @@ export default {
     },
     created(){
          this.$store.dispatch('getuser');
+         Axios.defaults.headers.common['Authorization']=localStorage.getItem("token");
     },
     methods:{
          logout(){
