@@ -24,7 +24,7 @@ CREATE TABLE demande_compte(
 	fonction varchar(225) NOT NULL ,
 	structure varchar(50) NOT NULL,
 	departement varchar(50) NULL,
-	CONSTRAINT CHK_typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Directeur DAM' , 'Chef departement'
+	CONSTRAINT CHK__typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Directeur DAM' , 'Chef departement'
 	, 'Chef departement DAM', 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
 ) ON [PRIMARY]
 

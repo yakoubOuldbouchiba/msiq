@@ -1,4 +1,5 @@
-//const BCRYPT = require('bcrypt');
+const BCRYPT = require('bcrypt');
+const saltRounds=10;
 const jwt = require('jsonwebtoken');
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
@@ -31,7 +32,8 @@ async function  setUser(user){
     try {
         await sql.connect(config)
         try {
-            let PW = BCRYPT.hashSync(user.passWord, 10);
+            console.log(user.passWord)
+            let PW = await BCRYPT.hash(user.passWord, saltRounds);
              await new sql.Request()
             .input('pw', sql.NVarChar, PW)
             .input('ln', sql.VarChar, user.lastName)
@@ -71,8 +73,10 @@ async function  Login(user){
                 error: 'User not found'
             }
         }else{
-            if(user_data.recordset[0].userPassword==user.password){
-                if(user_data.recordset[0].typeUtilisateur==user.role){
+            let auth = await BCRYPT.compare(user.password , user_data.recordset[0].userPassword);
+            console.log(auth);
+            if(auth){
+                if(user_data.recordset[0].typeUtilisateur==user.role){ 
                     let userInfo = await getUser(user.email);
                     return {
                         title: 'User in',
