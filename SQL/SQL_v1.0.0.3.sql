@@ -1,4 +1,4 @@
-CREATE TABLE utilisateurs (
+/*CREATE TABLE utilisateurs (
     email varchar(50) NOT NULL PRIMARY KEY,
 	userPassword nvarchar(50) NOT NULL,
     nomUtilisateur varchar(50) NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE utilisateurs (
 	departement varchar(50) NULL,
 	CONSTRAINT CHK_typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Directeur DAM' , 'Chef departement'
 	, 'Chef departement DAM', 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
-) ON [PRIMARY]
+) ON [PRIMARY]*/
 
 CREATE TABLE demande_compte(
 	email varchar(50) NOT NULL PRIMARY KEY,
@@ -28,7 +28,7 @@ CREATE TABLE demande_compte(
 	, 'Chef departement DAM', 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
 ) ON [PRIMARY]
 
-CREATE TABLE demande (
+/*CREATE TABLE demande (
 	demande_ID int IDENTITY(1, 1) PRIMARY KEY NOT NULL,
 	demande_Date date NOT NULL,
 	utilisateurs_ID varchar(50) NOT NULL,
@@ -152,4 +152,4 @@ CREATE TABLE chauffeur(
 	email varchar(MAX),
 	PRIMARY KEY (chauffeur_id)
 
-)
+)*/
