@@ -40,14 +40,14 @@ END*/
 
 
 
-CREATE PROCEDURE GetUser
+/*CREATE PROCEDURE GetUser
 	@email  AS VarChar(50)
 AS
 BEGIN
 SELECT email, nomUtilisateur, prenomUtilisateur, fonction , typeUtilisateur 
 FROM utilisateurs
 WHERE email=@email
-END
+END*/
 
 CREATE PROCEDURE setAccountDemand
 	@email AS varChar(50),
