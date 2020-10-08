@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import Axios from 'axios';
+import Axios from 'axios'
 import Register from './Register.vue'
 export default {
     name:'Login',
@@ -94,7 +94,6 @@ export default {
                 localStorage.setItem('token',res.token);
                 this.showError=false;
                 console.log(res.token);
-                Axios.defaults.headers.common['Authorization']=res.token;
                 this.$store.commit('auth',res.token);
                 this.$store.dispatch('getuser')
                 this.$router.push('/dashboard')

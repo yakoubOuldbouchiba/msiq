@@ -39,7 +39,7 @@
                    <img :src="person.avatar" alt="">
                  </v-list-item-avatar>
                  <v-list-item-content >
-                   <v-list-item-title>{{person.userName}}</v-list-item-title>
+                   <v-list-item-title>{{person.email}}</v-list-item-title>
                  </v-list-item-content>
                </v-list-item>
                <NewMessage />
