@@ -92,9 +92,9 @@ export default {
                 {name:'demande de client',icon:'devices',color:'pink'},
                 {name:'demande de fourniture',icon:'edit',color:'red'},
                 {name:'demande de véhicule',icon:'commute',color:'deep-purple'},
-                {name:'demande tirage',icon:'print',color:'purple'},
-                {name:'demande de prise en chare',icon:'flight',color:'indigo'},
-                {name:'demande de relex',icon:'hotel',color:'blue'}
+                {name:'demande de tirage',icon:'print',color:'purple'},
+                {name:'demande de prise en charge',icon:'flight',color:'indigo'},
+                {name:'demande activité relex',icon:'hotel',color:'blue'}
             ]
                 
         }
@@ -109,13 +109,13 @@ export default {
             }else if (demande==='demande de véhicule'){
                 this.$store.commit('updateDialog')
                 this.$store.commit('updateDialogVehicule')
-            }else if (demande==='demande tirage'){
+            }else if (demande==='demande de tirage'){
                 this.$store.commit('updateDialog')
                 this.$store.commit('updateDialogTirage')
-            }else if (demande==='demande de relex'){
+            }else if (demande==='demande activité relex'){
                 this.$store.commit('updateDialog')
                 this.$store.commit('updateDialogRelex')
-            }else if (demande==='demande de prise en chare'){
+            }else if (demande==='demande de prise en charge'){
                 this.$store.commit('updateDialog')
                 this.$store.commit('updateDialogPEC')
             }

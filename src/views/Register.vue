@@ -10,7 +10,16 @@
     <v-form v-model="valid" ref="form">
         <v-container>
             <v-row>
-                <v-col cols="12" sm="6">
+                <v-col cols="12" sm="4">
+                    <v-select 
+                    v-model="user.usertype"
+                    :items="items"
+                    :rules="[v => !!v || 'Cet champs est obligatoire']" 
+                    label="Type d'utilisateur" 
+                    prepend-icon="mdi-briefcase" >
+                    </v-select>
+                </v-col>
+                <v-col cols="12" sm="4">
                     <v-text-field 
                     v-model="user.lastName" 
                     label="Nom*" 
@@ -19,7 +28,7 @@
                     required>
                     </v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6">
+                <v-col cols="12" sm="4">
                     <v-text-field 
                     v-model="user.firstName" 
                     label="Prénom*" 
@@ -170,6 +179,9 @@ import axios from 'axios';
 export default {
     data() {
         return{
+            Users: [],
+            items: ['Administrator', 'Chef de parc', 'Directeur', 
+            'Client','Agent de Tirage','Agent de magasin'],
             Emailrules: [
                 v => !!v || 'E-mail is required',
                 v => /.+@.+/.test(v) || 'E-mail inccorect',
@@ -219,9 +231,6 @@ export default {
                     this.Errr = true,
                     this.msg = err.response.data.title
                 })
- 
-
-
         },
     }
 }

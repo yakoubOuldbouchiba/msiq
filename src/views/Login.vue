@@ -1,8 +1,12 @@
+
+Highly recommend
+sent
+44 minutes ago
 <template>
-    <div class="mt-8">
-    <v-container class="fill-height" fluid>
+    <div class="LoginPage">
+    <v-container class="fill-height" >
       <v-layout class="justify-center align-center">
-        <v-flex class="Login-box" xs10 sm6 md4 >
+        <v-flex class="Login-box">
           <v-card>
             <v-card-title class="amber darken-1 indigo--text text--darken-4"> 
               <v-flex row class="justify-center">
@@ -65,7 +69,6 @@
     </v-container>
     </div>
 </template>
-
 <script>
 import Axios from 'axios'
 import Register from './Register.vue'
@@ -85,7 +88,6 @@ export default {
       },
       items: ['Administrator', 'Chef de parc', 'Directeur', 
       'Client','Agent de Tirage','Agent de magasin'],
-      
     }),
     methods:{
       async login (){
@@ -109,6 +111,8 @@ export default {
 <style  scoped>
 .Login-box{
   max-width: 400px;
-  padding: 10px;
+}
+.LoginPage{
+  height: 93vh;
 }
 </style>
