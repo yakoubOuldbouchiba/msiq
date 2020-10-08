@@ -70,7 +70,7 @@ sent
     </div>
 </template>
 <script>
-import Axios from 'axios';
+import {http} from '../services/httpServices';
 import Register from './Register.vue'
 export default {
     name:'Login',
@@ -91,11 +91,10 @@ export default {
     }),
     methods:{
       async login (){
-         let res =(await Axios.post("http://localhost:3030/login",this.user)).data;
+         let res =(await http().post("/login",this.user)).data;
             if(typeof res.token !== "undefined"){
                 localStorage.setItem('token',res.token);
                 this.showError=false;
-                Axios.defaults.headers.common['Authorization']=res.token;
                 this.$store.commit('auth',res.token);
                 this.$store.dispatch('getuser')
                 this.$router.push('/dashboard')

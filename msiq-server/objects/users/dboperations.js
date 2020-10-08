@@ -1,4 +1,4 @@
-const BCRYPT = require('bcrypt');
+//const BCRYPT = require('bcrypt');
 const jwt = require('jsonwebtoken');
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
