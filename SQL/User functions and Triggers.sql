@@ -7,6 +7,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
+
 CREATE PROCEDURE DeleteUser 
 @email AS VarChar(50)
 AS
@@ -20,6 +21,11 @@ END
 CREATE PROCEDURE SetaUser
 	@email AS varChar(50),
 	@pw AS nvarchar(max),
+=======
+
+ALTER PROCEDURE SetUsers
+	@email AS varChar(50),
+	@pw AS nvarchar(Max),
 	@ln AS varChar(50),
 	@fn AS varChar(50),
 	@tu AS varChar(50),
@@ -28,11 +34,12 @@ CREATE PROCEDURE SetaUser
 	@job AS varChar(50),
 	@struc AS varChar(50),
 	@depart AS varChar(50)
-	AS
-	BEGIN 
+AS
+BEGIN 
 	INSERT INTO utilisateurs
 	Values(@email , @pw , @ln , @fn , @tu , @bd , @tel , @job , @struc , @depart)
-	END
+END
+
 
 /*----------------------------------------------------------------------------------*/
 
@@ -58,7 +65,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-CREATE PROCEDURE setAccountDemand
+ALTER PROCEDURE setAccountDemand
 	@email AS varChar(50),
 	@pw AS nvarchar(max),
 	@ln AS varChar(50),
