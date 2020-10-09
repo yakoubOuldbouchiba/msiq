@@ -32,7 +32,6 @@ async function  setUser(user){
     try {
         await sql.connect(config)
         try {
-            console.log(user.passWord);
             let PW = await BCRYPT.hash(user.passWord, saltRounds);
             await new sql.Request()
             .input('pw', sql.NVarChar, PW)
@@ -59,7 +58,6 @@ async function  setUser(user){
         console.log('connection error');
         return 'CNCTDB';  //can not connect to database
     }
-
 }
 // Login user
 async function  Login(user){
@@ -71,9 +69,9 @@ async function  Login(user){
         if(user_data.recordset.length == 0){
             return {
                 title: "Ce utilisateur n'est n'exister pas",
-                error: 'User not found'
-            }
-        }else{  
+                error: 'User not found'}
+
+            }else{  
             let auth = await BCRYPT.compare(user.password , user_data.recordset[0].userPassword);
             if(auth){
                 if(user_data.recordset[0].typeUtilisateur==user.role){ 
