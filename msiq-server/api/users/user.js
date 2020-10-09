@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const axios = require('axios')
 const dbOperationsClient = require('../../objects/users/dboperations.js');
 import * as auth from '../../services/auth-service.js'
 

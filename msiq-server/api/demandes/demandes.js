@@ -2,14 +2,14 @@ const express = require("express");
 const router = express.Router();
 const dbOperationsDemandes = require('../../objects/demandes/dboperations');
 const jwt = require('jsonwebtoken');
-
+import * as auth from '../../services/auth-service.js'
 module.exports=()=>{
     //get a list of demandes
-    router.get('/demandes',(req , res)=>{ 
+    router.get('/demandes',auth.requireLogin,(req , res)=>{ 
         res.send({title : 'List of demandes'});
     });
     //add a new demande
-    router.post('/DemandeClient' , (req , res)=>{
+    router.post('/DemandeClient',auth.requireLogin , (req , res)=>{
         jwt.verify((req.headers.authorization || req.headers['Authorization']),'TMPK3Y',
         (err,decoded) => {
             if (err) {
@@ -39,11 +39,11 @@ module.exports=()=>{
         });
     })
     //update a demande
-    router.put('/demande/:id',(req , res)=>{ 
+    router.put('/demande/:id',auth.requireLogin,(req , res)=>{ 
         res.send({method : 'update a demande'});
     });
     // delete a demande
-    router.delete('/demande/:id',(req , res)=>{ 
+    router.delete('/demande/:id',auth.requireLogin,(req , res)=>{ 
         res.send({method : 'delete a demande'});
     });
     return router;

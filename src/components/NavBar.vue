@@ -140,8 +140,12 @@ export default {
          }
     },
     created(){
-         this.$store.dispatch('getuser');
          Axios.defaults.headers.common['Authorization']=localStorage.getItem("token");
+         this.$store.dispatch('getuser');
+    },
+    mounted(){
+         Axios.defaults.headers.common['Authorization']=localStorage.getItem("token");
+         this.$store.dispatch('getuser');
     },
     methods:{
          logout(){
