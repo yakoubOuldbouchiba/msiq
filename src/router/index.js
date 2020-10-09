@@ -15,12 +15,19 @@ import Demandes from '../views/Demandes'
 import User from '../views/User.vue'
 import Test from '../views/Test.vue'
 import store from '../store/store'
+import InvalideSessions from '../views/InvalideSessions'
+import jwt from 'jsonwebtoken'
 import "animate.css/animate.css"
-
+let typeuser = jwt.decode(localStorage.getItem("token"),'TMPK3Y')
 Vue.use(VueRouter)
 
   const routes = [
     {
+      path: '/InvalideSessions',
+      name: 'InvalideSessions',
+      component: InvalideSessions
+    }
+    ,{
       path: '/Login',
       name: 'Login',
       component: Login
@@ -98,7 +105,12 @@ Vue.use(VueRouter)
     beforeEnter: (to, from, next) => {
       // ...
       if(store.state.token){
-        next();
+        if(typeuser.user.typeUtilisateur==="Chef de parc")
+         {
+           next();
+         }else{
+          next({name:'InvalideSessions'});
+         }
       }else{
         next({name:'Login'});
       }
@@ -111,7 +123,12 @@ Vue.use(VueRouter)
     beforeEnter: (to, from, next) => {
       
       if(store.state.token){
-        next();
+        if(typeuser.user.typeUtilisateur==="Chef de parc")
+        {
+           next();
+        }else{
+         next({name:'InvalideSessions'});
+        }
       }else{
         next({name:'Login'});
       }
@@ -124,7 +141,13 @@ Vue.use(VueRouter)
     beforeEnter: (to, from, next) => {
       // ...
       if(store.state.token){
-        next();
+        
+        if( typeuser.user.typeUtilisateur==='Directeur')
+        {
+          next();
+        }else{
+         next({name:'InvalideSessions'});
+        }
       }else{
         next({name:'Login'});
       }
@@ -137,7 +160,12 @@ Vue.use(VueRouter)
     beforeEnter: (to, from, next) => {
       // ...
       if(store.state.token){
-        next();
+        if(store.state.user.typeUtilisateur=='Directeur')
+        {
+          next();
+        }else{
+          next({name:'InvalideSessions'});
+        }
       }else{
         next({name:'Login'});
       }
@@ -150,7 +178,12 @@ Vue.use(VueRouter)
     beforeEnter: (to, from, next) => {
       // ...
       if(store.state.token){
-        next();
+        if(typeuser.user.typeUtilisateur==='Agent de magasin')
+        {
+           next();
+        }else{
+         next({name:'InvalideSessions'});
+        }
       }else{
         next({name:'Login'});
       }
@@ -163,7 +196,12 @@ Vue.use(VueRouter)
     beforeEnter: (to, from, next) => {
       // ...
       if(store.state.token){
-        next();
+        if(typeuser.user.typeUtilisateur==='Agent de magasin')
+        {
+           next();
+        }else{
+         next({name:'InvalideSessions'});
+        }
       }else{
         next({name:'Login'});
       }
