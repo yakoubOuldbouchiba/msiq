@@ -78,7 +78,11 @@
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">messages</v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="$store.state.typeUtilisateur!='Client'"  route :to="'/demandes'" >   
+              <v-list-item 
+                              v-if="$store.state.user.typeUtilisateur!=='Client'"
+       
+                                route :to="'/demandes'"
+          >   
                          <v-list-item-icon  >
                               <v-icon class="amber--text text--darken-1">layers</v-icon>
                          </v-list-item-icon>
