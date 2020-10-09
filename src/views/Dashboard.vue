@@ -13,16 +13,14 @@
                 v-bind="attrs"
                 v-on="on"
                 @click="sortBy('title')"
-              >trie par titre <v-icon small right >folder</v-icon></v-btn>
-              
+              >trie par titre <v-icon small right >folder</v-icon></v-btn>    
             </template>
             <span>trie par le titre de la demande</span>
           </v-tooltip>
-         <Pupupdemandes @recieveDemande='updateDemande(value)'/>
+         <Pupupdemandes/>
         </v-row>
       </div>
-      <v-card  class="my-6" v-for="Demande in Demandes" :key="Demande.id" >
-        
+      <v-card  class="my-6" v-for="Demande in Demandes" :key="Demande.id" >    
           <v-row >
             <!--Titre-->
             <v-flex xs12 md6 :class="`pa-3 demande ${Demande.status}`">
@@ -64,16 +62,12 @@ data(){
        {id:'4',title:'Demande de tiriage',dateDebut:'23-08-2020',status:'accepted' , dateReception:'23-08-2020'},
        {id:'5',title:'Demande de papier',dateDebut:'10-08-2020',status:'accepted' , dateReception:'10-08-2020'}
      ],
-     DVs:[]
    }
  },
  methods:{
    sortBy(p){
      this.Demandes.sort((a,b)=>a[p]>b[p] ? -1 : 1)
    },
-   updateDemande :function(value) {
-     this.DVs.push(value);
-   }
  }
 }
 </script>
@@ -96,5 +90,7 @@ data(){
   .theme--light.v-chip:not(.v-chip--active).isUnderStudy{
     background:  orange;
   }
-
+  .Dashboard{
+    padding: 20px;
+  }
 </style>

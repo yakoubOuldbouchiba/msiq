@@ -5,19 +5,14 @@
             <v-btn 
                 v-bind="attrs"
                 v-on="on"
-                xs1 text 
-            >
+                xs1 text>
                 <span class="blue--text">nouveau demande</span>
-                <v-icon small class="blue--text" right>
-                      note_add
-                </v-icon>
+                <v-icon small class="blue--text" right> note_add </v-icon>
             </v-btn>
         </template>
         <v-card >
             <v-card-title class="blue--text">
-                <v-icon large left class="blue--text">
-                      note_add
-                </v-icon>
+                <v-icon large left class="blue--text"> note_add</v-icon>
                 <span>Nouveau demande</span>
             </v-card-title>
             <v-container>
@@ -37,11 +32,7 @@
                     </v-container>
                 </v-card>
     </v-dialog> 
-    <Client  
-            :name='demandes[0].name'
-            :color='demandes[0].color'
-            :icon='demandes[0].icon'
-              />
+    <DemandeClient/>
 
     <Fourniture 
             :name='demandes[1].name'
@@ -77,7 +68,7 @@
 </template>
 
 <script>
-import Client from './Client'
+import DemandeClient from './Demandes/DemandeClient'
 import Fourniture from './Fourniture'
 import Tirage from './tirage'
 import Vehicule from './Vehicule'
@@ -85,11 +76,11 @@ import Relex from './Relex'
 import PEC from './PriseEnCharge'
 export default {
     name:'Pupupdemandes',
-    components:{Client , Fourniture , Tirage , Vehicule , Relex , PEC},
+    components:{DemandeClient , Fourniture , Tirage , Vehicule , Relex , PEC},
     data(){
         return{
             demandes :[
-                {name:'demande de client',icon:'devices',color:'pink'},
+                {name:'demande client',icon:'devices',color:'pink'},
                 {name:'demande de fourniture',icon:'edit',color:'red'},
                 {name:'demande de véhicule',icon:'commute',color:'deep-purple'},
                 {name:'demande de tirage',icon:'print',color:'purple'},
@@ -100,7 +91,7 @@ export default {
         }
     },methods:{
         lancerDialog : function(demande){
-            if(demande==='demande de client'){
+            if(demande==='demande client'){
                 this.$store.commit('updateDialog')
                 this.$store.commit('updateDialogClient')
             }else if (demande==='demande de fourniture'){

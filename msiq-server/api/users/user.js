@@ -34,7 +34,7 @@ module.exports=()=>{
                 })
             } else {
                 res.status(401).json({
-                    title: 'quelque chose s\'est mal passé',
+                    title: 'Quelque chose s\'est mal passé dans le serveur',
                     error: 'CNCTDB' 
                 })
             }
@@ -43,7 +43,6 @@ module.exports=()=>{
     })
     //login user
     router.post('/login' , (req , res)=>{
-        
         let user  = (req.body);
         dbOperationsClient.Login(user).then(result=>{
             res.json(result);

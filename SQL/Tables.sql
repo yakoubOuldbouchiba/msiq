@@ -1,6 +1,6 @@
-/*CREATE TABLE utilisateurs (
+CREATE TABLE utilisateurs (
     email varchar(50) NOT NULL PRIMARY KEY,
-	userPassword nvarchar(50) NOT NULL,
+	userPassword nvarchar(max) NOT NULL,
     nomUtilisateur varchar(50) NOT NULL,
     prenomUtilisateur varchar(50) NOT NULL,
 	typeUtilisateur varchar(50) NOT NULL,
@@ -11,11 +11,13 @@
 	departement varchar(50) NULL,
 	CONSTRAINT CHK_typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Directeur DAM' , 'Chef departement'
 	, 'Chef departement DAM', 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
-) ON [PRIMARY]*/
+) ON [PRIMARY]
+
+/*------------------------------------------------------------------------------------------------------------------------*/
 
 CREATE TABLE demande_compte(
 	email varchar(50) NOT NULL PRIMARY KEY,
-	userPassword nvarchar(50) NOT NULL,
+	userPassword nvarchar(max) NOT NULL,
     nomUtilisateur varchar(50) NOT NULL,
     prenomUtilisateur varchar(50) NOT NULL,
 	typeUtilisateur varchar(50) NOT NULL,
@@ -28,15 +30,19 @@ CREATE TABLE demande_compte(
 	, 'Chef departement DAM', 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
 ) ON [PRIMARY]
 
-/*CREATE TABLE demande (
+/*------------------------------------------------------------------------------------------------------------------------*/
+
+CREATE TABLE demande (
 	demande_ID int IDENTITY(1, 1) PRIMARY KEY NOT NULL,
-	demande_Date date NOT NULL,
+	demande_Date datetime NOT NULL,
 	utilisateurs_ID varchar(50) NOT NULL,
 	etat varchar(50) NOT NULL,
 	motif varchar(MAX) NULL,
 	CONSTRAINT CHK_etat CHECK(etat IN ('Acceptée1','Acceptée2','Acceptée3', 'Rejectée', 'Encours')),
 	CONSTRAINT FK_utilisateurs_demande FOREIGN KEY (utilisateurs_ID) REFERENCES utilisateurs(email)
 ) ON [PRIMARY]
+
+/*------------------------------------------------------------------------------------------------------------------------*/
 
 CREATE TABLE demande_client (
 	demande_C_ID int PRIMARY KEY NOT NULL,
@@ -49,6 +55,8 @@ CREATE TABLE demande_client (
 	date_achat date NULL,
 	CONSTRAINT FK_demande_client_demande FOREIGN KEY (demande_C_ID) REFERENCES demande(demande_ID)
 ) ON [PRIMARY]
+
+/*------------------------------------------------------------------------------------------------------------------------*/
 
 CREATE TABLE demande_vehicule (
 	demande_V_ID int PRIMARY KEY NOT NULL,
@@ -69,6 +77,8 @@ CREATE TABLE demande_vehicule (
 	CONSTRAINT FK_utilisateur3_demande FOREIGN KEY (utilisateur3_ID) REFERENCES utilisateurs(email)
 ) ON [PRIMARY];
 
+/*------------------------------------------------------------------------------------------------------------------------*/
+
 CREATE TABLE demande_tirage (
 	demande_T_ID int,
 	numero_ordre int,
@@ -76,6 +86,8 @@ CREATE TABLE demande_tirage (
 	PRIMARY KEY(demande_T_ID ),
 	CONSTRAINT FK_demande_tirage_document_demande_tirage FOREIGN KEY (demande_T_ID) REFERENCES demande_tirage(demande_T_ID),
 )ON [PRIMARY];
+
+/*------------------------------------------------------------------------------------------------------------------------*/
 
 CREATE TABLE document (
 	document_ID int PRIMARY KEY,
@@ -88,6 +100,7 @@ CREATE TABLE document (
 	CONSTRAINT FK_demande_tirage_document_demande_tirage_document FOREIGN KEY (demande_T_ID) REFERENCES demande_tirage(demande_T_ID),
 )ON [PRIMARY];
 
+/*------------------------------------------------------------------------------------------------------------------------*/
 
 CREATE TABLE  demande_fourniture(
 	demande_F_ID int PRIMARY KEY,
@@ -96,11 +109,15 @@ CREATE TABLE  demande_fourniture(
 	CONSTRAINT FK_demande_fourniture_demande FOREIGN KEY (demande_F_ID)  REFERENCES demande(demande_ID) 
 )ON [PRIMARY];
 
+/*------------------------------------------------------------------------------------------------------------------------*/
+
 CREATE TABLE objet (
     code_objet varchar(6) PRIMARY KEY,
 	designation varchar (255) NOT NULL,
 	quantite int NOT NULL
 )ON [PRIMARY];
+
+/*------------------------------------------------------------------------------------------------------------------------*/
 
 CREATE TABLE demande_fourniture_object (
     demande_F_ID int,
@@ -108,6 +125,8 @@ CREATE TABLE demande_fourniture_object (
 	PRIMARY KEY(demande_F_ID , code_object),
 	CONSTRAINT FK_demande_fourniture_object_demande_fourniture FOREIGN KEY (demande_F_ID) REFERENCES demande_fourniture(demande_F_ID)
 ) ON [PRIMARY]
+
+/*------------------------------------------------------------------------------------------------------------------------*/
 
 CREATE TABLE demande_priseEnCharge (
 	demande_P_ID int PRIMARY KEY,
@@ -119,6 +138,9 @@ CREATE TABLE demande_priseEnCharge (
 	aeroport varchar(250),
 	CONSTRAINT FK_demande_priseEnCharge  FOREIGN KEY(demande_P_ID) REFERENCES demande(demande_ID)
 )ON [PRIMARY]
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+
 CREATE TABLE demande_relex (
 	demande_R_ID int PRIMARY KEY,
 	structure varchar(50),
@@ -129,11 +151,16 @@ CREATE TABLE demande_relex (
 	prise_en_charge bit NOT NULL,
 	CONSTRAINT FK_demande_relex_demande FOREIGN KEY (demande_R_ID) REFERENCES demande(demande_ID)
 )ON [PRIMARY]
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+
 CREATE TABLE produit (
     code_produit varchar(6) PRIMARY KEY,
 	designation varchar (255) NOT NULL,
 	quantite int NOT NULL
 )ON [PRIMARY]
+
+/*------------------------------------------------------------------------------------------------------------------------*/
 
 CREATE TABLE vehicule(
 	matricule varchar(20),
@@ -142,6 +169,9 @@ CREATE TABLE vehicule(
 	type_vehicule varchar(20),
 	PRIMARY KEY (Matricule)
 );
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+
 CREATE TABLE chauffeur(
 	
 	chauffeur_id int IDENTITY(1, 1),
@@ -152,4 +182,4 @@ CREATE TABLE chauffeur(
 	email varchar(MAX),
 	PRIMARY KEY (chauffeur_id)
 
-)*/
+)
