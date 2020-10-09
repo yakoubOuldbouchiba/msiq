@@ -1,6 +1,6 @@
-/*CREATE TABLE utilisateurs (
+CREATE TABLE utilisateurs (
     email varchar(50) NOT NULL PRIMARY KEY,
-	userPassword nvarchar(50) NOT NULL,
+	userPassword nvarchar(MAX) NOT NULL,
     nomUtilisateur varchar(50) NOT NULL,
     prenomUtilisateur varchar(50) NOT NULL,
 	typeUtilisateur varchar(50) NOT NULL,
@@ -11,11 +11,11 @@
 	departement varchar(50) NULL,
 	CONSTRAINT CHK_typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Directeur DAM' , 'Chef departement'
 	, 'Chef departement DAM', 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
-) ON [PRIMARY]*/
+) ON [PRIMARY]
 
 CREATE TABLE demande_compte(
 	email varchar(50) NOT NULL PRIMARY KEY,
-	userPassword nvarchar(50) NOT NULL,
+	userPassword nvarchar(Max) NOT NULL,
     nomUtilisateur varchar(50) NOT NULL,
     prenomUtilisateur varchar(50) NOT NULL,
 	typeUtilisateur varchar(50) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE demande_compte(
 	utilisateurs_ID varchar(50) NOT NULL,
 	etat varchar(50) NOT NULL,
 	motif varchar(MAX) NULL,
-	CONSTRAINT CHK_etat CHECK(etat IN ('Acceptée1','Acceptée2','Acceptée3', 'Rejectée', 'Encours')),
+	CONSTRAINT CHK_etat CHECK(etat IN ('Acceptï¿½e1','Acceptï¿½e2','Acceptï¿½e3', 'Rejectï¿½e', 'Encours')),
 	CONSTRAINT FK_utilisateurs_demande FOREIGN KEY (utilisateurs_ID) REFERENCES utilisateurs(email)
 ) ON [PRIMARY]
 

@@ -32,9 +32,9 @@ async function  setUser(user){
     try {
         await sql.connect(config)
         try {
-            console.log(user.passWord)
+            console.log(user.passWord);
             let PW = await BCRYPT.hash(user.passWord, saltRounds);
-             await new sql.Request()
+            await new sql.Request()
             .input('pw', sql.NVarChar, PW)
             .input('ln', sql.VarChar, user.lastName)
             .input('fn', sql.VarChar, user.firstName)
@@ -48,7 +48,8 @@ async function  setUser(user){
             .execute('setAccountDemand');
             console.log('User Inserted');
             sql.close();
-            return  'UI' //user inserted
+            return  'UI'   
+              //user inserted
         } catch (error) {
             console.log('can not instert user');
             sql.close();
@@ -72,9 +73,8 @@ async function  Login(user){
                 title: "Ce utilisateur n'est n'exister pas",
                 error: 'User not found'
             }
-        }else{
+        }else{  
             let auth = await BCRYPT.compare(user.password , user_data.recordset[0].userPassword);
-            console.log(auth);
             if(auth){
                 if(user_data.recordset[0].typeUtilisateur==user.role){ 
                     let userInfo = await getUser(user.email);
