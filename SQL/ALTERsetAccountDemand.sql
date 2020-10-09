@@ -61,7 +61,7 @@ END*/
 
 ALTER PROCEDURE [dbo].[setAccountDemand]
 	@email AS varChar(50),
-	@pw AS nvarchar(50),
+	@pw AS nvarchar(Max),
 	@ln AS varChar(50),
 	@fn AS varChar(50),
 	@tu AS varChar(50),

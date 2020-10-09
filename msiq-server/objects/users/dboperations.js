@@ -33,23 +33,22 @@ async function  setUser(user){
         await sql.connect(config)
         try {
             console.log(user.passWord);
-            await BCRYPT.hash(user.passWord, saltRounds, function(err, hash) {
-                await new sql.Request()
-                    .input('pw', sql.NVarChar, hash)
-                    .input('ln', sql.VarChar, user.lastName)
-                    .input('fn', sql.VarChar, user.firstName)
-                    .input('bd', sql.DateTimeOffset, user.ddn)
-                    .input('tu', sql.VarChar, user.usertype)
-                    .input('tel', sql.VarChar, user.mobile)
-                    .input('email', sql.VarChar, user.email)
-                    .input('job', sql.VarChar, user.fonction)
-                    .input('struc', sql.VarChar, user.structure)
-                    .input('depart', sql.VarChar, user.departement)
-                    .execute('setAccountDemand');
-                    console.log('User Inserted');
-                    sql.close();
-                    return  'UI'            
-            });
+            let PW = await BCRYPT.hash(user.passWord, saltRounds);
+            await new sql.Request()
+            .input('pw', sql.NVarChar, PW)
+            .input('ln', sql.VarChar, user.lastName)
+            .input('fn', sql.VarChar, user.firstName)
+            .input('bd', sql.DateTimeOffset, user.ddn)
+            .input('tu', sql.VarChar, user.usertype)
+            .input('tel', sql.VarChar, user.mobile)
+            .input('email', sql.VarChar, user.email)
+            .input('job', sql.VarChar, user.fonction)
+            .input('struc', sql.VarChar, user.structure)
+            .input('depart', sql.VarChar, user.departement)
+            .execute('setAccountDemand');
+            console.log('User Inserted');
+            sql.close();
+            return  'UI'   
               //user inserted
         } catch (error) {
             console.log('can not instert user');
@@ -74,13 +73,8 @@ async function  Login(user){
                 title: "Ce utilisateur n'est n'exister pas",
                 error: 'User not found'
             }
-        }else{
-
-            /*BCRYPT.compare(user.password , user_data.recordset[0].userPassword, function(err, result) {
-                console.log(result)
-            });
-            /*let auth = await BCRYPT.compare(user.password , user_data.recordset[0].userPassword);
-            console.log(auth);
+        }else{  
+            let auth = await BCRYPT.compare(user.password , user_data.recordset[0].userPassword);
             if(auth){
                 if(user_data.recordset[0].typeUtilisateur==user.role){ 
                     let userInfo = await getUser(user.email);
@@ -99,7 +93,7 @@ async function  Login(user){
                     title: 'Verifiez votre mot de passe',
                     error: 'Wrong Password'
                 }
-            }*/
+            }
             
         }  
     }catch(error){

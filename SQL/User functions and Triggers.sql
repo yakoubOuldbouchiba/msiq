@@ -1,19 +1,19 @@
-/*CREATE PROCEDURE GetUsers 
+CREATE PROCEDURE GetUsers 
 AS
 BEGIN
 SELECT * FROM utilisateurs;
-END*/
-/*CREATE PROCEDURE DeleteUser 
+END
+CREATE PROCEDURE DeleteUser 
 @email AS VarChar(50)
 AS
 BEGIN
 DElETE FROM utilisateurs
 WHERE email=@email;
-END*/
+END
 
-/*CREATE PROCEDURE SetUsers
+ALTER PROCEDURE SetUsers
 	@email AS varChar(50),
-	@pw AS nvarchar(50),
+	@pw AS nvarchar(Max),
 	@ln AS varChar(50),
 	@fn AS varChar(50),
 	@tu AS varChar(50),
@@ -22,12 +22,12 @@ END*/
 	@job AS varChar(50),
 	@struc AS varChar(50),
 	@depart AS varChar(50)
-	AS
-	BEGIN 
+AS
+BEGIN 
 	INSERT INTO utilisateurs
 	Values(@email , @pw , @ln , @fn , @tu , @bd , @tel , @job , @struc , @depart)
-	END
-*/
+END
+
 
 /*CREATE PROCEDURE LOGIN
 	@email AS VARCHAR(30)
@@ -49,9 +49,9 @@ FROM utilisateurs
 WHERE email=@email
 END*/
 
-CREATE PROCEDURE setAccountDemand
+ALTER PROCEDURE setAccountDemand
 	@email AS varChar(50),
-	@pw AS nvarchar(50),
+	@pw AS nvarchar(Max),
 	@ln AS varChar(50),
 	@fn AS varChar(50),
 	@tu AS varChar(50),
