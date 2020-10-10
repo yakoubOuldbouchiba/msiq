@@ -18,7 +18,7 @@ import store from '../store/store'
 import InvalideSessions from '../views/InvalideSessions'
 import jwt from 'jsonwebtoken'
 import "animate.css/animate.css"
-let typeuser = jwt.decode(localStorage.getItem("token"),'TMPK3Y')
+
 Vue.use(VueRouter)
 
   const routes = [
@@ -103,8 +103,9 @@ Vue.use(VueRouter)
     name: 'Vehicules',
     component:Vehicules ,
     beforeEnter: (to, from, next) => {
-      // ...
+      
       if(store.state.token){
+        let typeuser = jwt.decode(localStorage.getItem("token"),'TMPK3Y')
         if(typeuser.user.typeUtilisateur==="Chef de parc")
          {
            next();
@@ -123,6 +124,7 @@ Vue.use(VueRouter)
     beforeEnter: (to, from, next) => {
       
       if(store.state.token){
+        let typeuser = jwt.decode(localStorage.getItem("token"),'TMPK3Y')
         if(typeuser.user.typeUtilisateur==="Chef de parc")
         {
            next();
@@ -139,10 +141,10 @@ Vue.use(VueRouter)
     name: 'User',
     component:User,
     beforeEnter: (to, from, next) => {
-      // ...
+     
       if(store.state.token){
-        
-        if( typeuser.user.typeUtilisateur==='Directeur')
+        let typeuser = jwt.decode(localStorage.getItem("token"),'TMPK3Y')
+        if( typeuser.user.typeUtilisateur==="Directeur")
         {
           next();
         }else{
@@ -160,7 +162,8 @@ Vue.use(VueRouter)
     beforeEnter: (to, from, next) => {
       // ...
       if(store.state.token){
-        if(store.state.user.typeUtilisateur=='Directeur')
+        let typeuser = jwt.decode(localStorage.getItem("token"),'TMPK3Y')
+        if(typeuser.typeUtilisateur=="Directeur")
         {
           next();
         }else{
@@ -178,6 +181,7 @@ Vue.use(VueRouter)
     beforeEnter: (to, from, next) => {
       // ...
       if(store.state.token){
+        let typeuser = jwt.decode(localStorage.getItem("token"),'TMPK3Y')
         if(typeuser.user.typeUtilisateur==='Agent de magasin')
         {
            next();
@@ -196,6 +200,7 @@ Vue.use(VueRouter)
     beforeEnter: (to, from, next) => {
       // ...
       if(store.state.token){
+        let typeuser = jwt.decode(localStorage.getItem("token"),'TMPK3Y')
         if(typeuser.user.typeUtilisateur==='Agent de magasin')
         {
            next();
@@ -213,8 +218,14 @@ Vue.use(VueRouter)
     component:Demandes ,
     beforeEnter: (to, from, next) => {
       // ...
-      if(store.state.authenticed){
-        next();
+      if(store.state.token){
+        let typeuser = jwt.decode(localStorage.getItem("token"),'TMPK3Y')
+        if(typeuser.user.typeUtilisateur!=='Client')
+        {
+           next();
+        }else{
+         next({name:'InvalideSessions'});
+        }
       }else{
         next({name:'Login'});
       }

@@ -46,12 +46,7 @@
             :icon='demandes[3].icon' 
             />
 
-    <Vehicule 
-            :name='demandes[2].name'
-            :color='demandes[2].color'
-            :icon='demandes[2].icon'
-           
-            />
+    <DemandeVehicule />
 
     <Relex 
             :name='demandes[5].name'
@@ -71,12 +66,12 @@
 import DemandeClient from './Demandes/DemandeClient'
 import Fourniture from './Fourniture'
 import Tirage from './tirage'
-import Vehicule from './Vehicule'
+import DemandeVehicule from './Demandes/DemandeVehicule'
 import Relex from './Relex'
 import PEC from './PriseEnCharge'
 export default {
     name:'Pupupdemandes',
-    components:{DemandeClient , Fourniture , Tirage , Vehicule , Relex , PEC},
+    components:{DemandeClient , Fourniture , Tirage , DemandeVehicule , Relex , PEC},
     data(){
         return{
             demandes :[
