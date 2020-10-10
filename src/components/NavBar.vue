@@ -49,7 +49,7 @@
               </v-flex>
               <v-flex xs12>
                    <div class="amber--text text--darken-1">{{$store.state.user.userName}}</div>
-                   <div class="indigo--text text--darken-4 capation">{{$store.state.user.role}}</div>
+                   <div class="indigo--text text--darken-4 capation">{{$store.state.user.fonction}}</div>
               </v-flex>
          </v-row>
          

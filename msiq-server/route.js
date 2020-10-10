@@ -2,6 +2,7 @@ const express = require('express')
 
 const chauffeurs = require('./api/chauffeurs/chauffeur.js');
 const demandes = require('./api/demandes/demandes.js');
+const demande_vehicule = require('./api/demande_vehicule/demande_vehicule.js')
 const fournitures = require('./api/fournitures/fourniture.js')
 const messages = require('./api/messages/messages.js');
 const produits = require('./api/produits/produit.js');
@@ -34,6 +35,7 @@ module.exports = (io)=>{
     })
     router.use(chauffeurs());
     router.use(demandes());
+    router.use(demande_vehicule());
     router.use(fournitures());
     router.use(messages(Messages , Users,io));
     router.use(produits());

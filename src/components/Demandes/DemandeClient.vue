@@ -109,6 +109,7 @@ import Axios from 'axios';
 export default {
   data(){
       return{
+          msg :'',
           Done: false,
           Errr: false,
           valid:false,

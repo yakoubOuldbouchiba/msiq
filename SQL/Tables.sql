@@ -48,7 +48,7 @@ CREATE TABLE demande_client (
 	demande_C_ID int PRIMARY KEY NOT NULL,
 	demande_C_description varchar(MAX) NOT NULL,
 	nature varchar(50) NOT NULL,
-	objet varchar (50) NOT NULL,
+	objet varchar (50) NOT NULL,ID
 	mise_disposition bit NULL,
 	date_mise_dispostion date NULL,
 	achat bit NULL,
@@ -57,24 +57,31 @@ CREATE TABLE demande_client (
 ) ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
-
+DROP TABLE demande_vehicule
 CREATE TABLE demande_vehicule (
 	demande_V_ID int PRIMARY KEY NOT NULL,
 	lieu varchar(100) NOT NULL,
 	organisme varchar (50) NOT NULL,
 	motif_deplacement varchar(250) NOT NULL,
 	date_depart date NOT NULL,
+	heure_depart time NOT NULL,
 	lieu_ramassage_d varchar(100),
 	date_retour date NOT NULL,
+	heure_retour time NOT NULL,
 	lieu_ramassage_r varchar(100),
 	nature_marchandise varchar(50) NOT NULL,
-	utilisateur1_ID varchar(50) NOT NULL,
-	utilisateur2_ID varchar(50) NOT NULL,
-	utilisateur3_ID varchar(50) NOT NULL,
+	transportee varchar(250),
+	utilisateur1_ID varchar(50) ,
+	utilisateur2_ID varchar(50) ,
+	utilisateur3_ID varchar(50) ,
+	matricule varchar(20),
+	chauffeur_ID int ,
 	CONSTRAINT FK_demande_vehicule_demande FOREIGN KEY (demande_V_ID) REFERENCES demande(demande_ID),
 	CONSTRAINT FK_utilisateur1_demande FOREIGN KEY (utilisateur1_ID) REFERENCES utilisateurs(email),
 	CONSTRAINT FK_utilisateur2_demande FOREIGN KEY (utilisateur2_ID) REFERENCES utilisateurs(email),
-	CONSTRAINT FK_utilisateur3_demande FOREIGN KEY (utilisateur3_ID) REFERENCES utilisateurs(email)
+	CONSTRAINT FK_utilisateur3_demande FOREIGN KEY (utilisateur3_ID) REFERENCES utilisateurs(email),
+	CONSTRAINT FK_vehicule_demande_vehicule FOREIGN KEY (matricule) REFERENCES vehicule(matricule),
+	CONSTRAINT FK_chauffeur_demande_vehicule FOREIGN KEY (chauffeur_ID)REFERENCES chauffeur(chauffeur_ID)
 ) ON [PRIMARY];
 
 /*------------------------------------------------------------------------------------------------------------------------*/
