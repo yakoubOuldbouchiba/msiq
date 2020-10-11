@@ -34,7 +34,7 @@
     </v-dialog> 
     <DemandeClient/>
 
-    <Fourniture 
+    <DemandeFourniture
             :name='demandes[1].name'
             :color='demandes[1].color'
             :icon='demandes[1].icon' 
@@ -64,14 +64,14 @@
 
 <script>
 import DemandeClient from './Demandes/DemandeClient'
-import Fourniture from './Fourniture'
+import DemandeFourniture from './Demandes/DemandeFourniture'
 import Tirage from './tirage'
 import DemandeVehicule from './Demandes/DemandeVehicule'
 import Relex from './Relex'
 import PEC from './PriseEnCharge'
 export default {
     name:'Pupupdemandes',
-    components:{DemandeClient , Fourniture , Tirage , DemandeVehicule , Relex , PEC},
+    components:{DemandeClient , DemandeFourniture , Tirage , DemandeVehicule , Relex , PEC},
     data(){
         return{
             demandes :[
