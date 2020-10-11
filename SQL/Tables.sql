@@ -63,11 +63,11 @@ CREATE TABLE demande_vehicule (
 	lieu varchar(100) NOT NULL,
 	organisme varchar (50) NOT NULL,
 	motif_deplacement varchar(250) NOT NULL,
-	date_depart date NOT NULL,
-	heure_depart time NOT NULL,
+	date_depart datetime NOT NULL,
+	/*heure_depart varchar(8) NOT NULL,*/
 	lieu_ramassage_d varchar(100),
-	date_retour date NOT NULL,
-	heure_retour time NOT NULL,
+	date_retour datetime NOT NULL,
+	/*heure_retour varchar(8) NOT NULL,*/
 	lieu_ramassage_r varchar(100),
 	nature_marchandise varchar(50) NOT NULL,
 	transportee varchar(250),

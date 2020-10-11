@@ -6,7 +6,9 @@ import jwt from 'jsonwebtoken'
 Vue.use(Vuex);
 export default new Vuex.Store({
     state : {
-        
+        menuProps: {
+            disabled: false
+        },
         user:{
             email : '',
             avatar : '',
