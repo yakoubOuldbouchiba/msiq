@@ -9,7 +9,7 @@ module.exports=()=>{
     });
     //add a new demande
     router.post('/DemandeVehicule',auth.requireLogin , (req , res)=>{
-        console.log(req.body)
+        
         dbOperationsDemandes.setDemandeVehicule( req.body)
             .then(result => {
                 if(result ==='DI'){

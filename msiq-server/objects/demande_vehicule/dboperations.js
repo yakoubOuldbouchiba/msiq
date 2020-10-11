@@ -11,19 +11,21 @@ async function  getDemandesVehicule(){
 // set new message
 async function  setDemandeVehicule(Demande){
     try {
+        let date_depart = Demande.DateSortie+" "+Demande.HeureSortie;
+        let date_retour = Demande.DateRetour+" "+Demande.HeureRetour;
+    
         await sql.connect(config)
         try {
-            console.log(Demande);
+            console.log(date_depart);
+            console.log(date_retour);
              await new sql.Request()
              .input('userID',sql.VarChar,Demande.UserID)
              .input('lieu',sql.VarChar,Demande.Lieu)
              .input('organisme',sql.VarChar,Demande.Organisme)
              .input('motif_deplacement',sql.VarChar,Demande.motif_deplacement)
-             .input('date_depart',sql.Date,Demande.DateSortie)
-             .input('heure_depart',sql.VarChar,Demande.HeureSortie)
+             .input('date_depart',sql.DateTime,date_depart)
              .input('lieu_remmassage_d',sql.VarChar,Demande.LieuRemassageSortie)
-             .input('date_retour',sql.Date,Demande.DateRetour)
-             .input('heure_retour',sql.VarChar,Demande.HeureRetour)
+             .input('date_retour',sql.DateTime,date_retour)
              .input('lieu_remmassage_r',sql.VarChar,Demande.LieuRemassageRetour)
              .input('nature_marchandise',sql.VarChar,Demande.NatureMarchandise)
              .input('transportee',sql.VarChar,Demande.Transportee)

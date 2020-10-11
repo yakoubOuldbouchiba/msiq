@@ -14,10 +14,9 @@
             <v-text-field 
                 v-bind="attrs"
                 v-on="on"
-                :label="label"
-                :prepend-icon="icon"
+                prepend-icon="alarm"
                 :value="heure"
-                
+                type="time"
             ></v-text-field>
         </template>
         <v-time-picker 
