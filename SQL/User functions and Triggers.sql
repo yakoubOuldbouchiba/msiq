@@ -38,7 +38,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-CREATE PROCEDURE LOGIN
+ALTER PROCEDURE LOGIN
 	@email AS VARCHAR(30)
 AS
 BEGIN
@@ -49,11 +49,11 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-CREATE PROCEDURE GetUser
+ALTER PROCEDURE GetUser
 	@email  AS VarChar(50)
 AS
 BEGIN
-SELECT email, nomUtilisateur, prenomUtilisateur, fonction , typeUtilisateur 
+SELECT email, nomUtilisateur, prenomUtilisateur, fonction , typeUtilisateur ,structure
 FROM utilisateurs
 WHERE email=@email
 END

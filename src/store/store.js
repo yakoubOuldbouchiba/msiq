@@ -6,12 +6,16 @@ import jwt from 'jsonwebtoken'
 Vue.use(Vuex);
 export default new Vuex.Store({
     state : {
-        
+        menuProps: {
+            disabled: false
+        },
         user:{
+            email : '',
             avatar : '',
             userName : '',
-            role : '',
-            typeUtilisateur:''
+            fonction : '',
+            typeUtilisateur:'',
+            structure : ''
         },
         sokect:io('http://localhost:3030/'),
         messages :[],
@@ -102,9 +106,11 @@ export default new Vuex.Store({
             const token = localStorage.getItem("token");
             if(token!=null){
                 let userData =jwt.decode(token , 'TMPK3Y');
+                state.user.email = userData.user.email
                 state.user.userName = userData.user.nomUtilisateur + " " + userData.user.prenomUtilisateur
-                state.user.role = userData.user.fonction;
+                state.user.fonction = userData.user.fonction;
                 state.user.typeUtilisateur = userData.user.typeUtilisateur;
+                state.user.structure = userData.user.structure;
                 console.log(userData)
             }
         }
