@@ -83,18 +83,31 @@ export default {
         }
     },methods:{
         lancerDialog : function(demande){
-            if(demande==='demande client')
+            if(demande==='demande client'){
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogClient')
+            }
             if (demande==='demande de fourniture')
+            {
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogFourniture')
-             if (demande==='demande de véhicule')
+            }
+             if (demande==='demande de véhicule'){
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogVehicule')
-            if (demande==='demande de tirage')
+            }
+            if (demande==='demande de tirage'){
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogTirage')
-            if (demande==='demande activité relex')
+            }
+            if (demande==='demande activité relex'){
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogRelex')
-            if (demande==='demande de prise en charge')
+            }
+            if (demande==='demande de prise en charge'){
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogPEC')
+            }
         },
         close: function() {
             this.$store.commit('updateDialog')

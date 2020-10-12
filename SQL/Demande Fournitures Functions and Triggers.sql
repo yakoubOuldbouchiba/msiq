@@ -21,18 +21,23 @@ BEGIN
 END
  
 /*Create type objet*/
-DROP TYPE ObjetType;
-CREATE TYPE ObjetType as Table(
-	code_object int,
-	qty_demande int	
-);
 
-CREATE PROCEDURE InsertObject
+AlTER PROCEDURE InsertDemandeFourniture
+	@userID AS varchar(50),
+	@demande_id AS int output
+AS
+BEGIN 
+	INSERT INTO demande VALUES ((SELECT CONVERT (datetime, SYSDATETIME())),@userID,'Encours', null)
+	INSERT INTO demande_fourniture VALUES ((SELECT IDENT_CURRENT('demande')), null );
+	SELECT @demande_id = IDENT_CURRENT('demande')
+END
 
-ALTER PROCEDURE InsertDemandeFourniture
-	@userID AS varchar(50)
-	--@objects AS ObjetType READONLY--
+ALTER PROCEDURE InserObjetOftDemandeFourniture
+    @demande_id as int, 
+	@code_objet as int,
+	@qty_demande as int 
 AS
 BEGIN
-   SELECT * from objet
+	INSERT INTO demande_fourniture_object(demande_F_ID , code_object , qty_demande)
+		VALUES (@demande_id,@code_objet,@qty_demande)
 END

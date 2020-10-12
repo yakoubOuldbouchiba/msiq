@@ -60,7 +60,8 @@ CREATE TABLE demande_client (
 ) ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
-
+DROP TABLE demande_relex;
+DROP TABLE demande_vehicule;
 CREATE TABLE demande_vehicule (
 	demande_V_ID int PRIMARY KEY NOT NULL,
 	lieu varchar(100) NOT NULL,
@@ -70,8 +71,7 @@ CREATE TABLE demande_vehicule (
 	lieu_ramassage_d varchar(100),
 	date_retour datetime NOT NULL,
 	lieu_ramassage_r varchar(100),
-	nature_marchandise varchar(50) NOT NULL,
-	transportee varchar(250),
+	nature_marchandise varchar(50),
 	utilisateur1_ID varchar(50) ,
 	utilisateur2_ID varchar(50) ,
 	utilisateur3_ID varchar(50) ,
@@ -132,7 +132,8 @@ CREATE TABLE demande_fourniture_object (
     demande_F_ID int,
 	code_object int,
 	qty_demande int,
-	qty_accordee int
+	qty_accordee int,
+	observation varchar(MAX)
 	PRIMARY KEY(demande_F_ID , code_object),
 	CONSTRAINT FK_demande_fourniture_object_demande_fourniture FOREIGN KEY (demande_F_ID) REFERENCES demande_fourniture(demande_F_ID)
 ) ON [PRIMARY]

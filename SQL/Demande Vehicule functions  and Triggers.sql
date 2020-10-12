@@ -23,7 +23,7 @@ BEGIN
 END
 
 /*--------------------------------------------*/
-CREATE PROCEDURE InsertDemandeVehicule
+ALTER PROCEDURE InsertDemandeVehicule
 	@userID AS varchar(50),
 	@lieu AS varchar(100),
 	@organisme As varchar(50),
@@ -33,7 +33,6 @@ CREATE PROCEDURE InsertDemandeVehicule
 	@date_retour AS datetime,
 	@lieu_remmassage_r as varchar(100),
 	@nature_marchandise as varchar(50),
-	@transportee as varchar(255),
 	@utilisateur1 as varchar(50),
 	@utilisateur2 as varchar(50),
 	@utilisateur3 as varchar(50)
@@ -41,5 +40,5 @@ AS
 BEGIN
 	INSERT INTO demande VALUES ((SELECT CONVERT (datetime, SYSDATETIME())),@userID,'Encours', null)
 	INSERT INTO demande_vehicule VALUES ((SELECT IDENT_CURRENT('demande')), @lieu, @organisme, @motif_deplacement, @date_depart, @lieu_remmassage_d ,
-	            @date_retour ,@lieu_remmassage_r,@nature_marchandise,@transportee,@utilisateur1,@utilisateur2,@utilisateur3,null,null);
+	            @date_retour ,@lieu_remmassage_r,@nature_marchandise,@utilisateur1,@utilisateur2,@utilisateur3,null,null);
 END

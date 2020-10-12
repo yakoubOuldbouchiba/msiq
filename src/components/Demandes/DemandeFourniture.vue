@@ -2,7 +2,7 @@
     <div>
         <v-dialog v-model="$store.state.dialogFourniture" 
             persistent 
-            width="900">
+            width="700">
                 <v-card tile >
                     <v-toolbar flat dark :color='color'  >
                         <v-toolbar-title> 
@@ -20,7 +20,7 @@
                                         <tr>
                                             <th>
                                                 <v-btn
-                                                    @click="addNewObject(index)"
+                                                    @click="addNewObject()"
                                                     color="cyan"
                                                     fab
                                                     dark
@@ -172,7 +172,7 @@ export default {
             this.totalObject++;
         },
         close : function(){
-            this.$refs.form.validate();
+            this.$refs.form.reset();
             this.$store.commit('updateDialogFourniture');
         }
     },
