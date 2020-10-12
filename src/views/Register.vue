@@ -5,7 +5,11 @@
         <a class="float-right"  v-on="on">Enregistez-vous</a>
       </template>
       <v-card>
-        <v-card-title class="indigo amber--text mb-5">Enregistez-vous</v-card-title>
+        <v-toolbar flat dark color='indigo pl-5'  >
+                <v-toolbar-title class="amber--text">Enregistez-vous</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn text @click="dialog = flase"> <v-icon> clear </v-icon></v-btn>
+            </v-toolbar>
         <v-card-text>
     <v-form v-model="valid" ref="form">
         <v-container>
@@ -39,17 +43,17 @@
                 </v-col>
             </v-row>
             <v-row>
-                <v-col cols="12" sm="6">
+                <v-col cols="12" sm="4">
                     <v-text-field 
                     v-model="user.passWord" 
                     label="Mot de passe*" 
-                    :rules="[v => !!v || 'Cet champs est obligatoire']" 
+                    :rules="MDPRules" 
                     prepend-icon="mdi-lock" 
                     type="password"
                     required>
                     </v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6">
+                <v-col cols="12" sm="4">
                     <v-text-field 
                     v-model="user.passWordConfirm" 
                     label="Confirme mot de passe*" 
@@ -59,21 +63,11 @@
                     required>
                     </v-text-field>
                 </v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="12" sm="6">
-                    <v-text-field 
-                    v-model="user.fonction" 
-                    label="Fonction*" 
-                    :rules="[v => !!v || 'Cet champs est obligatoire']"
-                    prepend-icon="mdi-briefcase" 
-                    required></v-text-field>
-                </v-col>
-                <v-col cols="12" sm="6">
+                <v-col cols="12" sm="4">
                     <v-menu max-width="290px" :close-on-content-click="false" ref="menu">
                         <template v-slot:activator="{on}">
                             <v-text-field 
-                            label="Date de naissance"
+                            label="Date de naissance*"
                             :rules="[v => !!v || 'Cet champs est obligatoire']" 
                             prepend-icon="mdi-calendar-month" 
                             v-on="on" 
@@ -91,17 +85,35 @@
             <v-row>
                 <v-col cols="12" sm="6">
                     <v-text-field 
+                    v-model="user.fonction" 
+                    label="Fonction*" 
+                    :rules="[v => !!v || 'Cet champs est obligatoire']"
+                    prepend-icon="mdi-briefcase" 
+                    required></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6">
+                    <v-text-field 
+                    v-model="user.posteTelephonique" 
+                    label="Poste Téléphonique*" 
+                    :rules="PosteTelRule"
+                    prepend-icon="mdi-phone-classic" 
+                    required></v-text-field>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" sm="6">
+                    <v-text-field 
                     v-model="user.structure" 
                     label="Structure*"
                     :rules="[v => !!v || 'Cet champs est obligatoire']" 
-                    prepend-icon="mdi-office-building" 
+                    prepend-icon="mdi-factory" 
                     required>
                     </v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6">
                     <v-text-field v-model="user.departement" 
                     label="Département"
-                    prepend-icon="mdi-nothing">
+                    prepend-icon="mdi-office-building">
                     </v-text-field>
                 </v-col>
             </v-row>
@@ -129,7 +141,6 @@
         <v-card-actions>
             <span>  * Champs obligatoires</span>
             <v-spacer></v-spacer>
-            <v-btn color="red darken-1" text @click="dialog = false">fermer</v-btn>
             <v-btn :disabled="!valid" color="green darken-1" text @click="submit">envoyer</v-btn>
         </v-card-actions>
       </v-card>
@@ -182,10 +193,6 @@ export default {
             Users: [],
             items: ['Administrator', 'Chef de parc', 'Directeur', 
             'Client','Agent de Tirage','Agent de magasin'],
-            Emailrules: [
-                v => !!v || 'E-mail is required',
-                v => /.+@.+/.test(v) || 'E-mail inccorect',
-            ],
             valid:true,
             dialog: false,
             msg: '',
@@ -200,13 +207,26 @@ export default {
                 departement: '',
                 email: '',
                 mobile: '',
-                usertype: 'Client'
+                usertype: 'Client',
+                posteTelephonique: ''
             },
+            Emailrules: [
+                v => !!v || 'E-mail is required',
+                v => /.+@.+/.test(v) || 'E-mail inccorect',
+            ],
+            MDPRules: [
+                v => !!v || 'Cet champs est obligatoire',
+                v => v.length > 7 || 'Votre mot de passe doit contenir au moins 8 caractères',
+            ],
             PasswordRule: [
                 v => !!v || 'Confirm password',
                 v => this.user.passWord == v || 'Mot de passe incorrect'
             ],
             PhoneNumberRule: [
+                v => !!v || 'Cet champs est obligatoire',
+                v =>  /^\d+$/.test(v)  || 'Numéro incorrect'
+            ],
+            PosteTelRule: [
                 v => !!v || 'Cet champs est obligatoire',
                 v =>  /^\d+$/.test(v)  || 'Numéro incorrect'
             ],

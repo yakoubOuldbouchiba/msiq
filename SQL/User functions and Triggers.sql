@@ -18,7 +18,6 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-
 ALTER PROCEDURE SetUsers
 	@email AS varChar(50),
 	@pw AS nvarchar(Max),
@@ -26,16 +25,16 @@ ALTER PROCEDURE SetUsers
 	@fn AS varChar(50),
 	@tu AS varChar(50),
 	@bd AS DATE ,
-	@tel AS varChar(50),
+	@tel AS int,
 	@job AS varChar(50),
 	@struc AS varChar(50),
-	@depart AS varChar(50)
+	@depart AS varChar(50),
+	@pt AS int
 AS
 BEGIN 
 	INSERT INTO utilisateurs
-	Values(@email , @pw , @ln , @fn , @tu , @bd , @tel , @job , @struc , @depart)
+	Values(@email, @pw, @ln, @fn, @tu, @bd, @tel, @job, @struc, @pt, @depart)
 END
-
 
 /*----------------------------------------------------------------------------------*/
 
@@ -68,22 +67,15 @@ ALTER PROCEDURE setAccountDemand
 	@fn AS varChar(50),
 	@tu AS varChar(50),
 	@bd AS DATE ,
-	@tel AS varChar(50),
+	@tel AS int,
 	@job AS varChar(50),
 	@struc AS varChar(50),
-	@depart AS varChar(50)
+	@depart AS varChar(50),
+	@pt as int
 	AS
 BEGIN 
 	INSERT INTO demande_compte
-	VALUES(@email , @pw , @ln , @fn , @tu , @bd , @tel , @job , @struc , @depart);
+	VALUES(@email, @pw, @ln, @fn, @tu, @bd, @tel, @job, @struc, @pt, @depart);
 	INSERT INTO utilisateurs 
-	VALUES (@email , @pw , @ln , @fn , 'Client' , @bd , @tel , @job , @struc , @depart);
+	VALUES (@email, @pw, @ln, @fn, 'Client', @bd, @tel, @job, @struc, @pt, @depart);
 END
-
-
-
-
-
-
-
-
