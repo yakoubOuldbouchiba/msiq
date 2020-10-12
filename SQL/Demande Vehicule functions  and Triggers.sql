@@ -23,7 +23,7 @@ BEGIN
 END
 
 /*--------------------------------------------*/
-ALTER PROCEDURE InsertDemandeVehicule
+CREATE PROCEDURE InsertDemandeVehicule
 	@userID AS varchar(50),
 	@lieu AS varchar(100),
 	@organisme As varchar(50),
