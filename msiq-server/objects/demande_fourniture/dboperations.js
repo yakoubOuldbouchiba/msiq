@@ -16,10 +16,18 @@ async function  setDemandeFourniture(Demande){
         try {
             let objets = await new sql.Request()
             .input('userID',sql.VarChar,Demande.userID)
-            //.input('objects',sql.ObjetType,Demande.objetsDemande)
+            .output('demande_id',sql.Int)
             .execute('InsertDemandeFourniture');
+            let demande_id=objets.output.demande_id;//id of demande insert it 
+            for(let i = 0 ; i <Demande.objetsDemande.length ; i++){
+                let objet = Demande.objetsDemande[i]
+                await new sql.Request()
+                .input('demande_id',sql.Int,demande_id)
+                .input('code_objet',sql.Int,objet.code_objet)
+                .input('qty_demande',sql.Int,objet.qty)
+                .execute('InserObjetOftDemandeFourniture')
+            }
             console.log('Demande Inserted');
-            console.log(objets)
             sql.close();
             return  'DI' //Demand inserted
         } catch (error) {

@@ -1,80 +1,139 @@
 <template>
-    <v-dialog v-model="$store.state.dialogFourniture" 
-        persistent 
-        width="900">
-            <v-card tile >
-                <v-toolbar flat dark :color='color'  >
-                    <v-toolbar-title> 
-                        <v-icon large left class="white--text">{{icon}}</v-icon> 
-                        {{name}}
-                    </v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-btn text @click="close()"> <v-icon> clear </v-icon></v-btn>
-                </v-toolbar>
-                <v-card-text>
-                     <v-form v-model="valid" ref="form">
-                         <div  v-for="(objet,index) in DemandeFourniture.objetsDemande" :key="index">
-                         <v-row justify="center">
-                             <v-col cols="6">
-                                 <v-autocomplete
-                                    :items="objets"
-                                    v-model="objet.code_objet"
-                                    solo
-                                    hide-selected
-                                    item-text="designation"
-                                    item-value="code_objet"
-                                    :label="'Objet '+index"
-                                    prepend-inner-icon="edit"
-                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
-                                 ></v-autocomplete>
-                             </v-col>
-                             <v-col cols="2">
-                                 <v-text-field
-                                    v-model="objet.qty"
-                                    solo
-                                    label="Quantite damande"
-                                    type="number"
-                                    min=0
-                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
-                                 ></v-text-field>
-                             </v-col>
-                             <v-col cols="1">
-                              <v-btn
-                                min="0"
-                                @click="deleteObject(index)"
-                                class="mx-2"
-                                color="cyan"
-                                fab
-                                dark
-                                x-small
-                                >
-                                <v-icon dark>
-                                    delete
-                                </v-icon>
-                              </v-btn>
-                             </v-col>
-                         </v-row>
-                         </div>
-                        <v-row justify="center">
-                            <v-btn class="ma-1 green white--text" @click="addNewObject()">
-                                <v-icon left>add</v-icon>
-                                <span>Ajouter un objet</span>  
-                            </v-btn> 
-                            <v-btn class="ma-1 grey white--text" @click="close()">
-                                <v-icon left>close</v-icon>
-                                <span>Annuler la demande</span>  
-                            </v-btn>
-                            <v-btn class="ma-1 pink white--text" 
-                                :disabled="!valid"
-                                @click="send">
-                                <v-icon left>send</v-icon>
-                                <span  >Envoyer la demande</span> 
-                            </v-btn>
-                        </v-row> 
-                    </v-form>
-                </v-card-text>               
-            </v-card>  
-    </v-dialog>
+    <div>
+        <v-dialog v-model="$store.state.dialogFourniture" 
+            persistent 
+            width="900">
+                <v-card tile >
+                    <v-toolbar flat dark :color='color'  >
+                        <v-toolbar-title> 
+                            <v-icon large left class="white--text">{{icon}}</v-icon> 
+                            {{name}}
+                        </v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <v-btn text @click="close()"> <v-icon> clear </v-icon></v-btn>
+                    </v-toolbar>
+                    <v-card-text>
+                        <v-form v-model="valid" ref="form" >
+                            <v-simple-table>
+                                <template v-slot:default color="white">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <v-btn
+                                                    @click="addNewObject(index)"
+                                                    color="cyan"
+                                                    fab
+                                                    dark
+                                                    small
+                                                    >
+                                                    <v-icon dark>
+                                                        add
+                                                    </v-icon>
+                                                </v-btn> 
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <th>Objet</th>
+                                            <th>Quantite damandée</th>
+                                            <th>actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(objet,index) in DemandeFourniture.objetsDemande" :key="index">
+                                            <td>
+                                                <v-autocomplete
+                                                    flat
+                                                    solo
+                                                    :items="objets"
+                                                    v-model="objet.code_objet"
+                                                    hide-selected
+                                                    item-text="designation"
+                                                    item-value="code_objet"
+                                                    :label="'Objet '+(index + 1)"
+                                                    prepend-inner-icon="edit"
+                                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
+                                                ></v-autocomplete>
+                                            </td>
+                                            <td>
+                                                <v-text-field
+                                                    flat
+                                                    solo
+                                                    v-model="objet.qty"
+                                                    label="Quantite damande"
+                                                    type="number"
+                                                    min=0
+                                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
+                                                ></v-text-field>
+                                            </td>
+                                            <td>
+                                                <v-btn
+                                                    @click="deleteObject(index)"
+                                                    color="secondary"
+                                                    fab
+                                                    dark
+                                                    small
+                                                    >
+                                                    <v-icon dark>
+                                                        delete
+                                                    </v-icon>
+                                                </v-btn>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </template>
+                            </v-simple-table>                     
+                            <v-row justify="center">
+                                <v-btn class="ma-1 pink white--text" 
+                                    :disabled="!valid"
+                                    @click="send">
+                                    <v-icon left>send</v-icon>
+                                    <span  >Envoyer la demande</span> 
+                                </v-btn>
+                            </v-row> 
+                        </v-form>
+                    </v-card-text>               
+                </v-card>  
+        </v-dialog>
+                <v-snackbar
+            v-model="Done"
+            :timeout="5000"
+            color="green"
+            outlined
+            class="mb-5"
+            >
+            {{ msg}}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                color="green"
+                text
+                v-bind="attrs"
+                @click="Done = false"
+                >
+                Close
+                </v-btn>
+            </template>
+            </v-snackbar>
+            <v-dialog v-model="Errr" max-width="290">
+            <v-card>
+                <v-card-title class="headline red lighten-2">
+                Error
+                </v-card-title>
+                <v-card-text  class="mt-10 title">{{msg}}</v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="red darken-1"
+                    text
+                    @click="Errr = false"
+                >
+                    OK
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+            </v-dialog>
+            </div>
 </template>
 
 <script>
@@ -86,6 +145,18 @@ export default {
         send(){
             this.$refs.form.validate();
             Axios.post('http://localhost:3030/DemandeFourniture', this.DemandeFourniture )
+            .then(
+                res =>{
+                    this.msg = res.data.title,
+                    this.$refs.form.reset(),
+                    this.Done = true,
+                    this.$store.commit('updateDialogFourniture')
+                },
+                err => {
+                    this.Errr = true,
+                    this.msg = err.response.data.title
+                }
+             )
         }
         ,deleteObject(index){
             if(this.totalObject>0){
@@ -101,7 +172,7 @@ export default {
             this.totalObject++;
         },
         close : function(){
-            //var value = {name : this.name , dialog:!this.dialog}
+            this.$refs.form.validate();
             this.$store.commit('updateDialogFourniture');
         }
     },
@@ -118,6 +189,9 @@ export default {
         return{
             totalObject : 1 ,
             valid : false,
+            msg :'',
+            Done: false,
+            Errr: false,
             objetsDemande : [],
             objets :[],
             DemandeFourniture :{
