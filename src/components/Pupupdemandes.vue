@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-dialog v-model="$store.state.dialog"  width="700">
+    <v-dialog v-model="$store.state.dialog"  width="700" persistent>
         <template v-slot:activator="{on , attrs}">
             <v-btn 
                 v-bind="attrs"
@@ -11,10 +11,11 @@
             </v-btn>
         </template>
         <v-card >
-            <v-card-title class="blue--text">
-                <v-icon large left class="blue--text"> note_add</v-icon>
-                <span>Nouveau demande</span>
-            </v-card-title>
+            <v-toolbar flat color='blue--text'>
+                <v-toolbar-title> <v-icon large left class="blue--text">note_add</v-icon> Demande de tirage</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn text @click="close()"> <v-icon> clear </v-icon></v-btn>
+            </v-toolbar>
             <v-container>
                 <v-row class="mx-2">
                     <v-flex xs12 sm6  v-for="demande in demandes" :key="demande.name">
@@ -40,11 +41,7 @@
             :icon='demandes[1].icon' 
              />
 
-    <Tirage 
-            :name='demandes[3].name'
-            :color='demandes[3].color'
-            :icon='demandes[3].icon' 
-            />
+    <DemandeTirage/>
 
     <DemandeVehicule />
 
@@ -65,13 +62,13 @@
 <script>
 import DemandeClient from './Demandes/DemandeClient'
 import DemandeFourniture from './Demandes/DemandeFourniture'
-import Tirage from './tirage'
+import DemandeTirage from './Demandes/DemandeTirage'
 import DemandeVehicule from './Demandes/DemandeVehicule'
 import Relex from './Relex'
 import PEC from './PriseEnCharge'
 export default {
     name:'Pupupdemandes',
-    components:{DemandeClient , DemandeFourniture , Tirage , DemandeVehicule , Relex , PEC},
+    components:{DemandeClient , DemandeFourniture , DemandeTirage , DemandeVehicule , Relex , PEC},
     data(){
         return{
             demandes :[
@@ -86,25 +83,21 @@ export default {
         }
     },methods:{
         lancerDialog : function(demande){
-            if(demande==='demande client'){
-                this.$store.commit('updateDialog')
+            if(demande==='demande client')
                 this.$store.commit('updateDialogClient')
-            }else if (demande==='demande de fourniture'){
-                this.$store.commit('updateDialog')
+            if (demande==='demande de fourniture')
                 this.$store.commit('updateDialogFourniture')
-            }else if (demande==='demande de véhicule'){
-                this.$store.commit('updateDialog')
+             if (demande==='demande de véhicule')
                 this.$store.commit('updateDialogVehicule')
-            }else if (demande==='demande de tirage'){
-                this.$store.commit('updateDialog')
+            if (demande==='demande de tirage')
                 this.$store.commit('updateDialogTirage')
-            }else if (demande==='demande activité relex'){
-                this.$store.commit('updateDialog')
+            if (demande==='demande activité relex')
                 this.$store.commit('updateDialogRelex')
-            }else if (demande==='demande de prise en charge'){
-                this.$store.commit('updateDialog')
+            if (demande==='demande de prise en charge')
                 this.$store.commit('updateDialogPEC')
-            }
+        },
+        close: function() {
+            this.$store.commit('updateDialog')
         }
     }
 }

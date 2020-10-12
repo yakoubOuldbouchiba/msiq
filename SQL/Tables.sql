@@ -5,9 +5,10 @@ CREATE TABLE utilisateurs (
     prenomUtilisateur varchar(50) NOT NULL,
 	typeUtilisateur varchar(50) NOT NULL,
 	dateNaissance Date NOT NULL,
-    mobile varchar(15) NOT NULL,
+    mobile int NOT NULL,
 	fonction varchar(225) NOT NULL ,
 	structure varchar(50) NOT NULL,
+	posteTelephonique int NOT NULL,
 	departement varchar(50) NULL,
 	CONSTRAINT CHK_typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Directeur DAM' , 'Chef departement'
 	, 'Chef departement DAM', 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
@@ -22,9 +23,10 @@ CREATE TABLE demande_compte(
     prenomUtilisateur varchar(50) NOT NULL,
 	typeUtilisateur varchar(50) NOT NULL,
 	dateNaissance Date NOT NULL,
-    mobile varchar(15) NOT NULL,
+    mobile int NOT NULL,
 	fonction varchar(225) NOT NULL ,
 	structure varchar(50) NOT NULL,
+	posteTelephonique int NOT NULL,
 	departement varchar(50) NULL,
 	CONSTRAINT CHK__typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Directeur DAM' , 'Chef departement'
 	, 'Chef departement DAM', 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
@@ -87,24 +89,27 @@ CREATE TABLE demande_vehicule (
 /*------------------------------------------------------------------------------------------------------------------------*/
 
 CREATE TABLE demande_tirage (
-	demande_T_ID int,
+	demande_T_ID int PRIMARY KEY,
 	numero_ordre int,
 	date_prestation date ,
-	PRIMARY KEY(demande_T_ID ),
-	CONSTRAINT FK_demande_tirage_document_demande_tirage FOREIGN KEY (demande_T_ID) REFERENCES demande_tirage(demande_T_ID),
+	document_ID int,
+	CONSTRAINT FK_demande_demande_tirage FOREIGN KEY (demande_T_ID) REFERENCES demande(demande_ID),
+	CONSTRAINT FK_demande_tirage_document FOREIGN KEY (document_ID) REFERENCES document(document_ID),
 )ON [PRIMARY];
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
+DROP TABLE document
 CREATE TABLE document (
-	document_ID int PRIMARY KEY,
-	demande_T_ID int,
+	document_ID int IDENTITY(1, 1) PRIMARY KEY,
 	nom_document varchar(MAX) NOT NULL,
 	nombre_feuille int NOT NULL,
 	nombre_exemplaire int NOT NULL,
 	total_feuille int NOT NULL,
-	type_document varchar(MAX) NULL,  
-	CONSTRAINT FK_demande_tirage_document_demande_tirage_document FOREIGN KEY (demande_T_ID) REFERENCES demande_tirage(demande_T_ID),
+	type_document varchar(MAX) NULL, 
+	autre varchar(max) null,
+	stored_name varchar(max) NOT NULL,
+	format_fichier varchar(10) NOT NULL,
 )ON [PRIMARY];
 
 /*------------------------------------------------------------------------------------------------------------------------*/

@@ -39,10 +39,11 @@ async function  setUser(user){
             .input('fn', sql.VarChar, user.firstName)
             .input('bd', sql.DateTimeOffset, user.ddn)
             .input('tu', sql.VarChar, user.usertype)
-            .input('tel', sql.VarChar, user.mobile)
+            .input('tel', sql.Int, user.mobile)
             .input('email', sql.VarChar, user.email)
             .input('job', sql.VarChar, user.fonction)
             .input('struc', sql.VarChar, user.structure)
+            .input('pt', sql.Int, user.posteTelephonique)
             .input('depart', sql.VarChar, user.departement)
             .execute('setAccountDemand');
             console.log('User Inserted');
