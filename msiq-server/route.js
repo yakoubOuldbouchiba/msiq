@@ -7,6 +7,8 @@ const messages = require('./api/messages/messages.js');
 const produits = require('./api/produits/produit.js');
 const users = require('./api/users/user');
 const vehicules = require('./api/vehicules/vehicules.js');
+const DemandeClient = require('./api/DemandeClient/DemandeClient');
+const DemandeTirage = require('./api/DemandeTirage/DemandeTirage');
 
 var Messages =[
     {
@@ -39,5 +41,7 @@ module.exports = (io)=>{
     router.use(produits());
     router.use(users());
     router.use(vehicules());
+    router.use(DemandeClient());
+    router.use(DemandeTirage());
     return router
 }

@@ -109,6 +109,7 @@ import Axios from 'axios';
 export default {
   data(){
       return{
+          msg: '',
           Done: false,
           Errr: false,
           valid:false,
@@ -128,16 +129,16 @@ export default {
         this.$refs.form.validate();
         Axios.post('http://localhost:3030/DemandeClient', this.DemandeClient )
         .then(
-            res =>{
-                    this.msg = res.data.title,
-                    this.$refs.form.reset(),
-                    this.Done = true,
-                    this.$store.commit('updateDialogClient')
-                },
-                err => {
-                    this.Errr = true,
-                    this.msg = err.response.data.title
-                }
+          res =>{
+            this.msg = res.data.title,
+            this.$refs.form.reset(),
+            this.Done = true,
+            this.$store.commit('updateDialogClient')
+          },
+          err => {
+              this.Errr = true,
+              this.msg = err.response.data.title
+          }
         )
     },
   }
