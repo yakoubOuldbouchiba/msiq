@@ -14,11 +14,12 @@ async function  setDemandeFourniture(Demande){
         console.log(Demande)
         await sql.connect(config)
         try {
-            console.log(date_depart);
-            console.log(date_retour);
-             await new sql.Request()
+            let objets = await new sql.Request()
+            .input('userID',sql.VarChar,Demande.userID)
+            //.input('objects',sql.ObjetType,Demande.objetsDemande)
             .execute('InsertDemandeFourniture');
             console.log('Demande Inserted');
+            console.log(objets)
             sql.close();
             return  'DI' //Demand inserted
         } catch (error) {
