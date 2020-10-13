@@ -2,7 +2,7 @@
     <v-menu max-width="290px" >
         <template v-slot:activator="{attrs , on}">
             <v-text-field 
-                
+                :label="label"
                 prepend-icon="date_range"
                 v-bind="attrs"
                 v-on="on"

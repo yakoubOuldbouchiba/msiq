@@ -67,7 +67,7 @@
                             <Heure 
                                 v-model="DV.HeureSortie" 
                                 :rules="[v => !!v || 'Cet champs est obligatoire']"
-                                label="heure de départ" 
+                                label="Heure de départ" 
                                 @heure = "heureSortie"
                             />
                         </v-col>
@@ -203,7 +203,7 @@ export default {
             ) 
         },
         closeDemande :function(){
-            this.$refs.form.reset(),
+            this.$refs.form.reset();
             this.$store.commit('updateDialogVehicule');
         },
         // the date & the hour actions which means getting its values 

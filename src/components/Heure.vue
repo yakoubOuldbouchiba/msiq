@@ -12,6 +12,7 @@
      >
         <template v-slot:activator="{attrs , on}">
             <v-text-field 
+                :label="label"
                 v-bind="attrs"
                 v-on="on"
                 prepend-icon="alarm"
