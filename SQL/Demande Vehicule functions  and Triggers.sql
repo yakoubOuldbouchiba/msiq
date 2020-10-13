@@ -28,20 +28,17 @@ ALTER PROCEDURE InsertDemandeVehicule
 	@lieu AS varchar(100),
 	@organisme As varchar(50),
 	@motif_deplacement AS varchar(50),
-	@date_depart AS date,
-	@heure_depart AS varchar(8),
+	@date_depart AS datetime,
 	@lieu_remmassage_d As varchar(100),
-	@date_retour AS date,
-	@heure_retour AS varchar(8),
+	@date_retour AS datetime,
 	@lieu_remmassage_r as varchar(100),
 	@nature_marchandise as varchar(50),
-	@transportee as varchar(255),
 	@utilisateur1 as varchar(50),
 	@utilisateur2 as varchar(50),
 	@utilisateur3 as varchar(50)
 AS
 BEGIN
 	INSERT INTO demande VALUES ((SELECT CONVERT (datetime, SYSDATETIME())),@userID,'Encours', null)
-	INSERT INTO demande_vehicule VALUES ((SELECT IDENT_CURRENT('demande')), @lieu, @organisme, @motif_deplacement, @date_depart, @heure_depart, @lieu_remmassage_d ,
-	            @date_retour,@heure_retour ,@lieu_remmassage_r,@nature_marchandise,@transportee,@utilisateur1,@utilisateur2,@utilisateur3,null,null);
+	INSERT INTO demande_vehicule VALUES ((SELECT IDENT_CURRENT('demande')), @lieu, @organisme, @motif_deplacement, @date_depart, @lieu_remmassage_d ,
+	            @date_retour ,@lieu_remmassage_r,@nature_marchandise,@utilisateur1,@utilisateur2,@utilisateur3,null,null);
 END

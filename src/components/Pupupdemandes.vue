@@ -35,7 +35,7 @@
     </v-dialog> 
     <DemandeClient/>
 
-    <Fourniture 
+    <DemandeFourniture
             :name='demandes[1].name'
             :color='demandes[1].color'
             :icon='demandes[1].icon' 
@@ -57,14 +57,14 @@
 
 <script>
 import DemandeClient from './Demandes/DemandeClient'
-import Fourniture from './Fourniture'
+import DemandeFourniture from './Demandes/DemandeFourniture'
 import DemandeTirage from './Demandes/DemandeTirage'
 import DemandeVehicule from './Demandes/DemandeVehicule'
 import Relex from './Relex'
 import DemandePriseEnCharge from './Demandes/DemandePriseEnCharge'
 export default {
     name:'Pupupdemandes',
-    components:{DemandeClient , Fourniture , DemandeTirage , DemandeVehicule , Relex , DemandePriseEnCharge},
+    components:{DemandeClient , DemandeFourniture , DemandeTirage , DemandeVehicule , Relex , DemandePriseEnCharge},
     data(){
         return{
             demandes :[
@@ -79,18 +79,31 @@ export default {
         }
     },methods:{
         lancerDialog : function(demande){
-            if(demande==='demande client')
+            if(demande==='demande client'){
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogClient')
+            }
             if (demande==='demande de fourniture')
+            {
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogFourniture')
-             if (demande==='demande de véhicule')
+            }
+             if (demande==='demande de véhicule'){
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogVehicule')
-            if (demande==='demande de tirage')
+            }
+            if (demande==='demande de tirage'){
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogTirage')
-            if (demande==='demande activité relex')
+            }
+            if (demande==='demande activité relex'){
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogRelex')
-            if (demande==='demande de prise en charge')
+            }
+            if (demande==='demande de prise en charge'){
+                this.$store.commit('updateDialog');
                 this.$store.commit('updateDialogPEC')
+            }
         },
         close: function() {
             this.$store.commit('updateDialog')

@@ -28,7 +28,6 @@ async function  setDemandeVehicule(Demande){
              .input('date_retour',sql.DateTime,date_retour)
              .input('lieu_remmassage_r',sql.VarChar,Demande.LieuRemassageRetour)
              .input('nature_marchandise',sql.VarChar,Demande.NatureMarchandise)
-             .input('transportee',sql.VarChar,Demande.Transportee)
              .input('utilisateur1',sql.VarChar,Demande.utilisateur1)
              .input('utilisateur2',sql.VarChar,Demande.utilisateur2)
              .input('utilisateur3',sql.VarChar,Demande.utilisateur3)

@@ -19,3 +19,25 @@ AS
 BEGIN
 	DELETE FROM objet where code_objet = @code_objet
 END
+ 
+/*Create type objet*/
+
+AlTER PROCEDURE InsertDemandeFourniture
+	@userID AS varchar(50),
+	@demande_id AS int output
+AS
+BEGIN 
+	INSERT INTO demande VALUES ((SELECT CONVERT (datetime, SYSDATETIME())),@userID,'Encours', null)
+	INSERT INTO demande_fourniture VALUES ((SELECT IDENT_CURRENT('demande')), null );
+	SELECT @demande_id = IDENT_CURRENT('demande')
+END
+
+ALTER PROCEDURE InserObjetOftDemandeFourniture
+    @demande_id as int, 
+	@code_objet as int,
+	@qty_demande as int 
+AS
+BEGIN
+	INSERT INTO demande_fourniture_object(demande_F_ID , code_object , qty_demande)
+		VALUES (@demande_id,@code_objet,@qty_demande)
+END

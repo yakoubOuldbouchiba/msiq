@@ -46,10 +46,6 @@
                                 </v-col>  
                             </v-row>  
                             <v-row justify="center"> 
-                                    <v-btn class="ma-1 grey white--text" @click="close()">
-                                        <v-icon left>close</v-icon>
-                                       <span>Annuler la demande</span>  
-                                    </v-btn>
                                     <v-btn class="ma-1 pink white--text" 
                                         :disabled="!valid"
                                         @click="submit">

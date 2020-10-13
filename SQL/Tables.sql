@@ -1,3 +1,4 @@
+
 CREATE TABLE utilisateurs (
     email varchar(50) NOT NULL PRIMARY KEY,
 	userPassword nvarchar(MAX) NOT NULL,
@@ -15,7 +16,16 @@ CREATE TABLE utilisateurs (
 ) ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
-
+CREATE TABLE demande (
+	demande_ID int IDENTITY(1, 1) PRIMARY KEY NOT NULL,
+	demande_Date datetime NOT NULL,
+	utilisateurs_ID varchar(50) NOT NULL,
+	etat varchar(50) NOT NULL,
+	motif varchar(MAX) NULL,
+	CONSTRAINT CHK_etat CHECK(etat IN ('Accept�e1','Accept�e2','Accept�e3', 'Reject�e', 'Encours')),
+	CONSTRAINT FK_utilisateurs_demande FOREIGN KEY (utilisateurs_ID) REFERENCES utilisateurs(email)
+) ON [PRIMARY]
+-----------------------------------------------------------------------------------
 CREATE TABLE demande_compte(
 	email varchar(50) NOT NULL PRIMARY KEY,
 	userPassword nvarchar(max) NOT NULL,
@@ -50,7 +60,7 @@ CREATE TABLE demande_client (
 	demande_C_ID int PRIMARY KEY NOT NULL,
 	demande_C_description varchar(MAX) NOT NULL,
 	nature varchar(50) NOT NULL,
-	objet varchar (50) NOT NULL,ID
+	objet varchar (50) NOT NULL,
 	mise_disposition bit NULL,
 	date_mise_dispostion date NULL,
 	achat bit NULL,
@@ -59,20 +69,18 @@ CREATE TABLE demande_client (
 ) ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
-DROP TABLE demande_vehicule
+DROP TABLE demande_relex;
+DROP TABLE demande_vehicule;
 CREATE TABLE demande_vehicule (
 	demande_V_ID int PRIMARY KEY NOT NULL,
 	lieu varchar(100) NOT NULL,
 	organisme varchar (50) NOT NULL,
 	motif_deplacement varchar(250) NOT NULL,
 	date_depart datetime NOT NULL,
-	/*heure_depart varchar(8) NOT NULL,*/
 	lieu_ramassage_d varchar(100),
 	date_retour datetime NOT NULL,
-	/*heure_retour varchar(8) NOT NULL,*/
 	lieu_ramassage_r varchar(100),
-	nature_marchandise varchar(50) NOT NULL,
-	transportee varchar(250),
+	nature_marchandise varchar(50),
 	utilisateur1_ID varchar(50) ,
 	utilisateur2_ID varchar(50) ,
 	utilisateur3_ID varchar(50) ,
@@ -99,7 +107,6 @@ CREATE TABLE demande_tirage (
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
-DROP TABLE document
 CREATE TABLE document (
 	document_ID int IDENTITY(1, 1) PRIMARY KEY,
 	nom_document varchar(MAX) NOT NULL,
@@ -116,7 +123,6 @@ CREATE TABLE document (
 
 CREATE TABLE  demande_fourniture(
 	demande_F_ID int PRIMARY KEY,
-	structure varchar(50),
 	date_recu date,
 	CONSTRAINT FK_demande_fourniture_demande FOREIGN KEY (demande_F_ID)  REFERENCES demande(demande_ID) 
 )ON [PRIMARY];
@@ -134,6 +140,9 @@ CREATE TABLE objet (
 CREATE TABLE demande_fourniture_object (
     demande_F_ID int,
 	code_object int,
+	qty_demande int,
+	qty_accordee int,
+	observation varchar(MAX)
 	PRIMARY KEY(demande_F_ID , code_object),
 	CONSTRAINT FK_demande_fourniture_object_demande_fourniture FOREIGN KEY (demande_F_ID) REFERENCES demande_fourniture(demande_F_ID)
 ) ON [PRIMARY]

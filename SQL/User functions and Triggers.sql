@@ -19,7 +19,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-ALTER PROCEDURE SetUsers
+CREATE PROCEDURE SetUsers
 	@email AS varChar(50),
 	@pw AS nvarchar(Max),
 	@ln AS varChar(50),
@@ -39,7 +39,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-ALTER PROCEDURE LOGIN
+CREATE PROCEDURE LOGIN
 	@email AS VARCHAR(30)
 AS
 BEGIN
@@ -50,7 +50,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-ALTER PROCEDURE GetUser
+CREATE PROCEDURE GetUser
 	@email  AS VarChar(50)
 AS
 BEGIN
@@ -61,7 +61,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-ALTER PROCEDURE setAccountDemand
+CREATE PROCEDURE setAccountDemand
 	@email AS varChar(50),
 	@pw AS nvarchar(max),
 	@ln AS varChar(50),

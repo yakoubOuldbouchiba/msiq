@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-dialog tile v-model="$store.state.dialogVehicule" width="900" persistent >
+    <v-dialog tile v-model="$store.state.dialogVehicule" width="800" persistent >
         <v-form v-model="valid" ref="form">
             <v-card >
                 <v-toolbar flat dark color='deep-purple' class="my-0" >
@@ -97,11 +97,8 @@
                         </v-col>
                     </v-row>
                     <v-row justify="center">
-                        <v-col cols="12" sm="6">
-                            <v-text-field v-model="DV.NatureMarchandise" label="Nature marchandise" prepend-icon='shop'></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6">
-                            <v-text-field v-model="DV.Transportee" label="Transportée" prepend-icon="commute"></v-text-field>
+                        <v-col cols="12">
+                            <v-text-field v-model="DV.NatureMarchandise" label="Nature marchandise transportée" prepend-icon='commute'></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -111,10 +108,6 @@
                     <v-btn :disabled="!valid" large class="deep-purple white--text ma-1" @click="sendDemande()" >
                         <v-icon left>send</v-icon>
                         Envoyer demande
-                    </v-btn>
-                    <v-btn large class='ma-1 grey white--text' @click="closeDemande()" >
-                        <v-icon left>close</v-icon>
-                        Annuler demande
                     </v-btn>
                 </v-row>        
             </v-card> 
@@ -248,7 +241,6 @@ export default {
                 HeureRetour : null,
                 LieuRemassageRetour : null ,// // it using for the areoport
                 NatureMarchandise : null,
-                Transportee : null,
                 utilisateur1 : null,
                 utilisateur2 : null,
                 utilisateur3 : null
