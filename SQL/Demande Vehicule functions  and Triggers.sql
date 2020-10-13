@@ -23,6 +23,7 @@ BEGIN
 END
 
 /*--------------------------------------------*/
+
 ALTER PROCEDURE InsertDemandeVehicule
 	@userID AS varchar(50),
 	@lieu AS varchar(100),
@@ -35,10 +36,12 @@ ALTER PROCEDURE InsertDemandeVehicule
 	@nature_marchandise as varchar(50),
 	@utilisateur1 as varchar(50),
 	@utilisateur2 as varchar(50),
-	@utilisateur3 as varchar(50)
+	@utilisateur3 as varchar(50),
+	@demande_v_id as int output
 AS
 BEGIN
 	INSERT INTO demande VALUES ((SELECT CONVERT (datetime, SYSDATETIME())),@userID,'Encours', null)
 	INSERT INTO demande_vehicule VALUES ((SELECT IDENT_CURRENT('demande')), @lieu, @organisme, @motif_deplacement, @date_depart, @lieu_remmassage_d ,
 	            @date_retour ,@lieu_remmassage_r,@nature_marchandise,@utilisateur1,@utilisateur2,@utilisateur3,null,null);
+	SELECT @demande_v_id = IDENT_CURRENT('demande');
 END

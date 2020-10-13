@@ -1,4 +1,5 @@
 <template>
+
     <div>
         <v-dialog v-model="$store.state.dialogPEC" persistent width="900">
             <v-card tile >
@@ -203,3 +204,4 @@ export default {
     
 }
 </script>
+
