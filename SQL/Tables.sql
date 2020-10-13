@@ -152,16 +152,17 @@ CREATE TABLE demande_priseEnCharge (
 )ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
-
+DROP TABLE demande_relex;
 CREATE TABLE demande_relex (
 	demande_R_ID int PRIMARY KEY,
-	structure varchar(50),
 	destination varchar(MAX) NOT NULL,
 	objet_mission varchar(MAX) NOT NULL,
-	date_depart date NOT NULL, 
-	date_retour date NOT NULL,
+	date_depart datetime NOT NULL, 
+	date_retour datetime NOT NULL,
 	prise_en_charge bit NOT NULL,
-	CONSTRAINT FK_demande_relex_demande FOREIGN KEY (demande_R_ID) REFERENCES demande(demande_ID)
+	demande_V_ID int ,
+	CONSTRAINT FK_demande_relex_demande FOREIGN KEY (demande_R_ID) REFERENCES demande(demande_ID),
+	CONSTRAINT FK_demande_relex_demande_vehicule FOREIGN KEY (demande_V_ID) REFERENCES demande_vehicule(demande_V_ID)
 )ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
