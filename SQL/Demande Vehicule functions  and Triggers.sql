@@ -45,3 +45,17 @@ BEGIN
 	            @date_retour ,@lieu_remmassage_r,@nature_marchandise,@utilisateur1,@utilisateur2,@utilisateur3,null,null);
 	SELECT @demande_v_id = IDENT_CURRENT('demande');
 END
+
+
+
+/--------------------------------------------------------/
+
+
+ALTER PROCEDURE DeleteDemandeVehicule
+	@id as int
+
+AS
+BEGIN
+	DELETE FROM demande_vehicule WHERE demande_V_ID = @id;
+	DELETE FROM demande WHERE demande_ID = @id
+END
