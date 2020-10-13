@@ -6,7 +6,7 @@
                 <v-toolbar flat dark color='deep-purple' class="my-0" >
                     <v-toolbar-title> 
                         <v-icon large left class="white--text">commute</v-icon> 
-                         {{forDemandeRelex}}
+                         Demande véhicule
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn text @click="closeDemande()"> <v-icon> clear </v-icon></v-btn>
@@ -189,10 +189,10 @@ export default {
         async sendDemande (){
             this.$refs.form.validate();
             if(this.forDemandeRelex){
-                console.log(this.forDemandeRelex);
                 await axios.post('http://localhost:3030/DemandeVehicule', this.DV)
                     .then(
                         res =>{
+                            this.valid=false,
                             this.msg = res.data.title,
                             this.Done = true,
                             this.$emit("sendDemande",res.data.demande_v_id);
@@ -207,10 +207,10 @@ export default {
             }
             else
             {
-                console.log(this.forDemandeRelex);
                 await axios.post('http://localhost:3030/DemandeVehicule', this.DV)
                 .then(
                     res =>{
+                        this.valid=false,
                         this.msg = res.data.title,
                         this.$refs.form.reset(),
                         this.Done = true,
@@ -224,6 +224,7 @@ export default {
             } 
         },
         closeDemande :function(){
+            this.$emit("sendDemande",null);
             this.$refs.form.reset();
             this.$store.commit('updateDialogVehicule');
         },
@@ -249,7 +250,6 @@ export default {
             Done: false,
             Errr: false,
             valid:false,
-            maxSelected: 3,
             collegues: [],
             DV : {
                 UserID: this.$store.state.user.email,

@@ -14,7 +14,6 @@
             <v-text-field 
                 :label="label"
                 v-bind="attrs"
-                :label="label"
                 v-on="on"
                 prepend-icon="alarm"
                 :value="heure"

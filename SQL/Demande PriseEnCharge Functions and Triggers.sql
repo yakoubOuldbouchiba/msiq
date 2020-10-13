@@ -1,4 +1,4 @@
-ALTER PROCEDURE InsertDemandePriseEnCharge
+CREATE PROCEDURE InsertDemandePriseEnCharge
 	@userID AS varchar(50), 
     @Col1_ID AS varchar(50), 
     @Col2_ID AS varchar(50), 

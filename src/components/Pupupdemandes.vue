@@ -44,7 +44,7 @@
     <DemandeTirage/>
 
     <DemandeVehicule 
-        :forDemandeRelex="false"
+        forDemandeRelex="false"
     />
 
     <DemandeRelex 
@@ -63,7 +63,7 @@ import DemandeFourniture from './Demandes/DemandeFourniture'
 import DemandeTirage from './Demandes/DemandeTirage'
 import DemandeVehicule from './Demandes/DemandeVehicule'
 import DemandeRelex from './Demandes/DemandeRelex'
-import DemandePriseEnCharge from from './Demandes/DemandePriseEnCharge'
+import DemandePriseEnCharge from './Demandes/DemandePriseEnCharge'
 export default {
     name:'Pupupdemandes',
     components:{DemandeClient , DemandeFourniture , DemandeTirage , DemandeVehicule , DemandeRelex ,  DemandePriseEnCharge},
