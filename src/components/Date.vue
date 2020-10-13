@@ -1,22 +1,32 @@
 <template>
-    <v-menu max-width="290px" >
+    <v-menu 
+        max-width="290px"  
+        :close-on-content-click="false" 
+        ref="menu">
         <template v-slot:activator="{attrs , on}">
             <v-text-field 
-                :label="label"
-                prepend-icon="date_range"
                 v-bind="attrs"
+                prepend-icon="date_range"
+                :label="label"
+                :rules="[v => !!v || 'Cet champs est obligatoire']"
                 v-on="on"
                 :value="date"
-                type="date"
                 >
             </v-text-field>
         </template>
-        <v-date-picker v-model="date" @change="$emit('date' , date)" ></v-date-picker>
+        <v-date-picker v-model="date" @change="$emit('date' , date)">
+            
+            <v-flex>
+                <v-btn text class="primary float-right" 
+                    @click="$refs.menu.save(date)"
+                >OK</v-btn>        
+            </v-flex>
+        </v-date-picker>
     </v-menu>
 </template>
 <script>
 export default {
-    props:['label' , 'icon'],
+    props: ['label'],
     data(){
         return {
             date :null

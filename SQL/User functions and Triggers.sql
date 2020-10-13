@@ -2,7 +2,8 @@
 CREATE PROCEDURE GetUsers 
 AS
 BEGIN
-SELECT * FROM utilisateurs;
+	SELECT email,nomUtilisateur,prenomUtilisateur,typeUtilisateur,dateNaissance,mobile,fonction,structure,posteTelephonique,departement 
+	FROM utilisateurs
 END
 
 /*----------------------------------------------------------------------------------*/
@@ -53,7 +54,7 @@ CREATE PROCEDURE GetUser
 	@email  AS VarChar(50)
 AS
 BEGIN
-SELECT email, nomUtilisateur, prenomUtilisateur, fonction , typeUtilisateur ,structure
+SELECT email,nomUtilisateur,prenomUtilisateur,typeUtilisateur,dateNaissance,mobile,fonction,structure,posteTelephonique,departement 
 FROM utilisateurs
 WHERE email=@email
 END
