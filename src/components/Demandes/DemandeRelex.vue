@@ -166,7 +166,6 @@ export default {
             this.$store.commit('updateDialogVehicule');
         },
         async getDemande(e){
-            console.log(e);
             this.DemandeRelex.demande_v_id = await e;
             if(this.DemandeRelex.demande_v_id !=null){
                 this.disabled = !this.disabled;
@@ -206,6 +205,7 @@ export default {
                             this.disabled=false
                         },
                         err => {
+                            this.disabled=false
                             this.Errr = true,
                             this.msg = err.response.data.title
                         }
