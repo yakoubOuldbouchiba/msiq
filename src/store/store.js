@@ -111,7 +111,6 @@ export default new Vuex.Store({
                 state.user.fonction = userData.user.fonction;
                 state.user.typeUtilisateur = userData.user.typeUtilisateur;
                 state.user.structure = userData.user.structure;
-                console.log(userData)
             }
         }
     }

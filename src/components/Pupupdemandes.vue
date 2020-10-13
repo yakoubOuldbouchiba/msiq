@@ -51,11 +51,7 @@
             :icon='demandes[5].icon' 
             />
 
-    <PEC 
-            :name='demandes[4].name'
-            :color='demandes[4].color'
-            :icon='demandes[4].icon' 
-            />
+    <DemandePriseEnCharge/>
 </div>
 </template>
 
@@ -65,10 +61,10 @@ import DemandeFourniture from './Demandes/DemandeFourniture'
 import DemandeTirage from './Demandes/DemandeTirage'
 import DemandeVehicule from './Demandes/DemandeVehicule'
 import Relex from './Relex'
-import PEC from './PriseEnCharge'
+import DemandePriseEnCharge from './Demandes/DemandePriseEnCharge'
 export default {
     name:'Pupupdemandes',
-    components:{DemandeClient , DemandeFourniture , DemandeTirage , DemandeVehicule , Relex , PEC},
+    components:{DemandeClient , DemandeFourniture , DemandeTirage , DemandeVehicule , Relex , DemandePriseEnCharge},
     data(){
         return{
             demandes :[
