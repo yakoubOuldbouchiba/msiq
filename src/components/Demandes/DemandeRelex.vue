@@ -68,10 +68,10 @@
                             <v-col cols="12">
                                  <v-checkbox 
                                     v-model="DemandeRelex.moyens_transport" 
-                                    value="false" 
+                                    :value="!DemandeRelex.moyens_transport" 
                                     label="Moyens de transport"
-                                    @change="openDemandeVehicule"
                                     >
+                                    <DemandeVehicule />
                                 </v-checkbox>
                             </v-col>
                             <v-col cols="12">
@@ -111,20 +111,20 @@
 <script>
 import Date from '../Date'
 import Heure from '../Heure'
+import DemandeVehicule from '../Demandes/DemandeVehicule'
 export default {
     name:"Relex",
-    components:{Date,Heure},
+    components:{Date,Heure,DemandeVehicule},
     props:['dialogRelex','name','icon','color'] ,
     methods : {
         submit(){
-
+            if(this.DemandeRelex.moyens_transport){
+                this.$store.commit('updateDialogVehicule');
+            }
         },
         close : function(){
             this.$refs.form.reset();
             this.$store.commit('updateDialogRelex');
-        },
-        openDemandeVehicule(){
-            this.$store.commit('updateDialogVehicule');
         },
         // the date & the hour actions which means getting its values 
         dateRetour : function(value){
@@ -149,7 +149,7 @@ export default {
                 heure_depart : null,
                 date_retour : null,
                 heure_retour : null,
-                moyens_transport : null ,
+                moyens_transport : false ,
                 is_prise_encharge : null
             }
         }
