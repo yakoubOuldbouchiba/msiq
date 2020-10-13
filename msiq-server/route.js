@@ -10,6 +10,7 @@ const users = require('./api/users/user');
 const vehicules = require('./api/vehicules/vehicules.js');
 const DemandeClient = require('./api/DemandeClient/DemandeClient');
 const DemandeTirage = require('./api/DemandeTirage/DemandeTirage');
+const DemandePriseEnCharge = require('./api/DemandePriseEnCharge/DemandePriseEnCharge')
 
 var Messages =[
     {
@@ -45,5 +46,6 @@ module.exports = (io)=>{
     router.use(vehicules());
     router.use(DemandeClient());
     router.use(DemandeTirage());
+    router.use(DemandePriseEnCharge());
     return router
 }

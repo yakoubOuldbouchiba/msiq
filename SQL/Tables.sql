@@ -40,7 +40,7 @@ CREATE TABLE demande (
 	utilisateurs_ID varchar(50) NOT NULL,
 	etat varchar(50) NOT NULL,
 	motif varchar(MAX) NULL,
-	CONSTRAINT CHK_etat CHECK(etat IN ('Accept�e1','Accept�e2','Accept�e3', 'Reject�e', 'Encours')),
+	CONSTRAINT CHK_etat CHECK(etat IN ('Acceptee1','Acceptee2','Acceptee3', 'Rejectee', 'Encours')),
 	CONSTRAINT FK_utilisateurs_demande FOREIGN KEY (utilisateurs_ID) REFERENCES utilisateurs(email)
 ) ON [PRIMARY]
 
@@ -140,15 +140,27 @@ CREATE TABLE demande_fourniture_object (
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
+DROP TABLE demande_priseEnCharge
 CREATE TABLE demande_priseEnCharge (
 	demande_P_ID int PRIMARY KEY,
-	structure varchar(50),
+	collegue1_ID varchar(50),
+	collegue2_ID varchar(50),
+	collegue3_ID varchar(50),
+	collegue4_ID varchar(50),
+	collegue5_ID varchar(50),
 	destination varchar(MAX) NOT NULL, 
 	objet_mission varchar(MAX) NOT NULL,
+	startDate date ,
+	EndDate date,
 	moyen_transport varchar(250) NOT NULL,
-	date_vol date ,
 	aeroport varchar(250),
-	CONSTRAINT FK_demande_priseEnCharge  FOREIGN KEY(demande_P_ID) REFERENCES demande(demande_ID)
+	heureDeVol time,
+	CONSTRAINT FK_demande_priseEnCharge_demande FOREIGN KEY(demande_P_ID) REFERENCES demande(demande_ID),
+	CONSTRAINT FK_demande_priseEnCharge_utilisateur1  FOREIGN KEY(collegue1_ID) REFERENCES utilisateurs(email),
+	CONSTRAINT FK_demande_priseEnCharge_utilisateur2  FOREIGN KEY(collegue2_ID) REFERENCES utilisateurs(email),
+	CONSTRAINT FK_demande_priseEnCharge_utilisateur3  FOREIGN KEY(collegue3_ID) REFERENCES utilisateurs(email),
+	CONSTRAINT FK_demande_priseEnCharge_utilisateur4  FOREIGN KEY(collegue4_ID) REFERENCES utilisateurs(email),
+	CONSTRAINT FK_demande_priseEnCharge_utilisateur5  FOREIGN KEY(collegue5_ID) REFERENCES utilisateurs(email),
 )ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/

@@ -13,10 +13,11 @@
         <template v-slot:activator="{attrs , on}">
             <v-text-field 
                 v-bind="attrs"
+                :label="label"
                 v-on="on"
                 prepend-icon="alarm"
                 :value="heure"
-                type="time"
+                :rules="[v => !!v || 'Cet champs est obligatoire']"
             ></v-text-field>
         </template>
         <v-time-picker 
@@ -31,7 +32,7 @@
 <script>
 export default {
     name:'Heure',
-    props :['label','icon'],
+    props :['label'],
     data(){
         return{
             menu2: false,
