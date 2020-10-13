@@ -43,7 +43,9 @@
 
     <DemandeTirage/>
 
-    <DemandeVehicule />
+    <DemandeVehicule 
+        :forDemandeRelex="false"
+    />
 
     <DemandeRelex 
             :name='demandes[5].name'
