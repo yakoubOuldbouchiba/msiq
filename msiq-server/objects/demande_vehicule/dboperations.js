@@ -18,7 +18,7 @@ async function  setDemandeVehicule(Demande){
         try {
             console.log(date_depart);
             console.log(date_retour);
-             await new sql.Request()
+            let result = await new sql.Request()
              .input('userID',sql.VarChar,Demande.UserID)
              .input('lieu',sql.VarChar,Demande.Lieu)
              .input('organisme',sql.VarChar,Demande.Organisme)
@@ -31,10 +31,14 @@ async function  setDemandeVehicule(Demande){
              .input('utilisateur1',sql.VarChar,Demande.utilisateur1)
              .input('utilisateur2',sql.VarChar,Demande.utilisateur2)
              .input('utilisateur3',sql.VarChar,Demande.utilisateur3)
+             .output('demande_v_id',sql.int)
             .execute('InsertDemandeVehicule');
             console.log('Demande Inserted');
             sql.close();
-            return  'DI' //Demand inserted
+            return  ({
+                result : 'DI',
+                demande_v_id : result.output.demande_v_id
+            } )//Demand inserted
         } catch (error) {
             console.log('can not instert Demande');
             sql.close();

@@ -1,21 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const dbOperationsDemandes = require('../../objects/demande_vehicule/dboperations.js');
+const dbOperationsDemandes = require('../../objects/demande_relex/dboperations.js');
 import * as auth from '../../services/auth-service.js'
 module.exports=()=>{
     //get a list of demandes
-    router.get('/DemandesVehicule',auth.requireLogin,(req , res)=>{ 
+    router.get('/DemandesRelex',auth.requireLogin,(req , res)=>{ 
         res.send({title : 'List of demandes'});
     });
     //add a new demande
-    router.post('/DemandeVehicule',auth.requireLogin , (req , res)=>{
+    router.post('/DemandeRelex',auth.requireLogin , (req , res)=>{
         
-        dbOperationsDemandes.setDemandeVehicule( req.body)
+        dbOperationsDemandes.setDemandeRelex( req.body)
             .then(result => {
-                if(result.result ==='DI'){
+                if(result ==='DI'){
                     res.status(200).json({
                         title: 'Votre demande véhicule a été envoyée',
-                        demande_v_id : result.demande_v_id
                     })
                 }else if (result ==='CNID') {
                     res.status(401).json({
@@ -31,11 +30,11 @@ module.exports=()=>{
             }) 
     });
     //update a demande
-    router.put('/DemandeVehicule/:id',auth.requireLogin,(req , res)=>{ 
+    router.put('/DemandeRelex/:id',auth.requireLogin,(req , res)=>{ 
         res.send({method : 'update a demande'});
     });
     // delete a demande
-    router.delete('/DemandeVehicule/:id',auth.requireLogin,(req , res)=>{ 
+    router.delete('/DemandeRelex/:id',auth.requireLogin,(req , res)=>{ 
         res.send({method : 'delete a demande'});
     });
     return router;

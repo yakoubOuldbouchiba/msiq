@@ -30,6 +30,8 @@ export default new Vuex.Store({
         dialogVehicule :false,
         dialogRelex:false,
         dialogPEC:false,
+        forDemandeRelex :false ,
+        
     },
     mutations:{
         

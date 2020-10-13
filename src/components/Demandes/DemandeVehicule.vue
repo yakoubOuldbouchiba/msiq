@@ -6,7 +6,7 @@
                 <v-toolbar flat dark color='deep-purple' class="my-0" >
                     <v-toolbar-title> 
                         <v-icon large left class="white--text">commute</v-icon> 
-                        Demande Vehicule
+                         {{forDemandeRelex}}
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn text @click="closeDemande()"> <v-icon> clear </v-icon></v-btn>
@@ -161,7 +161,7 @@ import Heure from '../Heure'
 import axios from 'axios'
 export default {
     name:"DemandeVehicule",
-    props:['name','color','icon'] ,
+    props:['name','color','icon' ,'forDemandeRelex'] ,
     components:{Date , Heure ,Autocomplete},
     computed :{
         dialog : {
@@ -186,21 +186,42 @@ export default {
             }
         },
         //the popup actions
-        sendDemande : function(){
+        async sendDemande (){
             this.$refs.form.validate();
-            axios.post('http://localhost:3030/DemandeVehicule', this.DV)
-              .then(
-                res =>{
-                    this.msg = res.data.title,
-                    this.$refs.form.reset(),
-                    this.Done = true,
-                    this.$store.commit('updateDialogVehicule')
-                },
-                err => {
-                    this.Errr = true,
-                    this.msg = err.response.data.title
-                }
-            ) 
+            if(this.forDemandeRelex){
+                console.log(this.forDemandeRelex);
+                await axios.post('http://localhost:3030/DemandeVehicule', this.DV)
+                    .then(
+                        res =>{
+                            this.msg = res.data.title,
+                            this.Done = true,
+                            this.$emit("sendDemande",res.data.demande_v_id);
+                            this.$refs.form.reset(),
+                            this.$store.commit('updateDialogVehicule');
+                        },
+                        err => {
+                            this.Errr = true,
+                            this.msg = err.response.data.title
+                        }
+                )
+            }
+            else
+            {
+                console.log(this.forDemandeRelex);
+                await axios.post('http://localhost:3030/DemandeVehicule', this.DV)
+                .then(
+                    res =>{
+                        this.msg = res.data.title,
+                        this.$refs.form.reset(),
+                        this.Done = true,
+                        this.$store.commit('updateDialogVehicule')
+                    },
+                    err => {
+                        this.Errr = true,
+                        this.msg = err.response.data.title
+                    }
+                )
+            } 
         },
         closeDemande :function(){
             this.$refs.form.reset();
@@ -223,6 +244,7 @@ export default {
     ,
     data(){
         return{
+            demande_v_id : null,
             msg :'',
             Done: false,
             Errr: false,
