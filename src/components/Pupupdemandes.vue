@@ -44,7 +44,7 @@
     <DemandeTirage/>
 
     <DemandeVehicule 
-        :forDemandeRelex="false"
+        forDemandeRelex="false"
     />
 
     <DemandeRelex 

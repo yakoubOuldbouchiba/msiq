@@ -14,7 +14,7 @@ module.exports=()=>{
             .then(result => {
                 if(result ==='DI'){
                     res.status(200).json({
-                        title: 'Votre demande véhicule a été envoyée'
+                        title: 'Votre demande fourniture a été envoyée'
                     })
                 }else if (result ==='CNID') {
                     res.status(401).json({

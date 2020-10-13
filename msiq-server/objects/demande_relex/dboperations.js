@@ -27,7 +27,7 @@ async function  setDemandeRelex(Demande){
             .execute('InsertDemandeRelex')
             console.log('Demande Inserted');
             sql.close();
-            return  'DI' //Demand inserted
+            return 'DI' //Demand inserted
         } catch (error) {
             console.log('can not instert Demande');
             sql.close();

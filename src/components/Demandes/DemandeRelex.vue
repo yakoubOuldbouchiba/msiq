@@ -67,13 +67,14 @@
                         <v-row justify="center">
                             <v-col cols="12">
                                  <v-checkbox 
-                                    v-model="DemandeRelex.moyens_transport" 
+                                    v-model="DemandeRelex.moyens_transport"
                                     :value="!DemandeRelex.moyens_transport" 
                                     label="Moyens de transport"
                                     :disabled="disabled"
                                     @click=" openDemandeVehicule"
                                     >
                                 </v-checkbox>
+                                <b class="green--text" v-show="disabled">Le demande véhicule est bien crée</b>
                             </v-col>
                             <v-col cols="12">
                                 <h3>Vous voulez prise en charge par la structure de destination ?</h3>
@@ -161,14 +162,19 @@ export default {
     components:{Date,Heure,DemandeVehicule},
     props:['dialogRelex','name','icon','color'] ,
     methods : {
-    openDemandeVehicule(){
-        this.disabled = !this.disabled;
-        this.$store.commit('updateDialogVehicule');
-    },
-      async getDemande(e){
-           console.log(e);
-           this.DemandeRelex.demande_v_id = await e;
-       },
+        openDemandeVehicule(){
+            this.$store.commit('updateDialogVehicule');
+        },
+        async getDemande(e){
+            console.log(e);
+            this.DemandeRelex.demande_v_id = await e;
+            if(this.DemandeRelex.demande_v_id !=null){
+                this.disabled = !this.disabled;
+            }else{
+                this.DemandeRelex.moyens_transport=!this.DemandeRelex.moyens_transport
+            }
+
+        },
        async submit(){
             await axios.post('http://localhost:3030/DemandeRelex', this.DemandeRelex )
             .then(
@@ -186,10 +192,28 @@ export default {
                     }
                 )
         },
-        close : function(){
+        async close (){
             this.$refs.form.reset();
-            this.$store.commit('updateDialogRelex');
-        },
+            if(this.DemandeRelex.demande_v_id!==null){
+                await axios.delete('http://localhost:3030/DemandeVehicule/'+this.DemandeRelex.demande_v_id)
+                .then(
+                        res =>{
+                            this.msg = res.data.title,
+                            this.$refs.form.reset(),
+                            this.Errr = true,
+                            this.$store.commit('updateDialogRelex')
+                            this.DemandeRelex.demande_v_id=null
+                            this.disabled=false
+                        },
+                        err => {
+                            this.Errr = true,
+                            this.msg = err.response.data.title
+                        }
+                    )
+                }else{
+                    this.$store.commit('updateDialogRelex');
+                }
+            },
         // the date & the hour actions which means getting its values 
         dateRetour : function(value){
             this.DemandeRelex.date_retour=value

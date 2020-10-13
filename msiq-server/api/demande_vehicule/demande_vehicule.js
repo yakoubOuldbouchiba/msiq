@@ -36,7 +36,25 @@ module.exports=()=>{
     });
     // delete a demande
     router.delete('/DemandeVehicule/:id',auth.requireLogin,(req , res)=>{ 
-        res.send({method : 'delete a demande'});
+        dbOperationsDemandes.deleteDemandeVehicule(req.params.id)
+        .then(result => {
+            if(result ==='DD'){
+                res.status(200).json({
+                    title: 'Votre demande véhicule a été supprimée',
+                    demande_v_id : result.demande_v_id
+                })
+            }else if (result ==='CNDD') {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                    error: 'CNIU'
+                })
+            } else {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé dans le serveur',
+                    error: 'CNCTDB' 
+                })
+            }
+        })
     });
     return router;
 }
