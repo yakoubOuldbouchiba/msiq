@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const dbOperationsDemandePriseEnCharge = require('../../objects/DemandePriseEnCharge/dboperations');
+import * as auth from '../../services/auth-service.js'
 const jwt = require('jsonwebtoken');
 module.exports=()=>{
    //add a new demande
@@ -45,5 +46,26 @@ module.exports=()=>{
             })
         });
     })
+        // delete a demande
+        router.delete('/DemandePriseEnCharge/:id',auth.requireLogin,(req , res)=>{ 
+        dbOperationsDemandePriseEnCharge.deleteDemandePriseEnCharge(req.params.id)
+        .then(result => {
+            if(result ==='DD'){
+                res.status(200).json({
+                    title: 'Votre demande prise en charge a été supprimée',
+                })
+            }else if (result ==='CNDD') {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                    error: 'CNIU'
+                })
+            } else {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé dans le serveur',
+                    error: 'CNCTDB' 
+                })
+            }
+        })
+    });
     return router;
 }

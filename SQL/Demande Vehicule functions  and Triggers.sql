@@ -1,4 +1,4 @@
-CREATE PROCEDURE GETVEHICULE
+mCREATE PROCEDURE GETVEHICULE
 AS
 BEGIN
 	SELECT * FROM vehicule
@@ -56,6 +56,7 @@ ALTER PROCEDURE DeleteDemandeVehicule
 
 AS
 BEGIN
+	--DELETE FROM demande_view WHERE demande_ID = @id;
 	DELETE FROM demande_vehicule WHERE demande_V_ID = @id;
 	DELETE FROM demande WHERE demande_ID = @id
 END

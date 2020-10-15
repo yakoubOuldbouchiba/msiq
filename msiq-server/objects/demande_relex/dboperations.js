@@ -47,11 +47,26 @@ async function  editDemandeRelex(){
     }
 }
 // delete demande
-async function  deleteDemandeRelex(){
+async function  deleteDemandeRelex(id){
     try{
-        let pool = await sql.connect(config);
-    }catch(error){
-        console.log(error);
+        await sql.connect(config);
+        try{
+            console.log(id);
+            await new sql.Request()
+            .input('id',sql.Int,id)
+            .execute('DeleteDemandeRelex');
+            sql.close();
+            console.log("demande deleted")
+            return "DD"
+
+        }catch(error){
+            console.log('can not delete Demande');
+            sql.close();
+            return 'CNDD'; // can not delete Demand
+        }
+    }catch (error) {
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
     }
 }
 module.exports = {
