@@ -138,6 +138,9 @@ components:{Pupupdemandes},
 async created(){
   this.Demandes = (await axios.get("http://localhost:3030/demandes/")).data.demandes
 },
+async mounted(){
+  this.Demandes = (await axios.get("http://localhost:3030/demandes/")).data.demandes
+},
 data(){
    return{
      Demandes :[],
