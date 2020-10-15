@@ -35,7 +35,25 @@ module.exports=()=>{
     });
     // delete a demande
     router.delete('/DemandeRelex/:id',auth.requireLogin,(req , res)=>{ 
-        res.send({method : 'delete a demande'});
+        dbOperationsDemandes.deleteDemandeRelex(req.params.id)
+        .then(result => {
+            if(result ==='DD'){
+                res.status(200).json({
+                    title: 'Votre demande relex a été supprimée',
+                    
+                })
+            }else if (result ==='CNDD') {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                    error: 'CNIU'
+                })
+            } else {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé dans le serveur',
+                    error: 'CNCTDB' 
+                })
+            }
+        })
     });
     return router;
 }

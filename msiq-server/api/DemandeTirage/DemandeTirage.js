@@ -1,7 +1,9 @@
+
 const express = require("express");
 const router = express.Router();
 const multer = require('multer');
 const dbOperationsDemandeTirage = require('../../objects/DemandeTirage/dboperations');
+
 const jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 
@@ -55,5 +57,35 @@ module.exports=()=>{
                 });
             })
         })
+        // delete a demande
+        router.delete('/DemandeTirage/:id',(req , res)=>{
+            jwt.verify((req.headers.authorization || req.headers['Authorization']),'TMPK3Y',
+            async (err,decoded) => {
+                if (err) {
+                    res.status(500).json({
+                        title: 'Quelque chose s\'est mal passé dans le serveur',
+                        error: 'CNCTDB' 
+                    })
+                };
+                dbOperationsDemandeTirage.deleteDemandeTirage(req.params.id)
+                    .then(result => {
+                        if(result ==='DD'){
+                            res.status(200).json({
+                                title: 'Votre demande tirage a été supprimée'
+                            })
+                        }else if (result ==='CNDD') {
+                            res.status(401).json({
+                                title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                                error: 'CNIU'
+                            })
+                        } else {
+                            res.status(401).json({
+                                title: 'Quelque chose s\'est mal passé dans le serveur',
+                                error: 'CNCTDB' 
+                            })
+                        }
+                    })
+                });
+    })
     return router;
 }

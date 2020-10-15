@@ -14,3 +14,11 @@ BEGIN
 	INSERT INTO document VALUES (@FN, @NF, @NE, @NTF, @TF, @A, @SFN, @FF)
 	INSERT INTO demande_tirage VALUES ((SELECT IDENT_CURRENT('demande')), null, null, (SELECT IDENT_CURRENT('document')))
 END
+ALTER PROCEDURE DeleteDemandeTirage
+	@id as int
+AS
+BEGIN
+	DELETE FROM demande_tirage WHERE demande_T_ID = @id;
+	DELETE FROM document WHERE document_ID = (select document_ID from demande_tirage where demande_T_ID = @id) ;
+	DELETE FROM demande WHERE demande_ID = @id
+END

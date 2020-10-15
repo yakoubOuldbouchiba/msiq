@@ -26,7 +26,30 @@ async function  setDemandeClient(Demande){
         return 'CNCTDB';  //can not connect to database
     }
 }
+// delete message
+async function  deleteDemandeClient(id){
+    try{
+        await sql.connect(config);
+        try{
+            console.log(id);
+            await new sql.Request()
+            .input('id',sql.Int,id)
+            .execute('DeleteDemandeClient');
+            sql.close();
+            console.log("demande deleted")
+            return "DD"
 
+        }catch(error){
+            console.log('can not delete Demande');
+            sql.close();
+            return 'CNDD'; // can not delete Demand
+        }
+    }catch (error) {
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
+    }
+}
 module.exports = {
     setDemandeClient,
+    deleteDemandeClient
 }

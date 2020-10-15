@@ -22,3 +22,11 @@ BEGIN
 		@Col4_ID, @Col5_ID, @Dest,
 		@Objet, @SD, @ED, @MDT, @A, @HV)
 END
+
+CREATE PROCEDURE DeleteDemandePEC
+	@id as int
+AS
+BEGIN
+	DELETE FROM demande_priseEnCharge WHERE demande_P_ID = @id;
+	DELETE FROM demande WHERE demande_ID = @id
+END
