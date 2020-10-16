@@ -56,5 +56,59 @@ module.exports=()=>{
             res.send(result);
         }); 
     });
-    return router;
+   // Confirm User
+   router.post('/confirm', (req,res) => {
+    
+    dbOperationsClient.confirm(req.body)
+    .then( 
+        resu => {
+            if (resu === 'G') 
+                res.status(200).json({
+                    title: 'Votre identité a été bien Confirmée'
+                })
+            else if (resu == 'WP')
+                res.status(401).json({
+                    title: 'Mot de pass inccorect',
+                    error: 'WP'
+                })
+            else
+                res.status(401).json({
+                title: 'Quel que chose est mal passée coté serveur',
+                error: 'CNCTDB'
+                })
+        })
+   });
+   //changement de mot de pass
+   router.post('/changeMDP', (req,res) => {
+    dbOperationsClient.changePW(req.body)
+    .then( 
+        resu => {
+        if (resu === 'G') 
+            res.status(200).json({
+                title: 'Votre mot de passe ont été changé'
+            })
+        else 
+            res.status(401).json({
+            title: 'Quel que chose est mal passée coté serveur',
+            error: 'CNCTDB'
+            })
+        })
+   });
+   //Modifier un utilisateur
+   router.post('/updateuser', (req,res) => {
+    dbOperationsClient.editUser(req.body)
+    .then( 
+        resu => {
+        if (resu === 'UU') 
+            res.status(200).json({
+                title: 'Votre informations ont été changé'
+            })
+        else 
+            res.status(401).json({
+            title: 'Quel que chose est mal passée coté serveur',
+            error: 'CNCTDB'
+            })
+        })
+   })
+   return router;
 }
