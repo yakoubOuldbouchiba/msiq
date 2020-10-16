@@ -13,9 +13,16 @@ export default new Vuex.Store({
             email : '',
             avatar : '',
             userName : '',
+            FirstName: '',
+            LastName: '',
             fonction : '',
             typeUtilisateur:'',
-            structure : ''
+            structure : '',
+            mobile: '',
+            departement: '',
+            posteTelephonique: '',
+            dateNaissance: '',
+
         },
         sokect:io('http://localhost:3030/'),
         messages :[],
@@ -108,11 +115,17 @@ export default new Vuex.Store({
             const token = localStorage.getItem("token");
             if(token!=null){
                 let userData =jwt.decode(token , 'TMPK3Y');
-                state.user.email = userData.user.email
+                state.user.email = userData.user.email;
+                state.user.LastName = userData.user.nomUtilisateur;
+                state.user.FirstName = userData.user.prenomUtilisateur;
                 state.user.userName = userData.user.nomUtilisateur + " " + userData.user.prenomUtilisateur
                 state.user.fonction = userData.user.fonction;
                 state.user.typeUtilisateur = userData.user.typeUtilisateur;
                 state.user.structure = userData.user.structure;
+                state.user.departement = userData.user.departement;
+                state.user.dateNaissance = userData.user.dateNaissance;
+                state.user.posteTelephonique = userData.user.posteTelephonique;
+                state.user.mobile = userData.user.mobile;
             }
         }
     }

@@ -7,8 +7,12 @@ export function generateJWT(user){
         nomUtilisateur : user.nomUtilisateur, 
         prenomUtilisateur : user.prenomUtilisateur,
         fonction : user.fonction,
-        typeUtilisateur  : user.typeUtilisateur 
-        
+        typeUtilisateur  : user.typeUtilisateur ,
+        structure: user.structure,
+        dateNaissance: user.dateNaissance,
+        mobile: user.mobile,
+        posteTelephonique: user.posteTelephonique,
+        departement: user.departement,
     }
     return jwt.sign({user : tokenData}, 'TMPK3Y')
 }

@@ -103,11 +103,30 @@ async function  Login(user){
     }
 }
 //edit user
-async function  editUser(){
+async function  editUser(user){
     try{
-        //let pool =  sql.connect(config);
+        console.log(user);
+        await sql.connect(config);
+        try {
+            await new sql.Request()
+            .input('email', sql.VarChar, user.UserName)
+            .input('ln', sql.VarChar, user.LastName)
+            .input('fn', sql.VarChar, user.LastName)
+            .input('bd', sql.DateTimeOffset, user.dateNaissance)
+            .input('tel', sql.VarChar, user.Tel)
+            .input('job', sql.VarChar, user.Fonction)
+            .input('struc', sql.VarChar, user.Structure)
+            .input('depart', sql.VarChar, user.Departement)
+            .input('pt', sql.Int, user.PosteTelephonique)
+            .execute('UpdateUser');
+            console.log('user updated');
+            return 'UU';
+        } catch (error) {
+            console.log(error);
+            return 'CNUU'
+        }
     }catch(error){
-        console.log(error);
+        return 'CNCTDB';
     }
 }
 // delete user
@@ -122,6 +141,45 @@ async function  deleteUser(email){
         return false;
     }
 }
+
+async function  confirm(user){
+    try{
+        await sql.connect(config);
+        try {
+            let result = await new sql.Request()
+            .input('email', sql.VarChar, user.UserName)
+            .execute('LOGIN');
+            if (await BCRYPT.compare(user.PassWord, result.recordset[0].userPassword))
+                return 'G';
+            else
+                return 'WP';
+        } catch (error) {
+            return 'CNFU'
+        }
+    }catch(error){
+        return 'CNCTDB';
+    }
+}
+
+async function  changePW(user){
+    try{
+        await sql.connect(config);
+        try {
+            let PW = await BCRYPT.hash(user.pw, saltRounds);
+            await new sql.Request()
+            .input('email', sql.VarChar, user.UserName)
+            .input('npw', sql.VarChar, PW)
+            .execute('UpdatePassword');
+            return 'G';
+        } catch (error) {
+            return 'CIP'
+        }
+    }catch(error){
+        return 'CNCTDB';
+    }
+}
+
+
 module.exports = {
     getUsers,
     getUser,
@@ -129,4 +187,6 @@ module.exports = {
     editUser,
     deleteUser,
     Login,
+    confirm,
+    changePW,
 }
