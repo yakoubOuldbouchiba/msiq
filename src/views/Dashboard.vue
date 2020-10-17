@@ -78,6 +78,7 @@
                   fab
                   dark
                   x-small
+                  @click="updateItem(Demande)"
                 >
                   <v-icon dark>
                     edit
@@ -126,15 +127,60 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <DemandeClient 
+      v-model="openDialogClient"
+      :demandeID="demande_id"
+      :demande="demande"
+      type= "update" 
+    />
+    <DemandeFourniture 
+      v-model="openDialogFourniture"
+      :demandeID="demande_id"
+      type= "update"
+      name='demande de fourniture'
+      icon='edit'
+      color='red'
+       />
+    <DemandeVehicule 
+       v-model="openDialogVehicule"
+      :demandeID="demande_id"
+      type= "update"
+      forDemandeRelex="false"
+      name ='demande de véhicule'
+      icon ='commute'
+      color ='deep-purple' />
+    <DemandeTirage 
+     v-model="openDialogTirage"
+      :demandeID="demande_id"
+      type= "update" />
+    <DemandePriseEnCharge 
+      v-model="openDialogPEC"
+      :demandeID="demande_id"
+      type= "update"
+    />
+    <DemandeRelex 
+      v-model="openDialogRelex"
+      :demandeID="demande_id"
+      type= "update"
+      name='demande activité relex' 
+      icon='hotel' 
+      color='blue'
+     />
   </div>
 </template>
 
 <script>
 import Pupupdemandes from '../components/Pupupdemandes'
+import DemandeClient from '../components/Demandes/DemandeClient'
+import DemandeFourniture from '../components/Demandes/DemandeFourniture'
+import DemandePriseEnCharge from '../components/Demandes/DemandePriseEnCharge'
+import DemandeRelex from '../components/Demandes/DemandeRelex'
+import DemandeTirage from '../components/Demandes/DemandeTirage'
+import DemandeVehicule from '../components/Demandes/DemandeVehicule'
 import axios from 'axios'
 export default {
 name: 'dashboard',
-components:{Pupupdemandes},
+components:{Pupupdemandes , DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture},
 async created(){
   this.Demandes = (await axios.get("http://localhost:3030/demandes/")).data.demandes
 },
@@ -143,11 +189,24 @@ async mounted(){
 },
 data(){
    return{
-     Demandes :[],
-     valid:false,
-            msg :'',
-            Done: false,
-            Errr: false,
+        Demandes :[],
+        valid:false,
+        msg :'',
+        Done: false,
+        Errr: false,
+        demande_id:null,
+        openDialogVehicule : false,
+        openDialogClient : false,
+        openDialogFourniture : false,
+        openDialogRelex : false,
+        openDialogTirage : false,
+        openDialogPEC : false,
+        demande:{
+              demande_c_id : '',
+              nature:'',
+              objet:'',
+              description:'',
+        }
    }
  },
  methods:{
@@ -186,6 +245,61 @@ data(){
       let index = this.Demandes.indexOf(demande)
       this.Demandes.splice(index , 1);
     }
+   },
+   async updateItem(Demande){
+     if(Demande.type_demande=='demande client'){
+       await this.getDemande(Demande);
+       this.demande_id = Demande.demande_ID;
+       this.openDialogClient = true;
+     }else if(Demande.type_demande=='demande fourniture'){
+       this.demande_id = Demande.demande_ID;
+       this.openDialogFourniture = true;
+     }else if(Demande.type_demande=='demande véhicule'){
+       this.demande_id = Demande.demande_ID;
+       this.openDialogVehicule = true
+     }else if(Demande.type_demande=='demande relex'){
+       this.demande_id = Demande.demande_ID;
+       this.openDialogRelex = true
+     }else if(Demande.type_demande=='demande tirage'){
+       this.demande_id = Demande.demande_ID;
+       this.openDialogTirage = true
+     }else if(Demande.type_demande=='demande prise en charge'){
+       this.demande_id = Demande.demande_ID;
+       this.openDialogPEC = true
+     }
+   },
+   async getDemande(demande){
+      let type = ''
+     if(demande.type_demande=="demande véhicule"){
+          type='/DemandeVehicule/' 
+     } else if(demande.type_demande=="demande client"){
+          type='/DemandeClient/' 
+     } else if(demande.type_demande=="demande fourniture"){
+          type='/DemandeFourniture/' 
+     }else if(demande.type_demande=="demande prise en charge"){
+          type='/DemandePriseEnCharge/' 
+     }else if(demande.type_demande=="demande tirage"){
+          type='/DemandeTirage/' 
+     }else if(demande.type_demande=="demande relex"){
+          type='/DemandeRelex/' 
+     }else{
+       type='/demande/'
+     }
+     await axios.get('http://localhost:3030'+type+demande.demande_ID)
+          .then(
+                res =>{
+                    this.msg = res.data.title
+                    this.demande.demande_c_id = res.data.demande.demande_C_ID
+                    this.demande.nature = res.data.demande.nature
+                    this.demande.objet = res.data.demande.objet
+                    this.description = res.data.demande.demande_C_description
+                    this.Done = true      
+                },
+                err => {
+                    this.Errr = true,
+                    this.msg = err.response.data.title
+                }
+          )
    }
  }
 }

@@ -1,7 +1,7 @@
 <template>
 
     <div>
-        <v-dialog v-model="$store.state.dialogPEC" persistent width="900">
+        <v-dialog :retain-focus="false"  v-model="dialog" persistent width="900">
             <v-card tile >
                 <v-toolbar flat dark color='indigo'  >
                     <v-toolbar-title > 
@@ -93,10 +93,17 @@
                         <v-row justify="center"> 
                             <v-col cols="9" sm="4">
                                 <v-btn  
+                                    v-if="type=='update'"
+                                    @click="update" 
+                                    :disabled="!valid" 
+                                    class="indigo white--text "
+                                ><v-icon left>send</v-icon>Modifier la demande</v-btn>
+                                <v-btn  
+                                    v-else
                                     @click="submit" 
                                     :disabled="!valid" 
                                     class="indigo white--text "
-                                ><v-icon left>send</v-icon>Envoyer demande</v-btn>
+                                ><v-icon left>send</v-icon>Envoyer la demande</v-btn>
                             </v-col>    
                         </v-row> 
                     </v-form>
@@ -150,6 +157,17 @@ import Heure from "./../Heure";
 import Axios from "axios";
 export default {
     name: 'DemandePriseEnCharge',
+    props : ['value' , 'type' , 'demandeID'],
+    computed:{
+        dialog : {
+            get : function(){
+                return this.value
+            },
+            set : function(value){
+                this.$emit('input' , value)
+            }
+        }
+    },
     async created(){
         await this.$store.dispatch('getTeam')
         this.Users = this.$store.state.users
@@ -182,7 +200,7 @@ export default {
     methods: {
         close(){
             this.$refs.form.reset(),
-            this.$store.commit('updateDialogPEC')        
+            this.dialog = false;       
         },
         submit(){
             this.$refs.form.validate();
@@ -192,7 +210,7 @@ export default {
                 this.msg = res.data.title,
                 this.$refs.form.reset(),
                 this.Done = true,
-                this.$store.commit('updateDialogPEC')
+                this.dialog = false
             },
             err => {
                 this.Errr = true,
@@ -200,6 +218,10 @@ export default {
             }
             )
         },
+        update(){
+            console.log(this.demandeID);
+            this.dialog=false
+        }
     },
     
 }

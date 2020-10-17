@@ -33,26 +33,29 @@
                     </v-container>
                 </v-card>
     </v-dialog> 
-    <DemandeClient/>
+    <DemandeClient v-model="openDialogClient"/>
 
     <DemandeFourniture
+            v-model="openDialogFourniture"
             :name='demandes[1].name'
             :color='demandes[1].color'
             :icon='demandes[1].icon' 
              />
 
-    <DemandeTirage/>
+    <DemandeTirage v-model="openDialogTirage"/>
 
     <DemandeVehicule 
+        v-model="openDialogVehicule"
         forDemandeRelex="false"
     />
 
     <DemandeRelex 
+            v-model ="openDialogRelex"
             :name='demandes[5].name'
             :color='demandes[5].color'
             :icon='demandes[5].icon' 
             />
-    <DemandePriseEnCharge/>
+    <DemandePriseEnCharge v-model="openDialogPEC"/>
 
 </div>
 </template>
@@ -69,6 +72,12 @@ export default {
     components:{DemandeClient , DemandeFourniture , DemandeTirage , DemandeVehicule , DemandeRelex ,  DemandePriseEnCharge},
     data(){
         return{
+            openDialogVehicule:false,
+            openDialogFourniture:false,
+            openDialogTirage:false,
+            openDialogClient:false,
+            openDialogPEC:false,
+            openDialogRelex:false,
             demandes :[
                 {name:'demande client',icon:'devices',color:'pink'},
                 {name:'demande de fourniture',icon:'edit',color:'red'},
@@ -83,28 +92,28 @@ export default {
         lancerDialog : function(demande){
             if(demande==='demande client'){
                 this.$store.commit('updateDialog');
-                this.$store.commit('updateDialogClient')
+                this.openDialogClient=true;
             }
             if (demande==='demande de fourniture')
             {
                 this.$store.commit('updateDialog');
-                this.$store.commit('updateDialogFourniture')
+                this.openDialogFourniture=true
             }
              if (demande==='demande de véhicule'){
                 this.$store.commit('updateDialog');
-                this.$store.commit('updateDialogVehicule')
+                this.openDialogVehicule=true
             }
             if (demande==='demande de tirage'){
                 this.$store.commit('updateDialog');
-                this.$store.commit('updateDialogTirage')
+                this.openDialogTirage=true;
             }
             if (demande==='demande activité relex'){
                 this.$store.commit('updateDialog');
-                this.$store.commit('updateDialogRelex')
+                this.openDialogRelex=true;
             }
             if (demande==='demande de prise en charge'){
                 this.$store.commit('updateDialog');
-                this.$store.commit('updateDialogPEC')
+                this.openDialogPEC=true;
             }
         },
         close: function() {

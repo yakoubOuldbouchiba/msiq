@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-dialog tile v-model="$store.state.dialogRelex" width="700" persistent>
+    <v-dialog :retain-focus="false"  tile v-model="dialog" width="700" persistent>
             <v-card >
                 <v-toolbar flat dark :color='color'  >
                     <v-toolbar-title> 
@@ -95,7 +95,14 @@
                             </v-col>
                         </v-row>
                         <v-row justify="center"> 
-                            <v-btn class="ma-1  white--text" 
+                            <v-btn v-if="type == 'update'" class="ma-1  white--text" 
+                                :color="color"
+                                :disabled="!valid"
+                                @click="update">
+                                <v-icon left>send</v-icon>
+                                <span  >Modifier la demande</span> 
+                            </v-btn>
+                            <v-btn v-else class="ma-1  white--text" 
                                 :color="color"
                                 :disabled="!valid"
                                 @click="submit">
@@ -109,7 +116,8 @@
     </v-dialog>
      <DemandeVehicule 
         forDemandeRelex=true
-        @sendDemande="getDemande"  
+        @sendDemande="getDemande" 
+        v-model="open_dialog" 
     />
          <v-snackbar
       v-model="Done"
@@ -160,10 +168,19 @@ import DemandeVehicule from '../Demandes/DemandeVehicule'
 export default {
     name:"Relex",
     components:{Date,Heure,DemandeVehicule},
-    props:['dialogRelex','name','icon','color'] ,
+    props:[ 'value','dialogRelex','name','icon','color' , 'type' , 'demadeID'] ,
+    computed :{
+        dialog : {
+            get : function(){
+                return this.value
+            },set : function(value){
+                this.$emit('input' , value)
+            }
+        }
+    },
     methods : {
         openDemandeVehicule(){
-            this.$store.commit('updateDialogVehicule');
+            this.open_dialog=true
         },
         async getDemande(e){
             this.DemandeRelex.demande_v_id = await e;
@@ -174,6 +191,10 @@ export default {
             }
 
         },
+        update(){
+            console.log(this.demadeID);
+            this.dialog = false;
+        },
        async submit(){
             await axios.post('http://localhost:3030/DemandeRelex', this.DemandeRelex )
             .then(
@@ -181,7 +202,7 @@ export default {
                         this.msg = res.data.title,
                         this.$refs.form.reset(),
                         this.Done = true,
-                        this.$store.commit('updateDialogRelex')
+                        this.dialog = false
                         this.DemandeRelex.demande_v_id=null
                         this.disabled=false
                     },
@@ -200,7 +221,7 @@ export default {
                             this.msg = res.data.title,
                             this.$refs.form.reset(),
                             this.Errr = true,
-                            this.$store.commit('updateDialogRelex')
+                            this.dialog=false
                             this.DemandeRelex.demande_v_id=null
                             this.disabled=false
                         },
@@ -211,7 +232,7 @@ export default {
                         }
                     )
                 }else{
-                    this.$store.commit('updateDialogRelex');
+                    this.dialog=false;
                 }
             },
         // the date & the hour actions which means getting its values 
@@ -235,6 +256,7 @@ export default {
             Done: false,
             Errr: false,
             DV:null,
+            open_dialog : false,
             DemandeRelex:{
                 userID : this.$store.state.user.email,
                 destination : null,

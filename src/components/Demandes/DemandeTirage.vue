@@ -1,7 +1,8 @@
 <template>
 <div>
 <v-dialog 
-        v-model="$store.state.dialogTirage" 
+        :retain-focus="false" 
+        v-model="dialog" 
         width="700"
         persistent>
         <v-card tile>
@@ -105,7 +106,17 @@
                                 </v-col>     
                             </v-row> 
                             <v-row justify="center"> 
-                                <v-btn class="ma-1 pink white--text" 
+                                <v-btn 
+                                    v-if="type=='update'" 
+                                    class="ma-1 pink white--text" 
+                                    :disabled="!valid"
+                                    @click="update">
+                                    <v-icon left>send</v-icon>
+                                    <span  >Modifier la demande</span> 
+                                </v-btn>
+                                <v-btn 
+                                    v-else 
+                                    class="ma-1 pink white--text" 
                                     :disabled="!valid"
                                     @click="submit">
                                     <v-icon left>send</v-icon>
@@ -170,7 +181,18 @@
 <script>
 import Axios from 'axios';
 export default {
-  data(){
+  props:['value','type','demandeID'],
+  computed :{
+      dialog : {
+          get : function(){
+             return this.value
+          },
+          set : function(value){
+              this.$emit('input' , value)
+          }
+      }
+  }
+  ,data(){
       return{
           Autres: false,
           Done: false,
@@ -196,7 +218,11 @@ export default {
         this.Autres= false,
         this.DemandeTirage.NombreFeuilles= 1,
         this.DemandeTirage.NombreCopies= 1,
-        this.$store.commit('updateDialogTirage');
+        this.dialog = false
+    },
+    update(){
+        console.log(this.demandeID);
+        this.dialog = false;
     },
     async submit () {
         this.$refs.form.validate();
@@ -217,7 +243,7 @@ export default {
             this.Done = true,
             this.DemandeTirage.NombreFeuilles= 1,
             this.DemandeTirage.NombreCopies= 1,
-            this.$store.commit('updateDialogTirage')
+            this.dialog=false
           },
           err => {
               this.loading = false;

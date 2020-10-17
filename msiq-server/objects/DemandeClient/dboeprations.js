@@ -1,6 +1,31 @@
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
 
+// get a demande client 
+async function getDemandeClient(id){
+    try{
+        let pool = await (sql.connect(config));
+        try{
+            let demande = await pool.request()
+            .input("id", sql.VarChar, id)
+            .execute('GetDemandeClient')
+            console.log('Demande getted');
+            sql.close();
+            return {
+                 result : 'DG' , //Demand inserted
+                 demande : demande.recordset
+            }  
+        }catch(error){
+            console.log('can not Get Demande');
+            sql.close();
+            return 'CNGD'; // can not get Demand
+        }
+    }catch(err){
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
+    }
+}
+
 // set new message
 async function  setDemandeClient(Demande){
     try {
@@ -51,5 +76,6 @@ async function  deleteDemandeClient(id){
 }
 module.exports = {
     setDemandeClient,
-    deleteDemandeClient
+    deleteDemandeClient,
+    getDemandeClient
 }
