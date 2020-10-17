@@ -7,7 +7,11 @@
         persistent>
         <v-card tile>
             <v-toolbar flat dark color='pink'  >
-                <v-toolbar-title> <v-icon large left class="white--text">devices</v-icon> Demande Client</v-toolbar-title>
+                <v-toolbar-title> 
+                  <v-icon large left class="white--text">devices</v-icon> 
+                  <span v-if="type=='update'&&dialog==true"> modifier demande Client némuro {{demande.demande_C_ID}} </span>
+                  <span v-else>Demande Client</span>
+                </v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn text @click="close()"> <v-icon> clear </v-icon></v-btn>
             </v-toolbar>
@@ -40,7 +44,7 @@
                                 </v-col>  
                                 <v-col cols="12" sm="8"> 
                                     <v-textarea 
-                                    v-model="DC.description" 
+                                    v-model="DC.demande_C_description" 
                                     label="Description" 
                                     prepend-icon="notes"
                                     :rules="[v => !!v || 'Cet champs est obligatoire']">Description</v-textarea>
@@ -110,7 +114,7 @@
 <script>
 import Axios from 'axios';
 export default {
-  props : ['value' ,'type' , 'demandeID' , 'demande'],
+  props : ['value' ,'type' , 'demande'],
   computed :{
         dialog : {
             get : function(){
@@ -119,8 +123,9 @@ export default {
             set : function(value){
                 this.$emit('input',value) 
             }
-        },DC : function() {
-          if(this.type=="update"){
+        },
+        DC : function() {
+          if(this.type=="update" && this.dialog==true){
             return this.demande
           }else{
             return this.DemandeClient
@@ -134,10 +139,10 @@ export default {
           Errr: false,
           valid:false,
           DemandeClient :{
-              demande_c_id : '',
+              demande_C_ID : '',
               nature:'',
               objet:'',
-              description:'',
+              demande_C_description:'',
           }
       }
   },
@@ -163,8 +168,20 @@ export default {
         )
     },
     update(){
-      console.log(this.demandeID);
-      this.dialog = false
+       this.$refs.form.validate();
+        Axios.post('http://localhost:3030/UpdateDemandeClient', this.DC )
+        .then(
+          res =>{
+            this.msg = res.data.title,
+            this.$refs.form.reset(),
+            this.Done = true,
+            this.dialog = false
+          },
+          err => {
+              this.Errr = true,
+              this.msg = err.response.data.title
+          }
+        )
     }
   }
 }

@@ -6,7 +6,8 @@
                 <v-toolbar flat dark color='deep-purple' class="my-0" >
                     <v-toolbar-title> 
                         <v-icon large left class="white--text">commute</v-icon> 
-                         Demande véhicule
+                         <span v-if="type=='update' && dialog==true"> modifier demande véhicule némuro {{demande.demande_V_ID}} </span>
+                         <span v-else>Demande véhicule</span>
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn text @click="closeDemande()"> <v-icon> clear </v-icon></v-btn>
@@ -16,19 +17,19 @@
                 <v-card-text>
                     <v-row justify="center">
                         <v-col>
-                            <Autocomplete :utilisateur.sync="DV.utilisateur1" :items="collegues" label="2 emme Client"/>
+                            <Autocomplete :utilisateur.sync="DV.utilisateur1_ID" :items="collegues" label="2 emme Client"/>
                         </v-col>
                         <v-col>
-                            <Autocomplete :utilisateur.sync="DV.utilisateur2" :items="collegues" label="3 emme Client"/>
+                            <Autocomplete :utilisateur.sync="DV.utilisateur2_ID" :items="collegues" label="3 emme Client"/>
                         </v-col>
                         <v-col>
-                            <Autocomplete :utilisateur.sync="DV.utilisateur3" :items="collegues" label="4 emme Client"/>
+                            <Autocomplete :utilisateur.sync="DV.utilisateur3_ID" :items="collegues" label="4 emme Client"/>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
                         <v-col>
                             <v-text-field 
-                            v-model="DV.Lieu" 
+                            v-model="DV.lieu" 
                             label="Lieu" 
                             prepend-icon="location_on"
                             :rules="[v => !!v || 'Cet champs est obligatoire']"
@@ -36,7 +37,7 @@
                         </v-col>
                         <v-col>
                             <v-text-field 
-                            v-model="DV.Organisme" 
+                            v-model="DV.organisme" 
                             label="Organisme" 
                             prepend-icon="domain"
                             :rules="[v => !!v || 'Cet champs est obligatoire']"
@@ -57,7 +58,7 @@
                     <v-row justify="center">
                         <v-col cols="12" sm="4">
                             <Date 
-                                v-model="DV.DateSortie" 
+                                v-model="DV.date_depart" 
                                 :rules="[v => !!v || 'Cet champs est obligatoire']"
                                 label="Date de départ" 
                                 @date ="dateSortie"
@@ -65,40 +66,40 @@
                         </v-col>
                             <v-col cols="12" sm="4">
                             <Heure 
-                                v-model="DV.HeureSortie" 
+                                v-model="DV.heure_depart" 
                                 :rules="[v => !!v || 'Cet champs est obligatoire']"
                                 label="Heure de départ" 
                                 @heure = "heureSortie"
                             />
                         </v-col>
                         <v-col cols="12" sm="4" >
-                            <v-text-field v-model="DV.LieuRemassageSortie" label="Lieu de remassage *" prepend-icon="flight_takeoff"></v-text-field>
+                            <v-text-field v-model="DV.lieu_ramassage_d" label="Lieu de remassage *" prepend-icon="flight_takeoff"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
                         <v-col cols="12" sm="4">
                             <Date 
-                                v-model="DV.DateRetour" 
+                                v-model="DV.date_retour" 
                                 label="Date de retour" 
                                 @date="dateRetour"
                             />
                         </v-col>
                             <v-col cols="12" sm="4">
                             <Heure  
-                                v-model="DV.HeureRetour" 
+                                v-model="DV.heure_retour" 
                                 label="heure de retour" 
                                 @heure ="heureRetour"
                             />
                         </v-col>
                         <v-col cols="12" sm="4">
-                            <v-text-field v-model="DV.LieuRemassageRetour" 
+                            <v-text-field v-model="DV.lieu_ramassage_r"
                             label="Lieu de remassage *"
                             prepend-icon="flight_land"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
                         <v-col cols="12">
-                            <v-text-field v-model="DV.NatureMarchandise" label="Nature marchandise transportée" prepend-icon='commute'></v-text-field>
+                            <v-text-field v-model="DV.nature_marchandise" label="Nature marchandise transportée" prepend-icon='commute'></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -165,7 +166,7 @@ import Heure from '../Heure'
 import axios from 'axios'
 export default {
     name:"DemandeVehicule",
-    props:[ 'value','name','color','icon' ,'forDemandeRelex', 'type','demandeID' ] ,
+    props:[ 'value','name','color','icon' ,'forDemandeRelex', 'type','demande' ] ,
     components:{Date , Heure ,Autocomplete},
     computed :{
         dialog : {
@@ -175,6 +176,13 @@ export default {
             set : function(value){
                 this.$emit('input',value) 
             }
+        },
+        DV : function() {
+          if(this.type=="update" && this.dialog==true){
+            return this.demande
+          }else{
+            return this.DemandeVehicule
+          }
         }
     },
     methods:{
@@ -228,8 +236,20 @@ export default {
             } 
         },
         update(){
-            console.log(this.demandeID);
-            this.dialog=false;
+            this.$refs.form.validate();
+            axios.post('http://localhost:3030/UpdateDemandeVehicule', this.DV )
+            .then(
+                res =>{
+                    this.msg = res.data.title,
+                    this.$refs.form.reset(),
+                    this.Done = true,
+                    this.dialog = false
+                },
+                err => {
+                    this.Errr = true,
+                    this.msg = err.response.data.title
+                }
+            )
         },
         closeDemande :function(){
             this.$emit("sendDemande",null);
@@ -238,14 +258,14 @@ export default {
         },
         // the date & the hour actions which means getting its values 
         dateRetour : function(value){
-            this.DV.DateRetour=value
+            this.DV.date_retour=value
         },
         dateSortie : function(value){
-            this.DV.DateSortie=value
+            this.DV.date_depart=value
         },heureRetour : function(value){
-            this.DV.HeureRetour=value
+            this.DV.heure_retour=value
         },heureSortie : function(value){
-            this.DV.HeureSortie=value
+            this.DV.heure_depart=value
         }
     },async created(){
         this.collegues = (await  axios.get("http://localhost:3030/team")).data
@@ -260,21 +280,21 @@ export default {
             Errr: false,
             valid:false,
             collegues: [],
-            DV : {
+            DemandeVehicule : {
                 UserID: this.$store.state.user.email,
-                Lieu : null,
-                Organisme :null,
+                lieu : null,
+                organisme :null,
                 motif_deplacement :null,
-                DateSortie : null,
-                HeureSortie :null,
-                LieuRemassageSortie : null , // it using for the areoport
-                DateRetour : null,
-                HeureRetour : null,
-                LieuRemassageRetour : null ,// // it using for the areoport
-                NatureMarchandise : null,
-                utilisateur1 : null,
-                utilisateur2 : null,
-                utilisateur3 : null
+                date_depart : null,
+                heure_depart :null,
+                lieu_ramassage_d : null , // it using for the areoport
+                date_retour : null,
+                heure_retour : null,
+                lieu_ramassage_r: null ,// // it using for the areoport
+                nature_marchandise : null,
+                utilisateur1_ID : null,
+                utilisateur2_ID : null,
+                utilisateur3_ID : null
             }
         }
     }

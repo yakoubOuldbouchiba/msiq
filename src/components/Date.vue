@@ -26,10 +26,10 @@
 </template>
 <script>
 export default {
-    props: ['label'],
+    props: ['label' , 'value'],
     data(){
         return {
-            date :null
+            date :this.value
         }
     }
     

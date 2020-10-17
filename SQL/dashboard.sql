@@ -54,14 +54,16 @@ END
 
 select dbo.DemandeType(7) as type_demande
 
-CREATE VIEW demande_view AS
-	SELECT dbo.DemandeType(demande.demande_ID) as type_demande, demande.*,  utilisateurs.nomUtilisateur , utilisateurs.prenomUtilisateur
+ALTER VIEW demande_view AS
+	SELECT utilisateurs.email,dbo.DemandeType(demande.demande_ID) as type_demande, demande.*,  utilisateurs.nomUtilisateur , utilisateurs.prenomUtilisateur
 	FROM demande , utilisateurs
 	where demande.utilisateurs_ID = utilisateurs.email;
 
 
-CREATE PROCEDURE getDemande 
+ALTER PROCEDURE getDemande 
+@email as varchar(max)
 AS
 BEGIN
 	select * from demande_view
+	where email=@email
 END

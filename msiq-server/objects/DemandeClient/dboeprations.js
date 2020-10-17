@@ -13,7 +13,7 @@ async function getDemandeClient(id){
             sql.close();
             return {
                  result : 'DG' , //Demand inserted
-                 demande : demande.recordset
+                 demande : demande.recordset[0]
             }  
         }catch(error){
             console.log('can not Get Demande');
@@ -36,7 +36,7 @@ async function  setDemandeClient(Demande){
             .input('userID', sql.VarChar, Demande.uID)    
             .input('nature', sql.VarChar, Demande.rb.nature)
             .input('objet', sql.VarChar, Demande.rb.objet)
-            .input('description', sql.VarChar, Demande.rb.description)
+            .input('description', sql.VarChar, Demande.rb.demande_C_description)
             .execute('InsertDemandeClient');
             console.log('Demande Inserted');
             sql.close();
@@ -74,8 +74,34 @@ async function  deleteDemandeClient(id){
         return 'CNCTDB';  //can not connect to database
     }
 }
+// set new message
+async function  updateDemandeClient(Demande){
+    try {
+        await sql.connect(config)
+        try {
+            console.log(Demande);
+             await new sql.Request()
+            .input('demande_C_ID', sql.Int, Demande.demande_C_ID)    
+            .input('nature', sql.VarChar, Demande.nature)
+            .input('objet', sql.VarChar, Demande.objet)
+            .input('description', sql.VarChar, Demande.demande_C_description)
+            .execute('updateDemandeClient');
+            console.log('Demande Updated');
+            sql.close();
+            return  'DU' //Demand updated
+        } catch (error) {
+            console.log('can not update Demande');
+            sql.close();
+            return 'CNUD'; // can not update Demand
+        }
+    } catch (error) {
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
+    }
+}
 module.exports = {
     setDemandeClient,
     deleteDemandeClient,
-    getDemandeClient
+    getDemandeClient,
+    updateDemandeClient
 }
