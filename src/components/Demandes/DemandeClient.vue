@@ -1,7 +1,8 @@
 <template>
 <div>
 <v-dialog 
-        v-model="$store.state.dialogClient" 
+        :retain-focus="false" 
+        v-model="dialog" 
         width="700"
         persistent>
         <v-card tile>
@@ -15,7 +16,7 @@
                         <v-form v-model="valid" ref="form">
                             <v-row justify="space-around"> 
                                 <v-radio-group
-                                    v-model="DemandeClient.nature"
+                                    v-model="DC.nature"
                                     row
                                     :rules="[v => !!v || 'Cet champs est obligatoire']"
                                     >
@@ -32,21 +33,27 @@
                             <v-row justify="center"> 
                                 <v-col cols="12" sm="8"> 
                                     <v-text-field 
-                                    v-model="DemandeClient.objet" 
+                                    v-model="DC.objet" 
                                     label="Objet" 
                                     prepend-icon="title" 
                                     :rules="[v => !!v || 'Cet champs est obligatoire']"></v-text-field>
                                 </v-col>  
                                 <v-col cols="12" sm="8"> 
                                     <v-textarea 
-                                    v-model="DemandeClient.description" 
+                                    v-model="DC.description" 
                                     label="Description" 
                                     prepend-icon="notes"
                                     :rules="[v => !!v || 'Cet champs est obligatoire']">Description</v-textarea>
                                 </v-col>  
                             </v-row>  
                             <v-row justify="center"> 
-                                    <v-btn class="ma-1 pink white--text" 
+                                    <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
+                                        :disabled="!valid"
+                                        @click="update">
+                                        <v-icon left>send</v-icon>
+                                       <span  >Modifier la demande</span> 
+                                    </v-btn>
+                                    <v-btn v-else class="ma-1 pink white--text" 
                                         :disabled="!valid"
                                         @click="submit">
                                         <v-icon left>send</v-icon>
@@ -103,13 +110,31 @@
 <script>
 import Axios from 'axios';
 export default {
-  data(){
+  props : ['value' ,'type' , 'demandeID' , 'demande'],
+  computed :{
+        dialog : {
+            get : function(){
+                return this.value
+            },
+            set : function(value){
+                this.$emit('input',value) 
+            }
+        },DC : function() {
+          if(this.type=="update"){
+            return this.demande
+          }else{
+            return this.DemandeClient
+          }
+        }
+    }
+  ,data(){
       return{
           msg: '',
           Done: false,
           Errr: false,
           valid:false,
           DemandeClient :{
+              demande_c_id : '',
               nature:'',
               objet:'',
               description:'',
@@ -119,17 +144,17 @@ export default {
   methods:{
     close:function(){
         this.$refs.form.reset(),
-        this.$store.commit('updateDialogClient');
+        this.dialog=false
     },
     submit () {
         this.$refs.form.validate();
-        Axios.post('http://localhost:3030/DemandeClient', this.DemandeClient )
+        Axios.post('http://localhost:3030/DemandeClient', this.DC )
         .then(
           res =>{
             this.msg = res.data.title,
             this.$refs.form.reset(),
             this.Done = true,
-            this.$store.commit('updateDialogClient')
+            this.dialog = false
           },
           err => {
               this.Errr = true,
@@ -137,6 +162,10 @@ export default {
           }
         )
     },
+    update(){
+      console.log(this.demandeID);
+      this.dialog = false
+    }
   }
 }
 </script>

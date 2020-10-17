@@ -56,5 +56,27 @@ module.exports=()=>{
             }
         })
     });
+    // get a single demande
+    router.get('/DemandeClient/:id',auth.requireLogin,(req , res)=>{ 
+        dbOperationsDemandes.getDemandeClient(req.params.id)
+        .then(result => {
+            if(result.result ==='DG'){
+                res.status(200).json({
+                    title: 'Votre demande client a get',
+                    demande : result.demande
+                })
+            }else if (result ==='CNGD') {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                    error: 'CNIU'
+                })
+            } else {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé dans le serveur',
+                    error: 'CNCTDB' 
+                })
+            }
+        })
+    });
     return router;
 }

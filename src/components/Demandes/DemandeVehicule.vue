@@ -1,6 +1,6 @@
 <template>
 <div>
-    <v-dialog tile v-model="$store.state.dialogVehicule" width="800" persistent >
+    <v-dialog tile :retain-focus="false" v-model="dialog" width="800" persistent >
         <v-form v-model="valid" ref="form">
             <v-card >
                 <v-toolbar flat dark color='deep-purple' class="my-0" >
@@ -105,7 +105,11 @@
                 </v-col>
                 </v-row>
                 <v-row justify="center">
-                    <v-btn :disabled="!valid" large class="deep-purple white--text ma-1" @click="sendDemande()" >
+                    <v-btn v-if="type=='update'" :disabled="!valid" large class="deep-purple white--text ma-1" @click="update()" >
+                        <v-icon left>send</v-icon>
+                        Modifier demande
+                    </v-btn>
+                    <v-btn v-else :disabled="!valid" large class="deep-purple white--text ma-1" @click="sendDemande()" >
                         <v-icon left>send</v-icon>
                         Envoyer demande
                     </v-btn>
@@ -161,15 +165,15 @@ import Heure from '../Heure'
 import axios from 'axios'
 export default {
     name:"DemandeVehicule",
-    props:['name','color','icon' ,'forDemandeRelex'] ,
+    props:[ 'value','name','color','icon' ,'forDemandeRelex', 'type','demandeID' ] ,
     components:{Date , Heure ,Autocomplete},
     computed :{
         dialog : {
             get : function(){
-                return this.dialogVehicule
+                return this.value
             },
-            set : function(a){
-                this.dialogVehicule=a
+            set : function(value){
+                this.$emit('input',value) 
             }
         }
     },
@@ -197,7 +201,7 @@ export default {
                             this.Done = true,
                             this.$emit("sendDemande",res.data.demande_v_id);
                             this.$refs.form.reset(),
-                            this.$store.commit('updateDialogVehicule');
+                            this.dialog=false;
                         },
                         err => {
                             this.Errr = true,
@@ -214,7 +218,7 @@ export default {
                         this.msg = res.data.title,
                         this.$refs.form.reset(),
                         this.Done = true,
-                        this.$store.commit('updateDialogVehicule')
+                        this.dialog=false;
                     },
                     err => {
                         this.Errr = true,
@@ -223,10 +227,14 @@ export default {
                 )
             } 
         },
+        update(){
+            console.log(this.demandeID);
+            this.dialog=false;
+        },
         closeDemande :function(){
             this.$emit("sendDemande",null);
             this.$refs.form.reset();
-            this.$store.commit('updateDialogVehicule');
+            this.dialog=false;
         },
         // the date & the hour actions which means getting its values 
         dateRetour : function(value){
@@ -245,6 +253,7 @@ export default {
     ,
     data(){
         return{
+            
             demande_v_id : null,
             msg :'',
             Done: false,

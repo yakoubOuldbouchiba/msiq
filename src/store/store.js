@@ -5,6 +5,7 @@ import io from 'socket.io-client'
 import jwt from 'jsonwebtoken'
 Vue.use(Vuex);
 export default new Vuex.Store({
+    //strict: true,
     state : {
         menuProps: {
             disabled: false
@@ -30,15 +31,7 @@ export default new Vuex.Store({
         token:!!localStorage.getItem('token')|| '',
         reciever_ID : null,
         dialogNewMessage:false,
-        dialog:false ,
-        dialogClient:false,
-        dialogFourniture : false,
-        dialogTirage :false,
-        dialogVehicule :false,
-        dialogRelex:false,
-        dialogPEC:false,
-        forDemandeRelex :false ,
-        
+        dialog:false
     },
     mutations:{
         
@@ -65,24 +58,6 @@ export default new Vuex.Store({
         },
         updateDialog(state){
             state.dialog= !state.dialog
-        },
-        updateDialogClient(state){
-            state.dialogClient= !state.dialogClient
-        },
-        updateDialogFourniture(state){
-            state.dialogFourniture= !state.dialogFourniture
-        },
-        updateDialogTirage(state){
-            state.dialogTirage= !state.dialogTirage
-        },
-        updateDialogVehicule(state){
-            state.dialogVehicule= !state.dialogVehicule
-        },
-        updateDialogRelex(state){
-            state.dialogRelex= !state.dialogRelex
-        },
-        updateDialogPEC(state){
-            state.dialogPEC= !state.dialogPEC
         }
     },
     actions:{

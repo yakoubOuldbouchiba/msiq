@@ -1,6 +1,8 @@
 <template>
     <div>
-        <v-dialog v-model="$store.state.dialogFourniture" 
+        <v-dialog 
+            :retain-focus="false" 
+            v-model="dialog" 
             persistent 
             width="700">
                 <v-card tile >
@@ -84,7 +86,13 @@
                                 </template>
                             </v-simple-table>                     
                             <v-row justify="center">
-                                <v-btn class="ma-1 pink white--text" 
+                                <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
+                                    :disabled="!valid"
+                                    @click="update">
+                                    <v-icon left>send</v-icon>
+                                    <span  >Modifier la demande</span> 
+                                </v-btn>
+                                <v-btn v-else class="ma-1 pink white--text" 
                                     :disabled="!valid"
                                     @click="send">
                                     <v-icon left>send</v-icon>
@@ -140,8 +148,17 @@
 import Axios from 'axios';
 export default {
     name:"DemandeFourniture",
-    props:['name','icon','color'] ,
-    methods :{
+    props:[ 'value','name','icon','color' , 'type' , 'demandeID'] ,
+    computed : {
+        dialog : {
+            get : function(){
+                return this.value
+            },
+            set : function(value){   
+                this.$emit('input',value)
+            }
+        }
+    },methods :{
         send(){
             this.$refs.form.validate();
             Axios.post('http://localhost:3030/DemandeFourniture', this.DemandeFourniture )
@@ -150,13 +167,16 @@ export default {
                     this.msg = res.data.title,
                     this.$refs.form.reset(),
                     this.Done = true,
-                    this.$store.commit('updateDialogFourniture')
+                    this.dialog = false
                 },
                 err => {
                     this.Errr = true,
                     this.msg = err.response.data.title
                 }
              )
+        },update(){
+            console.log(this.demandeID);
+            this.dialog = false
         }
         ,deleteObject(index){
             if(this.totalObject>0){
@@ -173,7 +193,7 @@ export default {
         },
         close : function(){
             this.$refs.form.reset();
-            this.$store.commit('updateDialogFourniture');
+            this.dialog = false;
         }
     },
     async created(){
