@@ -231,6 +231,7 @@
                             label="Votre nouveau Mot de passe"
                             v-model="ChangePassword.pw"
                             outlined
+                            :rules="MDPRules"
                             type="password"
                             ></v-text-field>
                           </v-col>
@@ -241,6 +242,7 @@
                             label="Confirmez votre Mot de passe"
                             v-model="ChangePassword.cpw"
                             outlined
+                            :rules="PasswordRule"
                             type="password"
                             ></v-text-field>
                           </v-col>
@@ -356,7 +358,15 @@ export default {
         UserName: this.$store.state.user.email, 
         pw: '',
         cpw: '',
-      }
+      },
+      MDPRules: [
+        v => !!v || 'Cet champs est obligatoire',
+        v => v.length > 7 || 'Votre mot de passe doit contenir au moins 8 caractères',
+      ],
+      PasswordRule: [
+        v => !!v || 'Confirm password',
+        v => this.ChangePassword.pw == v || 'Mot de passe incorrect'
+      ],
     }
   },
   methods: {
