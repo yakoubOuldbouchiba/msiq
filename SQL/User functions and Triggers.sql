@@ -52,7 +52,7 @@ LOGIN 'Yacinelalmi19@gmail.com'
 
 /*----------------------------------------------------------------------------------*/
 
-CREATE PROCEDURE GetUser
+ALTER PROCEDURE GetUser
 	@email  AS VarChar(50)
 AS
 BEGIN

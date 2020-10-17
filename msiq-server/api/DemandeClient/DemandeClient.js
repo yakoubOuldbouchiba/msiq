@@ -34,6 +34,36 @@ module.exports=()=>{
             })
         });
     })
+    //update a  demande
+    router.post('/UpdateDemandeClient',auth.requireLogin , (req , res)=>{
+        jwt.verify((req.headers.authorization || req.headers['Authorization']),'TMPK3Y',
+        (err,decoded) => {
+            if (err) {
+                res.status(500).json({
+                    title: 'Quelque chose s\'est mal passé dans le serveur',
+                    error: 'CNCTDB' 
+                })
+            }
+            dbOperationsDemandes.updateDemandeClient(req.body)
+            .then(result => {
+                if(result ==='DU'){
+                    res.status(200).json({
+                        title: 'Voter demande client a été mise à jours'
+                    })
+                }else if (result ==='CNUD') {
+                    res.status(401).json({
+                        title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                        error: 'CNIU'
+                    })
+                } else {
+                    res.status(401).json({
+                        title: 'Quelque chose s\'est mal passé dans le serveur',
+                        error: 'CNCTDB' 
+                    })
+                }
+            })
+        });
+    })
     // delete a demande
     router.delete('/DemandeClient/:id',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandes.deleteDemandeClient(req.params.id)

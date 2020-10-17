@@ -129,21 +129,19 @@
     </v-dialog>
     <DemandeClient 
       v-model="openDialogClient"
-      :demandeID="demande_id"
       :demande="demande"
       type= "update" 
     />
     <DemandeFourniture 
       v-model="openDialogFourniture"
-      :demandeID="demande_id"
       type= "update"
       name='demande de fourniture'
       icon='edit'
       color='red'
        />
     <DemandeVehicule 
-       v-model="openDialogVehicule"
-      :demandeID="demande_id"
+      v-model="openDialogVehicule"
+      :demande="demande"
       type= "update"
       forDemandeRelex="false"
       name ='demande de véhicule'
@@ -151,16 +149,13 @@
       color ='deep-purple' />
     <DemandeTirage 
      v-model="openDialogTirage"
-      :demandeID="demande_id"
       type= "update" />
     <DemandePriseEnCharge 
       v-model="openDialogPEC"
-      :demandeID="demande_id"
       type= "update"
     />
     <DemandeRelex 
       v-model="openDialogRelex"
-      :demandeID="demande_id"
       type= "update"
       name='demande activité relex' 
       icon='hotel' 
@@ -182,10 +177,10 @@ export default {
 name: 'dashboard',
 components:{Pupupdemandes , DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture},
 async created(){
-  this.Demandes = (await axios.get("http://localhost:3030/demandes/")).data.demandes
+  this.Demandes = (await axios.get("http://localhost:3030/demandes/"+this.$store.state.user.email)).data.demandes
 },
 async mounted(){
-  this.Demandes = (await axios.get("http://localhost:3030/demandes/")).data.demandes
+  this.Demandes = (await axios.get("http://localhost:3030/demandes/"+this.$store.state.user.email)).data.demandes
 },
 data(){
    return{
@@ -194,19 +189,13 @@ data(){
         msg :'',
         Done: false,
         Errr: false,
-        demande_id:null,
         openDialogVehicule : false,
         openDialogClient : false,
         openDialogFourniture : false,
         openDialogRelex : false,
         openDialogTirage : false,
         openDialogPEC : false,
-        demande:{
-              demande_c_id : '',
-              nature:'',
-              objet:'',
-              description:'',
-        }
+        demande:null
    }
  },
  methods:{
@@ -247,24 +236,24 @@ data(){
     }
    },
    async updateItem(Demande){
+     await this.getDemande(Demande);
      if(Demande.type_demande=='demande client'){
-       await this.getDemande(Demande);
-       this.demande_id = Demande.demande_ID;
        this.openDialogClient = true;
      }else if(Demande.type_demande=='demande fourniture'){
-       this.demande_id = Demande.demande_ID;
        this.openDialogFourniture = true;
      }else if(Demande.type_demande=='demande véhicule'){
-       this.demande_id = Demande.demande_ID;
+       let dp = this.demande.date_depart;
+       let dr = this.demande.date_retour
+       this.demande.date_depart = dp.substr(0,10)
+       this.demande.date_retour = dr.substr(0,10)
+       this.demande.heure_depart = dp.substr(11,5)
+       this.demande.heure_retour = dr.substr(11,5)
        this.openDialogVehicule = true
      }else if(Demande.type_demande=='demande relex'){
-       this.demande_id = Demande.demande_ID;
        this.openDialogRelex = true
      }else if(Demande.type_demande=='demande tirage'){
-       this.demande_id = Demande.demande_ID;
        this.openDialogTirage = true
      }else if(Demande.type_demande=='demande prise en charge'){
-       this.demande_id = Demande.demande_ID;
        this.openDialogPEC = true
      }
    },
@@ -288,12 +277,7 @@ data(){
      await axios.get('http://localhost:3030'+type+demande.demande_ID)
           .then(
                 res =>{
-                    this.msg = res.data.title
-                    this.demande.demande_c_id = res.data.demande.demande_C_ID
-                    this.demande.nature = res.data.demande.nature
-                    this.demande.objet = res.data.demande.objet
-                    this.description = res.data.demande.demande_C_description
-                    this.Done = true      
+                    this.demande = res.data.demande;       
                 },
                 err => {
                     this.Errr = true,

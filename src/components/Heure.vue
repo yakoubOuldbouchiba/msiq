@@ -32,11 +32,11 @@
 <script>
 export default {
     name:'Heure',
-    props :['label'],
+    props :['label' , 'value'],
     data(){
         return{
             menu2: false,
-            heure : null
+            heure : this.value
         }
     }
 }

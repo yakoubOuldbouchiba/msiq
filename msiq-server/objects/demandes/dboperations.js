@@ -1,11 +1,12 @@
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
 // getting all messages.
-async function  getDemandes(){
+async function  getDemandes(email){
     try{
         await sql.connect(config);
         try{
             let demandes = await new sql.Request()
+            .input('email',sql.VarChar , email)
             .execute('getDemande')
             return  {
                 result : 'DG',

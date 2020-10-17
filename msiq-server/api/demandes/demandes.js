@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken');
 import * as auth from '../../services/auth-service.js'
 module.exports=()=>{
     //get a list of demandes
-    router.get('/demandes',auth.requireLogin,(req , res)=>{ 
-        dbOperationsDemandes.getDemandes()
+    router.get('/demandes/:email',auth.requireLogin,(req , res)=>{ 
+        dbOperationsDemandes.getDemandes(req.params.email)
         .then(result => {
             if(result.result ==='DG'){
                 res.status(200).json({
