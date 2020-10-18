@@ -41,3 +41,25 @@ BEGIN
 	INSERT INTO demande_fourniture_object(demande_F_ID , code_object , qty_demande)
 		VALUES (@demande_id,@code_objet,@qty_demande)
 END
+
+--------------------------------------------------------------------------------------------
+
+CREATE PROCEDURE GetObjetOftDemandeFourniture
+	@demande_f_id as int
+AS
+BEGIN
+	SELECT * FROM demande_fourniture_object
+	WHERE demande_F_ID = @demande_f_id
+END
+
+
+ALTER PROCEDURE deleteObjetOftDemandeFourniture
+    @demande_id as int
+AS
+BEGIN
+	DELETE  FROM demande_fourniture_object where demande_F_ID = @demande_id
+END
+
+
+
+execute GetObjetOftDemandeFourniture 135
