@@ -1,11 +1,28 @@
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
 // getting all demande.
-async function  getDemandesFourniture(){
+async function  getDemandeFourniture(id){
     try{
-        let pool = await sql.connect(config);
-    }catch(error){
-        console.log(error);
+        let pool = await (sql.connect(config));
+        try{
+            let demande = await pool.request()
+            .input("demande_f_id", sql.VarChar, id)
+            .execute('GetObjetOftDemandeFourniture')
+            console.log('Demande getted');
+            sql.close();
+            console.log(demande.recordset)
+            return {
+                 result : 'DG' , //Demand inserted
+                 demande : demande.recordset
+            }  
+        }catch(error){
+            console.log('can not Get Demande');
+            sql.close();
+            return 'CNGD'; // can not get Demand
+        }
+    }catch(err){
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
     }
 }
 // set new demande
@@ -23,8 +40,8 @@ async function  setDemandeFourniture(Demande){
                 let objet = Demande.objetsDemande[i]
                 await new sql.Request()
                 .input('demande_id',sql.Int,demande_id)
-                .input('code_objet',sql.Int,objet.code_objet)
-                .input('qty_demande',sql.Int,objet.qty)
+                .input('code_objet',sql.Int,objet.code_object)
+                .input('qty_demande',sql.Int,objet.qty_demande)
                 .execute('InserObjetOftDemandeFourniture')
             }
             console.log('Demande Inserted');
@@ -41,11 +58,33 @@ async function  setDemandeFourniture(Demande){
     }
 }
 //edit demande
-async function  editDemandeFourniture(){
-    try{
-        let pool = await sql.connect(config);
-    }catch(error){
-        console.log(error);
+async function  editDemandeFourniture(Demande){
+    try {
+        console.log(Demande)
+        await sql.connect(config)
+        try {
+            let objets = await new sql.Request()
+            .input('demande_id',sql.Int , Demande.demande_id)
+            .execute('deleteObjetOftDemandeFourniture'); //id of demande insert it 
+            for(let i = 0 ; i <Demande.objetsDemande.length ; i++){
+                let objet = Demande.objetsDemande[i]
+                await new sql.Request()
+                .input('demande_id',sql.Int,Demande.demande_id)
+                .input('code_objet',sql.Int,objet.code_object)
+                .input('qty_demande',sql.Int,objet.qty_demande)
+                .execute('InserObjetOftDemandeFourniture')
+            }
+            console.log('Demande updated');
+            sql.close();
+            return  'DU' //Demand updated
+        } catch (error) {
+            console.log('can not update Demande');
+            sql.close();
+            return 'CNUD'; // can not update Demand
+        }
+    } catch (error) {
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
     }
 }
 // delete demande
@@ -72,7 +111,7 @@ async function  deleteDemandeFourniture(id){
     }
 }
 module.exports = {
-    getDemandesFourniture,
+    getDemandeFourniture,
     setDemandeFourniture,
     editDemandeFourniture,
     deleteDemandeFourniture

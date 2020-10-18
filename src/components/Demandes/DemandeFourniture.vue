@@ -41,16 +41,30 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(objet,index) in DemandeFourniture.objetsDemande" :key="index">
+                                        <tr v-for="(objet,index) in objetsDF" :key="index">
                                             <td>
                                                 <v-autocomplete
                                                     flat
                                                     solo
                                                     :items="objets"
-                                                    v-model="objet.code_objet"
+                                                    v-if="type=='update' && dialog==true"
+                                                    v-model="objet.code_object"
                                                     hide-selected
                                                     item-text="designation"
-                                                    item-value="code_objet"
+                                                    item-value="code_object"
+                                                    :label="getDesign(objet.code_object)"
+                                                    prepend-inner-icon="edit"
+                                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
+                                                ></v-autocomplete>
+                                                <v-autocomplete
+                                                    flat
+                                                    solo
+                                                    :items="objets"
+                                                    v-else
+                                                    v-model="objet.code_object"
+                                                    hide-selected
+                                                    item-text="designation"
+                                                    item-value="code_object"
                                                     :label="'Objet '+(index + 1)"
                                                     prepend-inner-icon="edit"
                                                     :rules="[v => !!v || 'Cet champs est obligatoire']"
@@ -60,7 +74,7 @@
                                                 <v-text-field
                                                     flat
                                                     solo
-                                                    v-model="objet.qty"
+                                                    v-model="objet.qty_demande"
                                                     label="Quantite damande"
                                                     type="number"
                                                     min=0
@@ -148,7 +162,7 @@
 import Axios from 'axios';
 export default {
     name:"DemandeFourniture",
-    props:[ 'value','name','icon','color' , 'type' , 'demandeID'] ,
+    props:[ 'value','name','icon','color' , 'type' , 'demande'] ,
     computed : {
         dialog : {
             get : function(){
@@ -157,11 +171,19 @@ export default {
             set : function(value){   
                 this.$emit('input',value)
             }
+        },
+        objetsDF : function() {
+             if(this.type=="update" && this.dialog==true){
+                return this.demande
+            }else{
+                return this.DemandeFourniture.objetsDemande
+             }
         }
+        
     },methods :{
         send(){
             this.$refs.form.validate();
-            Axios.post('http://localhost:3030/DemandeFourniture', this.DemandeFourniture )
+            Axios.post('http://localhost:3030/DemandeFourniture',{userID : this.$store.state.user.email , objetsDemande : this.objetsDF} )
             .then(
                 res =>{
                     this.msg = res.data.title,
@@ -174,33 +196,62 @@ export default {
                     this.msg = err.response.data.title
                 }
              )
-        },update(){
-            console.log(this.demandeID);
-            this.dialog = false
+        },
+        update(){
+        this.$refs.form.validate();
+            Axios.post('http://localhost:3030/UpdateDemandeFourniture', 
+                            {
+                                demande_id : this.objetsDF[0].demande_F_ID,
+                                objetsDemande : this.objetsDF
+                            })
+            .then(
+            res =>{
+                this.msg = res.data.title,
+                this.$refs.form.reset(),
+                this.Done = true,
+                this.dialog = false
+            },
+            err => {
+                this.Errr = true,
+                this.msg = err.response.data.title
+            }
+            )
         }
+        
         ,deleteObject(index){
             if(this.totalObject>0){
-               this.DemandeFourniture.objetsDemande.splice(index,1);
+               this.objetsDF.splice(index,1);
                this.totalObject--;
             }
         },
         addNewObject(){
-            this.DemandeFourniture.objetsDemande.push({
+            this.objetsDF.push({
                 code_objet:null,    
-                qty:null
+                qty_demande:null
                 });
             this.totalObject++;
         },
         close : function(){
             this.$refs.form.reset();
             this.dialog = false;
+        },
+        getDesign(code_object){
+            if(code_object!=null){
+                for (let i = 0 ; i<this.objets.length ; i++){ 
+                    if(this.objets[i].code_object == code_object){
+                            return this.objets[i].designation
+                    } 
+               }
+            }else{
+                return 'object '+(this.totalObject+1);
+            }
         }
     },
     async created(){
         for(let i=0 ; i<this.totalObject ; i++){
             this.DemandeFourniture.objetsDemande.push({
                 code_objet:null,    
-                qty:null
+                qty_demande:null
                 });
         }
         this.objets = (await Axios.get("http://localhost:3030/fournitures")).data

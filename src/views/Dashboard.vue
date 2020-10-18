@@ -134,6 +134,7 @@
     />
     <DemandeFourniture 
       v-model="openDialogFourniture"
+      :demande="demande"
       type= "update"
       name='demande de fourniture'
       icon='edit'
@@ -277,7 +278,7 @@ data(){
      await axios.get('http://localhost:3030'+type+demande.demande_ID)
           .then(
                 res =>{
-                    this.demande = res.data.demande;       
+                     this.demande = res.data.demande;        
                 },
                 err => {
                     this.Errr = true,
