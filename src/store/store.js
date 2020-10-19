@@ -31,7 +31,9 @@ export default new Vuex.Store({
         token:!!localStorage.getItem('token')|| '',
         reciever_ID : null,
         dialogNewMessage:false,
-        dialog:false
+        dialog:false,
+        dialogPEC: false,
+        ActionType: '',
     },
     mutations:{
         
@@ -58,6 +60,12 @@ export default new Vuex.Store({
         },
         updateDialog(state){
             state.dialog= !state.dialog
+        },
+        updateDialogPEC(state){
+            state.dialogPEC= !state.dialogPEC
+        },
+        SetActionType(state, Type){
+           state.ActionType = Type
         }
     },
     actions:{

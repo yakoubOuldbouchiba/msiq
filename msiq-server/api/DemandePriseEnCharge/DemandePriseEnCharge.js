@@ -47,7 +47,7 @@ module.exports=()=>{
         });
     })
         // delete a demande
-        router.delete('/DemandePriseEnCharge/:id',auth.requireLogin,(req , res)=>{ 
+    router.delete('/DemandePriseEnCharge/:id',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandePriseEnCharge.deleteDemandePriseEnCharge(req.params.id)
         .then(result => {
             if(result ==='DD'){
@@ -67,5 +67,43 @@ module.exports=()=>{
             }
         })
     });
+    
+    // Get a demand
+    router.get('/DemandePriseEnCharge/:id',auth.requireLogin, (req , res)=>{
+        dbOperationsDemandePriseEnCharge.GetDemandePriseEnCharge(req.params.id)
+        .then(result => {
+            if(!!result){
+                res.status(200).json({
+                    title: 'Votre demande prise en charge a été chargée',
+                    demande: result
+                })
+            } else {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé dans le serveur',
+                    demande: null,
+                    error: 'CNCTDB' 
+                })
+            }
+        })
+    });
+    
+    //Edit the demand
+    router.post('/UpdateDemandePriseEnCharge',auth.requireLogin, (req , res)=>{
+        dbOperationsDemandePriseEnCharge.UpdateDemandePriseEnCharge(req.body)
+        .then(result => {
+            if(result == 'DE'){
+                res.status(200).json({
+                    title: 'Votre demande prise en charge a été modifier',
+                    demande: result
+                })
+            } else {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé dans le serveur',
+                    demande: null,
+                    error: 'CNCTDB' 
+                })
+            }
+        })
+    });   
     return router;
 }

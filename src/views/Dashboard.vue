@@ -152,12 +152,9 @@
       color ='deep-purple'
       @resetDemand="resetDemand"
        />
-    <DemandeTirage 
-     v-model="openDialogTirage"
-      type= "update" />
+    <DemandeTirage :demande="demande"/>
     <DemandePriseEnCharge 
-      v-model="openDialogPEC"
-      type= "update"
+      :demande="demande"
     />
     <DemandeRelex 
       v-model="openDialogRelex"
@@ -183,9 +180,6 @@ import axios from 'axios'
 export default {
 name: 'dashboard',
 components:{Pupupdemandes , DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture},
-async created(){
-  this.Demandes = (await axios.get("http://localhost:3030/demandes/"+this.$store.state.user.email)).data.demandes
-},
 async mounted(){
   this.Demandes = (await axios.get("http://localhost:3030/demandes/"+this.$store.state.user.email)).data.demandes
 },
@@ -271,7 +265,11 @@ data(){
      }else if(Demande.type_demande=='demande tirage'){
        this.openDialogTirage = true
      }else if(Demande.type_demande=='demande prise en charge'){
-       this.openDialogPEC = true
+       this.$store.commit('SetActionType', 'update')
+       this.demande.startDate = this.demande.startDate.substr(0,10)
+       this.demande.EndDate = this.demande.EndDate.substr(0,10)
+       this.demande.heureDeVol = this.demande.heureDeVol.substr(11,5)
+       this.$store.commit('updateDialogPEC');
      }
    },
    async getDemande(demande){
@@ -294,7 +292,7 @@ data(){
      await axios.get('http://localhost:3030'+type+demande.demande_ID)
           .then(
                 res =>{
-                     this.demande = res.data.demande;        
+                  this.demande = res.data.demande;        
                 },
                 err => {
                     this.Errr = true,
