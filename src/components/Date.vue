@@ -10,11 +10,11 @@
                 :label="label"
                 :rules="[v => !!v || 'Cet champs est obligatoire']"
                 v-on="on"
-                :value="date"
+                :value="date_computed"
                 >
             </v-text-field>
         </template>
-        <v-date-picker v-model="date" @change="$emit('date' , date)">
+        <v-date-picker v-model="date_computed" @change="$emit('date' , date)">
             
             <v-flex>
                 <v-btn text class="primary float-right" 
@@ -29,7 +29,16 @@ export default {
     props: ['label' , 'value'],
     data(){
         return {
-            date :this.value
+            date :null
+        }
+    },computed :{
+        date_computed : {
+            get :function(){
+                return this.value
+            },
+            set : function(value){
+                this.date=value
+            }
         }
     }
     

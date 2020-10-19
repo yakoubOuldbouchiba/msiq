@@ -8,6 +8,31 @@ async function  getDemandesRelex(){
         console.log(error);
     }
 }
+// get a demande client 
+async function getDemandeRelex(id){
+    try{
+        let pool = await (sql.connect(config));
+        try{
+            let demande = await pool.request()
+            .input("id", sql.VarChar, id)
+            .execute('GetDemandeRelex')
+            console.log(demande.recordset[0]);
+            console.log('Demande getted');
+            sql.close();
+            return {
+                 result : 'DG' , //Demand inserted
+                 demande : demande.recordset[0]
+            }  
+        }catch(error){
+            console.log('can not Get Demande');
+            sql.close();
+            return 'CNGD'; // can not get Demand
+        }
+    }catch(err){
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
+    }
+}
 // set new demande
 async function  setDemandeRelex(Demande){
     try {
@@ -22,8 +47,8 @@ async function  setDemandeRelex(Demande){
             .input('objet_mission',sql.VarChar,Demande.objet_mission)
             .input('date_depart',sql.DateTime,date_depart)
             .input('date_retour',sql.DateTime,date_retour)
-            .input('prise_en_charge',sql.Bit,Demande.is_prise_encharge)
-            .input('demande_V_ID',sql.Int,Demande.demande_v_id)
+            .input('prise_en_charge',sql.Bit,Demande.prise_en_charge)
+            .input('demande_V_ID',sql.Int,Demande.demande_V_ID)
             .execute('InsertDemandeRelex')
             console.log('Demande Inserted');
             sql.close();
@@ -38,12 +63,33 @@ async function  setDemandeRelex(Demande){
         return 'CNCTDB';  //can not connect to database
     }
 }
-//edit demande
-async function  editDemandeRelex(){
-    try{
-        let pool = await sql.connect(config);
-    }catch(error){
-        console.log(error);
+// edit new demande
+async function  editDemandeRelex(Demande){
+    try {
+        let date_depart = Demande.date_depart+" "+Demande.heure_depart;
+        let date_retour = Demande.date_retour+" "+Demande.heure_retour;
+        await sql.connect(config)
+        console.log(Demande)
+        try {
+            let objets = await new sql.Request()
+            .input('destination',sql.VarChar,Demande.destination)
+            .input('objet_mission',sql.VarChar,Demande.objet_mission)
+            .input('date_depart',sql.DateTime,date_depart)
+            .input('date_retour',sql.DateTime,date_retour)
+            .input('prise_en_charge',sql.Bit,Demande.prise_en_charge)
+            .input('demande_R_ID',sql.Int,Demande.demande_R_ID)
+            .execute('UpdateDemandeRelex')
+            console.log('Demande updated');
+            sql.close();
+            return 'DU' //Demand inserted
+        } catch (error) {
+            console.log('can not update Demande');
+            sql.close();
+            return 'CNUD'; // can not insert Demand
+        }
+    } catch (error) {
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
     }
 }
 // delete demande
@@ -71,6 +117,7 @@ async function  deleteDemandeRelex(id){
 }
 module.exports = {
     getDemandesRelex,
+    getDemandeRelex,
     setDemandeRelex,
     editDemandeRelex,
     deleteDemandeRelex

@@ -131,6 +131,7 @@
       v-model="openDialogClient"
       :demande="demande"
       type= "update" 
+      @resetDemand="resetDemand"
     />
     <DemandeFourniture 
       v-model="openDialogFourniture"
@@ -139,6 +140,7 @@
       name='demande de fourniture'
       icon='edit'
       color='red'
+      @resetDemand="resetDemand"
        />
     <DemandeVehicule 
       v-model="openDialogVehicule"
@@ -147,7 +149,9 @@
       forDemandeRelex="false"
       name ='demande de véhicule'
       icon ='commute'
-      color ='deep-purple' />
+      color ='deep-purple'
+      @resetDemand="resetDemand"
+       />
     <DemandeTirage 
      v-model="openDialogTirage"
       type= "update" />
@@ -157,6 +161,8 @@
     />
     <DemandeRelex 
       v-model="openDialogRelex"
+      :demande="demande"
+      @resetDemand="resetDemand"
       type= "update"
       name='demande activité relex' 
       icon='hotel' 
@@ -200,6 +206,9 @@ data(){
    }
  },
  methods:{
+   resetDemand(){
+     this.demande=null
+   },
    sortBy(p){
      this.Demandes.sort((a,b)=>a[p]>b[p] ? -1 : 1)
    },
@@ -251,6 +260,13 @@ data(){
        this.demande.heure_retour = dr.substr(11,5)
        this.openDialogVehicule = true
      }else if(Demande.type_demande=='demande relex'){
+       let dp = this.demande.date_depart;
+       let dr = this.demande.date_retour
+       this.demande.date_depart = dp.substr(0,10)
+       this.demande.date_retour = dr.substr(0,10)
+       this.demande.heure_depart = dp.substr(11,5)
+       this.demande.heure_retour = dr.substr(11,5)
+       this.moyens_transport = false
        this.openDialogRelex = true
      }else if(Demande.type_demande=='demande tirage'){
        this.openDialogTirage = true
