@@ -7,6 +7,28 @@ module.exports=()=>{
     router.get('/DemandesRelex',auth.requireLogin,(req , res)=>{ 
         res.send({title : 'List of demandes'});
     });
+    // get a single demande
+    router.get('/DemandeRelex/:id',auth.requireLogin,(req , res)=>{ 
+        dbOperationsDemandes.getDemandeRelex(req.params.id)
+        .then(result => {
+            if(result.result ==='DG'){
+                res.status(200).json({
+                    title: 'Votre demande relex a get',
+                    demande : result.demande
+                })
+            }else if (result ==='CNGD') {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                    error: 'CNIU'
+                })
+            } else {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé dans le serveur',
+                    error: 'CNCTDB' 
+                })
+            }
+        })
+    });
     //add a new demande
     router.post('/DemandeRelex',auth.requireLogin , (req , res)=>{
         
@@ -55,5 +77,26 @@ module.exports=()=>{
             }
         })
     });
+        //update a  demande
+        router.post('/UpdateDemandeRelex',auth.requireLogin , (req , res)=>{
+            dbOperationsDemandes.editDemandeRelex(req.body)
+            .then(result => {
+                if(result ==='DU'){
+                    res.status(200).json({
+                        title: 'Voter demande relex est mise à jours'
+                    })
+                }else if (result ==='CNUD') {
+                    res.status(401).json({
+                        title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                        error: 'CNIU'
+                    })
+                } else {
+                    res.status(401).json({
+                        title: 'Quelque chose s\'est mal passé dans le serveur',
+                        error: 'CNCTDB' 
+                    })
+                }
+            })
+        });
     return router;
 }

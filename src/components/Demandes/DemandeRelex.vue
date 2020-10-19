@@ -15,7 +15,7 @@
                         <v-row justify="center">
                             <v-col cols="12">
                                 <v-text-field
-                                    v-model="DemandeRelex.destination"
+                                    v-model="DR.destination"
                                     label="Destination"
                                     prepend-icon="location_on"
                                     :rules="[v => !!v || 'Cet champs est obligatoire']"
@@ -24,7 +24,7 @@
                             </v-col>
                             <v-col cols="12">
                             <v-text-field
-                                v-model="DemandeRelex.objet_mission"
+                                v-model="DR.objet_mission"
                                 label="Objet mission"
                                 prepend-icon="business_center"
                                 :rules="[v => !!v || 'Cet champs est obligatoire']"
@@ -35,14 +35,14 @@
                         <v-row justify="center">
                             <v-col cols="12" sm="6">
                                 <Date 
-                                    v-model="DemandeRelex.date_depart"
+                                    v-model="DR.date_depart"
                                     label="Date de départ"
                                     @date ="dateSortie"
                                 />
                             </v-col>
                             <v-col cols="12" sm="6">
                                 <Heure 
-                                    v-model="DemandeRelex.heure_depart"
+                                    v-model="DR.heure_depart"
                                     label="Heure souhaitée de départ"
                                     @heure = "heureSortie"
                                 />
@@ -51,14 +51,14 @@
                         <v-row justify="center">
                             <v-col cols="12" sm="6">
                                 <Date 
-                                    v-model="DemandeRelex.date_retour"
+                                    v-model="DR.date_retour"
                                     label="Date de retour"
                                     @date="dateRetour"
                                 />
                             </v-col>
                             <v-col cols="12" sm="6">
                                 <Heure 
-                                    v-model="DemandeRelex.heure_retour"
+                                    v-model="DR.heure_retour"
                                     label="Heure souhaitée de retour"
                                     @heure ="heureRetour"
                                 />
@@ -67,8 +67,8 @@
                         <v-row justify="center">
                             <v-col cols="12">
                                  <v-checkbox 
-                                    v-model="DemandeRelex.moyens_transport"
-                                    :value="!DemandeRelex.moyens_transport" 
+                                    v-model="DR.moyens_transport"
+                                    :value="!DR.moyens_transport" 
                                     label="Moyens de transport"
                                     :disabled="disabled"
                                     @click=" openDemandeVehicule"
@@ -79,17 +79,17 @@
                             <v-col cols="12">
                                 <h3>Vous voulez prise en charge par la structure de destination ?</h3>
                                 <v-radio-group
-                                    v-model="DemandeRelex.is_prise_encharge"
+                                    v-model="DR.prise_en_charge"
                                     row
-                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
+                                    
                                     >
                                     <v-radio
-                                        label="oui"
-                                        value="true"
+                                        label="non"
+                                        :value="false"
                                     ></v-radio>
                                     <v-radio
-                                        label="non"
-                                        value="false"
+                                        label="oui"
+                                        :value="true"
                                     ></v-radio>
                                 </v-radio-group>
                             </v-col>
@@ -168,7 +168,7 @@ import DemandeVehicule from '../Demandes/DemandeVehicule'
 export default {
     name:"Relex",
     components:{Date,Heure,DemandeVehicule},
-    props:[ 'value','dialogRelex','name','icon','color' , 'type' , 'demadeID'] ,
+    props:[ 'value','dialogRelex','name','icon','color' , 'type' , 'demande'] ,
     computed :{
         dialog : {
             get : function(){
@@ -176,6 +176,13 @@ export default {
             },set : function(value){
                 this.$emit('input' , value)
             }
+        },
+        DR : function() {
+          if(this.type=="update" && this.dialog==true){
+            return this.demande
+          }else{
+            return this.DemandeRelex
+          }
         }
     },
     methods : {
@@ -183,20 +190,33 @@ export default {
             this.open_dialog=true
         },
         async getDemande(e){
-            this.DemandeRelex.demande_v_id = await e;
-            if(this.DemandeRelex.demande_v_id !=null){
+            this.DR.demande_v_id = await e;
+            if(this.DR.demande_v_id !=null){
                 this.disabled = !this.disabled;
             }else{
-                this.DemandeRelex.moyens_transport=!this.DemandeRelex.moyens_transport
+                this.DR.moyens_transport=!this.DR.moyens_transport
             }
 
         },
         update(){
-            console.log(this.demadeID);
-            this.dialog = false;
+            this.$refs.form.validate();
+            axios.post('http://localhost:3030/UpdateDemandeRelex', this.DR)
+            .then(
+            res =>{
+                this.msg = res.data.title,
+                this.$refs.form.reset(),
+                this.Done = true,
+                this.dialog = false
+                this.$emit('resetDemand')
+            },
+            err => {
+                this.Errr = true,
+                this.msg = err.response.data.title
+            }
+            )
         },
        async submit(){
-            await axios.post('http://localhost:3030/DemandeRelex', this.DemandeRelex )
+            await axios.post('http://localhost:3030/DemandeRelex', this.DR )
             .then(
                     res =>{
                         this.msg = res.data.title,
@@ -214,15 +234,15 @@ export default {
         },
         async close (){
             this.$refs.form.reset();
-            if(this.DemandeRelex.demande_v_id!==null){
-                await axios.delete('http://localhost:3030/DemandeVehicule/'+this.DemandeRelex.demande_v_id)
+            if(this.type!=="update" && this.DR.demande_V_ID!==null){
+                await axios.delete('http://localhost:3030/DemandeVehicule/'+this.DR.demande_V_ID)
                 .then(
                         res =>{
                             this.msg = res.data.title,
                             this.$refs.form.reset(),
                             this.Errr = true,
                             this.dialog=false
-                            this.DemandeRelex.demande_v_id=null
+                            this.DR.demande_v_id=null
                             this.disabled=false
                         },
                         err => {
@@ -237,14 +257,14 @@ export default {
             },
         // the date & the hour actions which means getting its values 
         dateRetour : function(value){
-            this.DemandeRelex.date_retour=value
+            this.DR.date_retour=value
         },
         dateSortie : function(value){
-            this.DemandeRelex.date_depart=value
+            this.DR.date_depart=value
         },heureRetour : function(value){
-            this.DemandeRelex.heure_retour=value
+            this.DR.heure_retour=value
         },heureSortie : function(value){
-            this.DemandeRelex.heure_depart=value
+            this.DR.heure_depart=value
         }
 
     },
@@ -266,8 +286,8 @@ export default {
                 date_retour : null,
                 heure_retour : null,
                 moyens_transport : false ,
-                is_prise_encharge : null,
-                demande_v_id : null
+                prise_en_charge : null,
+                demande_V_ID : null
             }
         }
     }

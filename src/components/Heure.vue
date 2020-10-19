@@ -16,13 +16,13 @@
                 v-bind="attrs"
                 v-on="on"
                 prepend-icon="alarm"
-                :value="heure"
+                :value="heure_computed"
                 :rules="[v => !!v || 'Cet champs est obligatoire']"
             ></v-text-field>
         </template>
         <v-time-picker 
             v-if="menu2"
-            v-model="heure" 
+            v-model="heure_computed" 
             @click:minute="$refs.menu.save(heure)"
             @change="$emit('heure' , heure+':00')" >
     </v-time-picker>
@@ -37,6 +37,16 @@ export default {
         return{
             menu2: false,
             heure : this.value
+        }
+    },
+    computed : {
+        heure_computed :{
+            get : function(){
+                return this.value
+            },
+            set : function(value){
+                this.heure = value
+            }
         }
     }
 }

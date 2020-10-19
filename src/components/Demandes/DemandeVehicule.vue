@@ -244,6 +244,7 @@ export default {
                     this.$refs.form.reset(),
                     this.Done = true,
                     this.dialog = false
+                    this.$emit('resetDemand')
                 },
                 err => {
                     this.Errr = true,

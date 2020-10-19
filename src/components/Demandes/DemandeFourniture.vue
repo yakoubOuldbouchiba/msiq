@@ -9,7 +9,8 @@
                     <v-toolbar flat dark :color='color'  >
                         <v-toolbar-title> 
                             <v-icon large left class="white--text">{{icon}}</v-icon> 
-                            {{name}}
+                            <span v-if="type=='update'&&dialog==true">Modofier la {{name}} numréo {{objetsDF[0].demande_F_ID}}</span>
+                            <span v-else >{{name}}</span>
                         </v-toolbar-title>
                         <v-spacer></v-spacer>
                         <v-btn text @click="close()"> <v-icon> clear </v-icon></v-btn>
@@ -210,6 +211,7 @@ export default {
                 this.$refs.form.reset(),
                 this.Done = true,
                 this.dialog = false
+                this.$emit('resetDemand')
             },
             err => {
                 this.Errr = true,
