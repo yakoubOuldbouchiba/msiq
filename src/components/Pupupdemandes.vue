@@ -55,7 +55,7 @@
             :color='demandes[5].color'
             :icon='demandes[5].icon' 
             />
-    <DemandePriseEnCharge v-model="openDialogPEC"/>
+    <DemandePriseEnCharge/>
 
 </div>
 </template>
@@ -113,7 +113,8 @@ export default {
             }
             if (demande==='demande de prise en charge'){
                 this.$store.commit('updateDialog');
-                this.openDialogPEC=true;
+                this.$store.commit('SetActionType', 'new');
+                this.$store.commit('updateDialogPEC');
             }
         },
         close: function() {
