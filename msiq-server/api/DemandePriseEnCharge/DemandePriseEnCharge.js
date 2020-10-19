@@ -14,16 +14,17 @@ module.exports=()=>{
                     error: 'Mauvais token' 
                 })
             }
+            console.log(req.body);
             let InfoToSend = {
                 UserID: decoded.user.email,
                 Collegues: req.body.Collegues,
-                Destination: req.body.Destination,
-                Objet: req.body.Objet,
-                StartDate: req.body.StartDate,
+                Destination: req.body.destination,
+                Objet: req.body.objet_mission,
+                StartDate: req.body.startDate,
                 EndDate: req.body.EndDate,
-                MoyDeTrans: req.body.MoyenDeTrans,
-                HeureDeVol: req.body.HeureDeVol,
-                Aeroport: req.body.Aeroport,
+                MoyDeTrans: req.body.moyen_transport,
+                HeureDeVol: req.body.heureDeVol,
+                Aeroport: req.body.aeroport,
             };
             console.log(InfoToSend);
             dbOperationsDemandePriseEnCharge.setDemandePriseEnCharge(InfoToSend)

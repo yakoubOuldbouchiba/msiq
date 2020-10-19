@@ -17,7 +17,7 @@
                         <v-row justify="center">
                             <v-col cols="10">
                                 <v-autocomplete
-                                v-model="DPEC.Collegues"
+                                    v-model="DPEC.Collegues"
                                     :items="Users"
                                     item-text="email"
                                     counter=5
