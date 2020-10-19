@@ -74,14 +74,43 @@
                                     @click=" openDemandeVehicule"
                                     >
                                 </v-checkbox>
-                                <b class="green--text" v-show="disabled">Le demande véhicule est bien crée</b>
+                                <b class="red--text" v-if="DeleteDV">Votre demande véhicule</b>
+                                <div v-if="DR.demande_V_ID!=null">
+                                    <b class="green--text" v-show="disabled">Le demande véhicule est bien crée</b>
+                                    <v-btn
+                                        class="mx-2"
+                                        outlined
+                                        color="indigo"
+                                        fab
+                                        dark
+                                        x-small
+                                        @click='deleteDV()'
+                                    >
+                                        <v-icon dark>
+                                            delete
+                                        </v-icon>
+                                    </v-btn>
+                                    <v-btn
+                                        class="mx-2"
+                                        outlined
+                                        color="teal"
+                                        fab
+                                        dark
+                                        x-small
+                                        @click="updateDV()"
+                                    >
+                                        <v-icon dark>
+                                            edit
+                                        </v-icon>
+                                    </v-btn>
+                                </div>
                             </v-col>
                             <v-col cols="12">
                                 <h3>Vous voulez prise en charge par la structure de destination ?</h3>
                                 <v-radio-group
                                     v-model="DR.prise_en_charge"
                                     row
-                                    
+                                    :rules="[v => v!=null || 'Cet champs est obligatoire']"
                                     >
                                     <v-radio
                                         label="non"
@@ -116,6 +145,8 @@
     </v-dialog>
      <DemandeVehicule 
         forDemandeRelex=true
+        :demande="DV_Computed"
+        :type="type_demande_v"
         @sendDemande="getDemande" 
         v-model="open_dialog" 
     />
@@ -183,114 +214,168 @@ export default {
           }else{
             return this.DemandeRelex
           }
-        }
+        },
+        disabled : function() {
+            if(this.DR.demande_V_ID !==null){
+                return true;
+            }else{
+                return false;
+            }
+        },
+        type_demande_v () {
+            if(this.type_demande!=null){
+                return "update"
+            }else{
+                return null
+            }
+        },
+        DV_Computed(){
+            return this.DV
+        } 
     },
     methods : {
         openDemandeVehicule(){
             this.open_dialog=true
         },
-        async getDemande(e){
-            this.DR.demande_v_id = await e;
-            if(this.DR.demande_v_id !=null){
-                this.disabled = !this.disabled;
-            }else{
-                this.DR.moyens_transport=!this.DR.moyens_transport
-            }
-
+        async updateDV(){
+              this.type_demande = "update";
+              await axios.get('http://localhost:3030/DemandeVehicule/'+this.DR.demande_V_ID)
+                .then(
+                        res =>{
+                            let demande = res.data.demande; 
+                            let dp = demande.date_depart;
+                            let dr = demande.date_retour;
+                            demande.date_depart = dp.substr(0,10)
+                            demande.date_retour = dr.substr(0,10)
+                            demande.heure_depart = dp.substr(11,8)
+                            demande.heure_retour = dr.substr(11,8)
+                            this.DV = demande
+                            this.open_dialog=true;     
+                        },
+                        err => {
+                            this.Errr = true,
+                            this.msg = err.response.data.title
+                        }
+                )
+            
         },
-        update(){
-            this.$refs.form.validate();
-            axios.post('http://localhost:3030/UpdateDemandeRelex', this.DR)
-            .then(
-            res =>{
-                this.msg = res.data.title,
-                this.$refs.form.reset(),
-                this.Done = true,
-                this.dialog = false
-                this.$emit('resetDemand')
-            },
-            err => {
-                this.Errr = true,
-                this.msg = err.response.data.title
-            }
-            )
-        },
-       async submit(){
-            await axios.post('http://localhost:3030/DemandeRelex', this.DR )
+        async deleteDV(){
+            await axios.delete('http://localhost:3030/DemandeVehicule/'+this.DR.demande_V_ID)
             .then(
                     res =>{
                         this.msg = res.data.title,
-                        this.$refs.form.reset(),
-                        this.Done = true,
-                        this.dialog = false
-                        this.DemandeRelex.demande_v_id=null
-                        this.disabled=false
+                        this.DR.demande_V_ID=null
+                        this.DR.moyens_transport=false
+                        this.DeleteDV = true
                     },
                     err => {
                         this.Errr = true,
                         this.msg = err.response.data.title
                     }
-                )
-        },
-        async close (){
-            this.$refs.form.reset();
-            if(this.type!=="update" && this.DR.demande_V_ID!==null){
-                await axios.delete('http://localhost:3030/DemandeVehicule/'+this.DR.demande_V_ID)
-                .then(
-                        res =>{
-                            this.msg = res.data.title,
-                            this.$refs.form.reset(),
-                            this.Errr = true,
-                            this.dialog=false
-                            this.DR.demande_v_id=null
-                            this.disabled=false
-                        },
-                        err => {
-                            this.disabled=false
-                            this.Errr = true,
-                            this.msg = err.response.data.title
-                        }
-                    )
-                }else{
-                    this.dialog=false;
-                }
-            },
-        // the date & the hour actions which means getting its values 
-        dateRetour : function(value){
-            this.DR.date_retour=value
-        },
-        dateSortie : function(value){
-            this.DR.date_depart=value
-        },heureRetour : function(value){
-            this.DR.heure_retour=value
-        },heureSortie : function(value){
-            this.DR.heure_depart=value
+            )
+    },
+    async getDemande(e){
+        this.DR.demande_V_ID = await e;
+        if(this.DR.demande_V_ID ===null){
+            this.DR.moyens_transport=!this.DR.moyens_transport
         }
 
     },
-    data(){
-        return{
-            valid:false,
-            disabled : false,
-            msg :'',
-            Done: false,
-            Errr: false,
-            DV:null,
-            open_dialog : false,
-            DemandeRelex:{
-                userID : this.$store.state.user.email,
-                destination : null,
-                objet_mission : null,
-                date_depart : null,
-                heure_depart : null,
-                date_retour : null,
-                heure_retour : null,
-                moyens_transport : false ,
-                prise_en_charge : null,
-                demande_V_ID : null
+    update(){
+        this.$refs.form.validate();
+        axios.post('http://localhost:3030/UpdateDemandeRelex', this.DR)
+        .then(
+        res =>{
+            this.msg = res.data.title,
+            this.$refs.form.reset(),
+            this.Done = true,
+            this.dialog = false,
+            this.DeleteDV = false
+            this.$emit('resetDemand')
+        },
+        err => {
+            this.Errr = true,
+            this.msg = err.response.data.title
+        })
+    },
+    async submit(){
+        await axios.post('http://localhost:3030/DemandeRelex', this.DR )
+        .then(
+                res =>{
+                    this.msg = res.data.title,
+                    this.$refs.form.reset(),
+                    this.Done = true,
+                    this.dialog = false
+                    this.DeleteDV = false
+                    this.DemandeRelex.demande_v_id=null
+    
+                },
+                err => {
+                    this.Errr = true,
+                    this.msg = err.response.data.title
+                }
+            )
+    },
+    async close (){
+        this.$refs.form.reset();
+        if(this.type!=="update" && this.DR.demande_V_ID!==null){
+            await axios.delete('http://localhost:3030/DemandeVehicule/'+this.DR.demande_V_ID)
+            .then(
+                    res =>{
+                        this.msg = res.data.title,
+                        this.$refs.form.reset(),
+                        this.Errr = true,
+                        this.dialog=false
+                        this.DeleteDV = false
+                        this.DR.demande_V_ID=null    
+                    },
+                    err => {
+                        
+                        this.Errr = true,
+                        this.msg = err.response.data.title
+                    }
+                )
+            }else{
+                this.dialog=false;
             }
+        },
+    // the date & the hour actions which means getting its values 
+    dateRetour : function(value){
+        this.DR.date_retour=value
+    },
+    dateSortie : function(value){
+        this.DR.date_depart=value
+    },heureRetour : function(value){
+        this.DR.heure_retour=value
+    },heureSortie : function(value){
+        this.DR.heure_depart=value
+    }
+
+},
+data(){
+    return{
+        valid:false,
+        msg :'',
+        DeleteDV:false,
+        Done: false,
+        Errr: false,
+        type_demande : null,
+        DV:null,
+        open_dialog : false,
+        DemandeRelex:{
+            userID : this.$store.state.user.email,
+            destination : null,
+            objet_mission : null,
+            date_depart : null,
+            heure_depart : null,
+            date_retour : null,
+            heure_retour : null,
+            moyens_transport : false ,
+            prise_en_charge : null,
+            demande_V_ID : null
         }
     }
+}
 }
 </script>
 
