@@ -33,6 +33,7 @@ export default new Vuex.Store({
         dialogNewMessage:false,
         dialog:false,
         dialogPEC: false,
+        dialogTirage: false,
         ActionType: '',
     },
     mutations:{
@@ -63,6 +64,9 @@ export default new Vuex.Store({
         },
         updateDialogPEC(state){
             state.dialogPEC= !state.dialogPEC
+        },
+        updateDialogTirage(state){
+            state.dialogTirage= !state.dialogTirage
         },
         SetActionType(state, Type){
            state.ActionType = Type

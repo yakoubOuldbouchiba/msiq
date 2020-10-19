@@ -36,7 +36,6 @@ async function  deleteDemandeTirage(id){
     try{
         await sql.connect(config);
         try{
-            console.log(id);
             await new sql.Request()
             .input('id',sql.Int,id)
             .execute('DeleteDemandeTirage');
@@ -54,7 +53,58 @@ async function  deleteDemandeTirage(id){
         return 'CNCTDB';  //can not connect to database
     }
 }
+
+// Get a demand
+async function  GetDemandeTirage(id){
+    try{
+        await sql.connect(config);
+        try{
+            let demande = await new sql.Request()
+            .input('id',sql.Int,id)
+            .execute('GetDemandeTirage');
+            console.log("demande has been loaded")
+            return demande.recordset[0]
+
+        }catch(error){
+            console.log('can not delete Demande');
+            return null; // can not delete Demand
+        }
+    }catch (error) {
+        console.log('connection error');
+        return null;  //can not connect to database
+    }
+}
+
+// Edit a demand
+async function  upDemandeTirage(Data){
+    try {
+        await sql.connect(config)
+        try {
+             await new sql.Request()
+            .input('id', sql.Int, Data.demande_T_ID)
+            .input('NF', sql.Int, Data.nombre_feuille)
+            .input('NE', sql.Int, Data.nombre_exemplaire)
+            .input('NTF', sql.Int, Data.nombre_exemplaire*Data.nombre_feuille)
+            .input('TF', sql.VarChar, Data.type_document)
+            .input('A', sql.VarChar, Data.autre)
+            .execute('UpdatetDemandeTirage');
+            console.log('Demande Inserted');
+            sql.close();
+            return  'DE' //Demand inserted
+        } catch (error) {
+            console.log('can not Edit Demande');
+            console.log(error);
+            sql.close();
+            return 'CNED'; // can not insert Demand
+        }
+    } catch (error) {
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
+    }
+}
 module.exports = {
     setDemandeTirage,
-    deleteDemandeTirage
+    deleteDemandeTirage,
+    GetDemandeTirage,
+    upDemandeTirage
 }

@@ -13,13 +13,13 @@ async function  setDemandePriseEnCharge(Data){
             .input('Col3_ID', sql.VarChar, typeof Data.Collegues[2] == 'undefined' ? null : Data.Collegues[2])
             .input('Col4_ID', sql.VarChar, typeof Data.Collegues[3] == 'undefined' ? null : Data.Collegues[3])
             .input('Col5_ID', sql.VarChar, typeof Data.Collegues[4] == 'undefined' ? null : Data.Collegues[4])
-            .input('Dest', sql.VarChar, Data.destination)
-            .input('Objet', sql.VarChar, Data.objet_mission)
-            .input('SD', sql.DateTimeOffset, Data.startDate)
+            .input('Dest', sql.VarChar, Data.Destination)
+            .input('Objet', sql.VarChar, Data.Objet)
+            .input('SD', sql.DateTimeOffset, Data.StartDate)
             .input('ED', sql.DateTimeOffset, Data.EndDate)
-            .input('MDT', sql.VarChar, Data.moyen_transport)
-            .input('A', sql.VarChar, Data.aeroport)
-            .input('HV', sql.VarChar, Data.heureDeVol)
+            .input('MDT', sql.VarChar, Data.MoyDeTrans)
+            .input('A', sql.VarChar, Data.Aeroport)
+            .input('HV', sql.VarChar, Data.HeureDeVol)
             .execute('InsertDemandePriseEnCharge');
             console.log('Demande Inserted');
             sql.close();
