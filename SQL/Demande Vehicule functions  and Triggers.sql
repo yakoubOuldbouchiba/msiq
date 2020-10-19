@@ -56,7 +56,7 @@ ALTER PROCEDURE DeleteDemandeVehicule
 
 AS
 BEGIN
-	--DELETE FROM demande_view WHERE demande_ID = @id;
+	UPDATE demande_relex set demande_V_ID = null WHERE demande_V_ID = @id
 	DELETE FROM demande_vehicule WHERE demande_V_ID = @id;
 	DELETE FROM demande WHERE demande_ID = @id
 END
