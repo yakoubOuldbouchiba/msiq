@@ -13,7 +13,7 @@ async function  setDemandePriseEnCharge(Data){
             .input('Col3_ID', sql.VarChar, typeof Data.Collegues[2] == 'undefined' ? null : Data.Collegues[2])
             .input('Col4_ID', sql.VarChar, typeof Data.Collegues[3] == 'undefined' ? null : Data.Collegues[3])
             .input('Col5_ID', sql.VarChar, typeof Data.Collegues[4] == 'undefined' ? null : Data.Collegues[4])
-            .input('Dest', sql.VarChar, Data.destination)
+            .input('Dest', sql.VarChar, Data.Destination)
             .input('Objet', sql.VarChar, Data.objet_mission)
             .input('SD', sql.DateTimeOffset, Data.startDate)
             .input('ED', sql.DateTimeOffset, Data.EndDate)

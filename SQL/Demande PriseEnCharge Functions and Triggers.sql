@@ -1,4 +1,4 @@
-CREATE PROCEDURE InsertDemandePriseEnCharge
+ALTER PROCEDURE InsertDemandePriseEnCharge
 	@userID AS varchar(50), 
     @Col1_ID AS varchar(50), 
     @Col2_ID AS varchar(50), 
@@ -31,7 +31,7 @@ BEGIN
 	DELETE FROM demande WHERE demande_ID = @id
 END
 
-ALTER PROCEDURE GetDemandePEC
+CREATE PROCEDURE GetDemandePEC
 	@id AS int 
 AS
 BEGIN
