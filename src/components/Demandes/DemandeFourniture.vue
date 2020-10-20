@@ -234,6 +234,7 @@ export default {
             this.totalObject++;
         },
         close : function(){
+            this.$emit('resetDemand')
             this.$refs.form.reset();
             this.dialog = false;
         },

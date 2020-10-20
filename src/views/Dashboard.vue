@@ -152,8 +152,8 @@
       color ='deep-purple'
       @resetDemand="resetDemand"
        />
-    <DemandeTirage :demande="demande"/>
-    <DemandePriseEnCharge :demande="demande"/>
+    <DemandeTirage :demande="demande" v-model="openDialogTirage"/>
+    <DemandePriseEnCharge :demande="demande" v-model="openDialogPEC"/>
     <DemandeRelex 
       v-model="openDialogRelex"
       :demande="demande"
@@ -262,13 +262,13 @@ data(){
        this.openDialogRelex = true
      }else if(Demande.type_demande=='demande tirage'){
        this.$store.commit('SetActionType', 'update')
-       this.$store.commit('updateDialogTirage');
+       this.openDialogTirage = true
      }else if(Demande.type_demande=='demande prise en charge'){
        this.$store.commit('SetActionType', 'update')
        this.demande.startDate = this.demande.startDate.substr(0,10)
        this.demande.EndDate = this.demande.EndDate.substr(0,10)
        this.demande.heureDeVol = this.demande.heureDeVol.substr(11,5)
-       this.$store.commit('updateDialogPEC');
+       this.openDialogPEC = true
      }
    },
    async getDemande(demande){

@@ -1,7 +1,7 @@
 <template>
 
     <div>
-        <v-dialog :retain-focus="false"  v-model="$store.state.dialogPEC" persistent width="900">
+        <v-dialog :retain-focus="false"  v-model="dialog" persistent width="900">
             <v-card tile >
                 <v-toolbar flat dark color='indigo'  >
                     <v-toolbar-title > 
@@ -159,10 +159,17 @@ import Heure from "./../Heure";
 import Axios from "axios";
 export default {
     name: 'DemandePriseEnCharge',
-    props : ['demande'],
+    props : ['demande' , 'value'],
     computed:{
+        dialog : {
+            get : function(){
+                return this.value
+            },set : function(value){
+                this.$emit('input' , value)
+            }
+      },
         DPEC : function() {
-          if(this.$store.state.ActionType=="update"){
+          if(this.$store.state.ActionType=="update" && this.dialog==true){
            return this.demande
           }else{
             return this.DemandePriseEnCharge
@@ -211,7 +218,7 @@ export default {
                 this.msg = res.data.title,
                 this.$refs.form.reset(),
                 this.Done = true,
-                this.$store.commit('updateDialogPEC')   
+                this.dialog = false
             },
             err => {
                 this.Errr = true,
@@ -227,7 +234,7 @@ export default {
                 this.msg = res.data.title,
                 this.$refs.form.reset(),
                 this.Done = true,
-                this.$store.commit('updateDialogPEC')   
+                this.dialog = false 
             },
             err => {
                 this.Errr = true,
