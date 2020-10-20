@@ -2,7 +2,7 @@
 <div>
 <v-dialog 
         :retain-focus="false" 
-        v-model="$store.state.dialogTirage" 
+        v-model="dialog" 
         width="700"
         persistent>
         <v-card tile>
@@ -190,10 +190,17 @@
 <script>
 import Axios from 'axios';
 export default {
-  props: ['demande'],
+  props: ['demande' , 'value'],
   computed :{
+      dialog : {
+            get : function(){
+                return this.value
+            },set : function(value){
+                this.$emit('input' , value)
+            }
+      },
       DT: function() {
-          if (this.$store.state.ActionType == 'update') {
+          if (this.$store.state.ActionType == 'update' && this.dialog==true) {
               console.log('here');
               console.log(this.demande);
               return this.demande
@@ -224,7 +231,7 @@ export default {
     close:function(){
         this.DT.NombreFeuilles= 1,
         this.DT.NombreCopies= 1,
-        this.$store.commit('updateDialogTirage')
+        this.dialog = false
     },
     async update(){
         this.$refs.form.validate();
@@ -235,7 +242,7 @@ export default {
             this.loading = false;
             this.msg = res.data.title,
             this.Done = true,
-            this.$store.commit('updateDialogTirage')
+            this.dialog = false
           },
           err => {
               this.loading = false;
@@ -263,7 +270,7 @@ export default {
             this.Done = true,
             this.DT.NombreFeuilles= 1,
             this.DT.NombreCopies= 1,
-            this.$store.commit('updateDialogTirage')
+            this.dialog = false
           },
           err => {
               this.loading = false;
