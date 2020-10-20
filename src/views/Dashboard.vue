@@ -153,9 +153,7 @@
       @resetDemand="resetDemand"
        />
     <DemandeTirage :demande="demande"/>
-    <DemandePriseEnCharge 
-      :demande="demande"
-    />
+    <DemandePriseEnCharge :demande="demande"/>
     <DemandeRelex 
       v-model="openDialogRelex"
       :demande="demande"
@@ -263,7 +261,8 @@ data(){
        this.moyens_transport = false
        this.openDialogRelex = true
      }else if(Demande.type_demande=='demande tirage'){
-       this.openDialogTirage = true
+       this.$store.commit('SetActionType', 'update')
+       this.$store.commit('updateDialogTirage');
      }else if(Demande.type_demande=='demande prise en charge'){
        this.$store.commit('SetActionType', 'update')
        this.demande.startDate = this.demande.startDate.substr(0,10)

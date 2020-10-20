@@ -42,7 +42,7 @@
             :icon='demandes[1].icon' 
              />
 
-    <DemandeTirage v-model="openDialogTirage"/>
+    <DemandeTirage/>
 
     <DemandeVehicule 
         v-model="openDialogVehicule"
@@ -105,7 +105,8 @@ export default {
             }
             if (demande==='demande de tirage'){
                 this.$store.commit('updateDialog');
-                this.openDialogTirage=true;
+                this.$store.commit('SetActionType', 'new');
+                this.$store.commit('updateDialogTirage');
             }
             if (demande==='demande activité relex'){
                 this.$store.commit('updateDialog');
