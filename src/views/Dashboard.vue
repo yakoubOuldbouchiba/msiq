@@ -178,7 +178,7 @@ import axios from 'axios'
 export default {
 name: 'dashboard',
 components:{Pupupdemandes , DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture},
-async mounted(){
+async beforeMount(){
   this.Demandes = (await axios.get("http://localhost:3030/demandes/"+this.$store.state.user.email)).data.demandes
 },
 data(){

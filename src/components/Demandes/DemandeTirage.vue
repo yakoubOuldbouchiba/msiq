@@ -119,7 +119,8 @@
                                     v-if="$store.state.ActionType=='update'" 
                                     class="ma-1 pink white--text" 
                                     :disabled="!valid"
-                                    @click="update">
+                                    @click="update"
+                                    type="submit">
                                     <v-icon left>send</v-icon>
                                     <span  >Modifier la demande</span> 
                                 </v-btn>
@@ -127,7 +128,8 @@
                                     v-else 
                                     class="ma-1 pink white--text" 
                                     :disabled="!valid"
-                                    @click="submit">
+                                    @click="submit"
+                                    >
                                     <v-icon left>send</v-icon>
                                     <span  >Envoyer la demande</span> 
                                 </v-btn>
@@ -201,8 +203,6 @@ export default {
       },
       DT: function() {
           if (this.$store.state.ActionType == 'update' && this.dialog==true) {
-              console.log('here');
-              console.log(this.demande);
               return this.demande
           } else {
               return this.DemandeTirage

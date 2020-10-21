@@ -208,7 +208,7 @@ export default {
     methods: {
         close(){
             this.$refs.form.reset(),
-            this.$store.commit('updateDialogPEC')      
+            this.dialog = false    
         },
         submit(){
             this.$refs.form.validate();
