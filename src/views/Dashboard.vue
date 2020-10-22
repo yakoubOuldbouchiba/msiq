@@ -189,7 +189,7 @@ data(){
         Done: false,
         Errr: false,
         openDialogVehicule : false,
-        openDialogClient : false,
+        openDialogClient : true,
         openDialogFourniture : false,
         openDialogRelex : false,
         openDialogTirage : false,
@@ -273,17 +273,17 @@ data(){
    },
    async getDemande(demande){
       let type = ''
-     if(demande.type_demande=="demande véhicule"){
+     if(demande.type_demande=="Demande véhicule"){
           type='/DemandeVehicule/' 
-     } else if(demande.type_demande=="demande client"){
+     } else if(demande.type_demande=="Demande client"){
           type='/DemandeClient/' 
-     } else if(demande.type_demande=="demande fourniture"){
+     } else if(demande.type_demande=="Demande fourniture"){
           type='/DemandeFourniture/' 
-     }else if(demande.type_demande=="demande prise en charge"){
+     }else if(demande.type_demande=="Demande prise en charge"){
           type='/DemandePriseEnCharge/' 
-     }else if(demande.type_demande=="demande tirage"){
+     }else if(demande.type_demande=="Demande tirage"){
           type='/DemandeTirage/' 
-     }else if(demande.type_demande=="demande relex"){
+     }else if(demande.type_demande=="Demande relex"){
           type='/DemandeRelex/' 
      }else{
        type='/demande/'

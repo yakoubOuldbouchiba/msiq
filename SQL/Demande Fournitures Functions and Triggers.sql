@@ -22,7 +22,7 @@ END
  
 /*Create type objet*/
 
-AlTER PROCEDURE InsertDemandeFourniture
+ALTER PROCEDURE InsertDemandeFourniture
 	@userID AS varchar(50),
 	@demande_id AS int output
 AS
@@ -44,7 +44,7 @@ END
 
 --------------------------------------------------------------------------------------------
 
-CREATE PROCEDURE GetObjetOftDemandeFourniture
+ALTER PROCEDURE GetObjetOftDemandeFourniture
 	@demande_f_id as int
 AS
 BEGIN
@@ -52,14 +52,9 @@ BEGIN
 	WHERE demande_F_ID = @demande_f_id
 END
 
-
 ALTER PROCEDURE deleteObjetOftDemandeFourniture
     @demande_id as int
 AS
 BEGIN
 	DELETE  FROM demande_fourniture_object where demande_F_ID = @demande_id
 END
-
-
-
-execute GetObjetOftDemandeFourniture 135
