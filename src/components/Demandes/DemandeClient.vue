@@ -22,7 +22,7 @@
                                 <v-radio-group
                                     v-model="DC.nature"
                                     row
-                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
+                                    :rules="[v => !!v || 'Ce champs est obligatoire']"
                                     >
                                     <v-radio
                                         label="Produit"
@@ -40,14 +40,14 @@
                                     v-model="DC.objet" 
                                     label="Objet" 
                                     prepend-icon="title" 
-                                    :rules="[v => !!v || 'Cet champs est obligatoire']"></v-text-field>
+                                    :rules="[v => !!v || 'Ce champs est obligatoire']"></v-text-field>
                                 </v-col>  
                                 <v-col cols="12" sm="8"> 
                                     <v-textarea 
                                     v-model="DC.demande_C_description" 
                                     label="Description" 
                                     prepend-icon="notes"
-                                    :rules="[v => !!v || 'Cet champs est obligatoire']">Description</v-textarea>
+                                    :rules="[v => !!v || 'Ce champs est obligatoire']">Description</v-textarea>
                                 </v-col>  
                             </v-row>  
                             <v-row justify="center"> 
