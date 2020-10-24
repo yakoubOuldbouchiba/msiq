@@ -2,7 +2,7 @@ var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
 
 // set new message
-async function  setDemandeTirage(Data){
+async function  setDemandeTirage(Data,io){
     try {
         await sql.connect(config)
         try {
@@ -16,7 +16,20 @@ async function  setDemandeTirage(Data){
             .input('A', sql.VarChar, Data.AutreDes)
             .input('SFN', sql.VarChar, Data.StoringName)
             .input('FF', sql.VarChar, Data.TypeOfFile)
-            .execute('InsertDemandeTirage');
+            .output('DID', sql.Int)
+            .output('DDATE', sql.DateTime)
+            .execute('InsertDemandeTirage').then((res,err) => {
+                if (err) 
+                    return 'CNID'
+                let Demand = {
+                     demande_ID: res.output.DID,
+                     demande_Date: res.output.DDATE,
+                     type_demande: 'demande tirage',
+                     etat: 'Encours',
+                     motif: '',
+                 }
+                 io.emit('NewDemandCD', Demand )
+             });
             console.log('Demande Inserted');
             sql.close();
             return  'DI' //Demand inserted

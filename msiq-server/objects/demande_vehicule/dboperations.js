@@ -35,7 +35,7 @@ async function getDemandeVehicule(id){
 }
 
 // set new message
-async function  setDemandeVehicule(Demande){
+async function  setDemandeVehicule(Demande,io){
     try {
         let date_depart = Demande.date_depart+" "+Demande.heure_depart;
         let date_retour = Demande.date_retour+" "+Demande.heure_retour;
@@ -57,8 +57,17 @@ async function  setDemandeVehicule(Demande){
              .input('utilisateur1',sql.VarChar,Demande.utilisateur1_ID)
              .input('utilisateur2',sql.VarChar,Demande.utilisateur2_ID)
              .input('utilisateur3',sql.VarChar,Demande.utilisateur3_ID)
-             .output('demande_v_id',sql.int)
-            .execute('InsertDemandeVehicule');
+             .output('demande_v_id',sql.Int)
+             .output('DDATE', sql.DateTime)
+            .execute('InsertDemandeVehicule')
+            let Demand = {
+                    demande_ID: result.output.demande_v_id,
+                    demande_Date: result.output.DDATE,
+                    type_demande: 'demande véhicule',
+                    etat: 'Encours',
+                    motif: '',
+                }
+            io.emit('NewDemandCD', Demand )
             console.log('Demande Inserted');
             sql.close();
             return  ({
@@ -66,6 +75,7 @@ async function  setDemandeVehicule(Demande){
                 demande_v_id : result.output.demande_v_id
             } )//Demand inserted
         } catch (error) {
+            console.log(error);
             console.log('can not instert Demande');
             sql.close();
             return 'CNID'; // can not insert Demand

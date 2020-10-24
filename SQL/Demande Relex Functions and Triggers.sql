@@ -1,15 +1,19 @@
-CREATE PROCEDURE InsertDemandeRelex
+ALTER PROCEDURE InsertDemandeRelex
 	@userID AS varchar(50),
 	@destination AS varchar(max),
 	@objet_mission as varchar(max),
 	@date_depart as datetime,
 	@date_retour as datetime,
 	@prise_en_charge as bit ,
-	@demande_V_ID as int
+	@demande_V_ID as int,
+	@DID AS int OUTPUT,
+	@DDATE AS datetime OUTPUT
 AS
 BEGIN
 	INSERT INTO demande VALUES ((SELECT CONVERT (datetime, SYSDATETIME())),@userID,'Encours', null)
+	SELECT @DDATE = CONVERT (datetime, SYSDATETIME())
 	INSERT INTO demande_relex VALUES ((SELECT IDENT_CURRENT('demande')), @destination,@objet_mission,@date_depart,@date_retour,@prise_en_charge,@demande_V_ID)
+	SELECT @DID= IDENT_CURRENT('demande')
 END
 
 --------------------------------------
@@ -25,16 +29,24 @@ BEGIN
 END
 
 -----------------------------------------------
--- get relex demande --
 
-CREATE PROCEDURE GetDemandeRelex
+ALTER PROCEDURE GetDemandeRelex
 	@id as int
 AS
 BEGIN
-	SELECT * FROM demande_relex
-	WHERE demande_R_ID = @id
+	SELECT	DR.* ,
+			U.nomUtilisateur,
+			U.prenomUtilisateur,
+			U.departement,
+			D.demande_Date
+	FROM	demande_relex DR, demande D, utilisateurs U
+	WHERE	DR.demande_R_ID = D.demande_ID
+	AND		D.utilisateurs_ID = U.email
+	AND		DR.demande_R_ID = @id
 END
+
 -- update relex demande  --
+
 CREATE PROCEDURE UpdateDemandeRelex
 	@destination AS varchar(max),
 	@objet_mission as varchar(max),

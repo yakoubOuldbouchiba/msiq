@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const dbOperationsDemandes = require('../../objects/demande_vehicule/dboperations.js');
 import * as auth from '../../services/auth-service.js'
-module.exports=()=>{
+module.exports=(io)=>{
     //get a single vehicule
     router.get('/DemandeVehicule/:id',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandes.getDemandeVehicule(req.params.id)
@@ -28,7 +28,7 @@ module.exports=()=>{
     //add a new demande
     router.post('/DemandeVehicule',auth.requireLogin , (req , res)=>{
         
-        dbOperationsDemandes.setDemandeVehicule( req.body)
+        dbOperationsDemandes.setDemandeVehicule( req.body,io)
             .then(result => {
                 if(result.result ==='DI'){
                     res.status(200).json({

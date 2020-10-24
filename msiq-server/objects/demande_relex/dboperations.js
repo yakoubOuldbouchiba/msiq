@@ -34,14 +34,14 @@ async function getDemandeRelex(id){
     }
 }
 // set new demande
-async function  setDemandeRelex(Demande){
+async function  setDemandeRelex(Demande,io){
     try {
         let date_depart = Demande.date_depart+" "+Demande.heure_depart;
         let date_retour = Demande.date_retour+" "+Demande.heure_retour;
         await sql.connect(config)
         console.log(Demande)
         try {
-            let objets = await new sql.Request()
+             await new sql.Request()
             .input('userID',sql.VarChar,Demande.userID)
             .input('destination',sql.VarChar,Demande.destination)
             .input('objet_mission',sql.VarChar,Demande.objet_mission)
@@ -49,7 +49,20 @@ async function  setDemandeRelex(Demande){
             .input('date_retour',sql.DateTime,date_retour)
             .input('prise_en_charge',sql.Bit,Demande.prise_en_charge)
             .input('demande_V_ID',sql.Int,Demande.demande_V_ID)
-            .execute('InsertDemandeRelex')
+            .output('DID', sql.Int)
+            .output('DDATE', sql.DateTime)
+            .execute('InsertDemandeRelex').then((res,err) => {
+                if (err) 
+                    return 'CNID'
+                let Demand = {
+                     demande_ID: res.output.DID,
+                     demande_Date: res.output.DDATE,
+                     type_demande: 'demande relex',
+                     etat: 'Encours',
+                     motif: '',
+                 }
+                 io.emit('NewDemandCD', Demand )
+             });
             console.log('Demande Inserted');
             sql.close();
             return 'DI' //Demand inserted

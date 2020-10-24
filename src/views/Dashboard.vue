@@ -1,6 +1,6 @@
 <template>
   <div class="Dashboard">  
-    <v-container>
+    <v-container class="px-8">
       <div class="my-6">
         <v-row>
           <span xs1 class="subheading blue--text">Mes demandes</span>
@@ -39,12 +39,12 @@
                <td >{{Demande.demande_Date}}</td>
                <td class="text-center">
                  <v-chip
-                  v-if="Demande.etat == 'Acceptée3'"
+                  v-if="Demande.etat == 'Acceptee3'"
                   class="success"
                  >
                   {{Demande.etat}}
                  </v-chip>
-                 <v-chip v-else-if="Demande.etat == 'Rejectée'" 
+                 <v-chip v-else-if="Demande.etat == 'Rejectee'" 
                  class="error">
                   {{Demande.etat}}
                  </v-chip>
@@ -152,7 +152,9 @@
       color ='deep-purple'
       @resetDemand="resetDemand"
        />
-    <DemandeTirage :demande="demande" v-model="openDialogTirage"/>
+    <DemandeTirage :demande="demande" 
+    v-model="openDialogTirage"
+    type='update'/>
     <DemandePriseEnCharge :demande="demande" v-model="openDialogPEC"/>
     <DemandeRelex 
       v-model="openDialogRelex"
@@ -178,8 +180,13 @@ import axios from 'axios'
 export default {
 name: 'dashboard',
 components:{Pupupdemandes , DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture},
-async mounted(){
-  this.Demandes = (await axios.get("http://localhost:3030/demandes/"+this.$store.state.user.email)).data.demandes
+async created(){
+  this.Demandes = (await axios.get("http://localhost:3030/demandes/"+this.$store.state.user.email)).data.demandes.reverse()
+},
+mounted(){
+    this.$store.state.sokect.on('NewDemand', (newDemand) => {
+      this.Demandes.unshift(newDemand)
+    })
 },
 data(){
    return{
@@ -306,10 +313,10 @@ data(){
   .demande{
     border-left:4px solid orange;
   }
-  .demande.Rcceptée3{
+  .demande.Acceptee3{
     border-left:4px solid springgreen;
   }
-  .demande.Rejectée{
+  .demande.Rejectee{
     border-left:4px solid tomato;
   }
   

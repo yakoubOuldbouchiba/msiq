@@ -54,8 +54,55 @@ async function  deleteDemande(id){
         return 'CNCTDB';  //can not connect to database
     }
 }
+
+// Getting all Demandes a traiter.
+async function  getDemandesATraiter(Params){
+    try{
+        await sql.connect(config);
+        try{
+            let demandes = await new sql.Request()
+            .input('UserType',sql.VarChar , Params.UserType)
+            .input('Depart',sql.VarChar , Params.Depart)
+            .execute('getDemandeATraiter')
+            console.log(demandes.recordset);
+            return  demandes.recordset
+        }catch(err){
+            console.log('can not get the demandes');
+            sql.close();
+            return null; // can not get Demand
+        }
+    }catch(error){
+        console.log('connection error');
+        return null;  //can not connect to database
+    }
+}
+
+// Update demand State.
+async function  UpdateDemandState(DemandeID, state, motif){
+    try{
+        await sql.connect(config);
+        try{
+            await new sql.Request()
+            .input('Demand_ID',sql.VarChar , DemandeID)
+            .input('motif', sql.VarChar, motif)
+            .input('State',sql.VarChar , state)
+            .execute('UpdateDemandState')
+            return 'DU'
+        }catch(err){
+            console.log(err);
+            console.log('can not Edit demande');
+            sql.close();
+            return 'CNED'; // can not Edit Demand
+        }
+    }catch(error){
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
+    }
+}
 module.exports = {
     getDemandes,
     editDemande,
-    deleteDemande
+    deleteDemande,
+    getDemandesATraiter,
+    UpdateDemandState
 }

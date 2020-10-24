@@ -15,6 +15,24 @@
                 <v-row justify="center">
                 <v-col cols="12" sm="10">
                 <v-card-text>
+                    <v-row justify="center" v-if="type == 'Triater'"> 
+                                <v-col cols="12" sm="6"> 
+                                    <v-text-field 
+                                    :value="DV.nomUtilisateur+' '+DV.prenomUtilisateur"
+                                    disabled
+                                    label="Nom et prenom"
+                                    prepend-icon="mdi-account" 
+                                    ></v-text-field>
+                                </v-col>  
+                                <v-col cols="12" sm="6"> 
+                                    <v-text-field  
+                                    :value="DV.departement"
+                                    disabled
+                                    label="Departement"
+                                    prepend-icon="mdi-office-building"
+                                    ></v-text-field>
+                                </v-col>  
+                            </v-row>
                     <v-row justify="center">
                         <v-col>
                             <Autocomplete :utilisateur.sync="DV.utilisateur1_ID" :items="collegues" label="2 emme Client"/>
@@ -31,6 +49,7 @@
                             <v-text-field 
                             v-model="DV.lieu" 
                             label="Lieu" 
+                            :disabled="type =='Triater'"
                             prepend-icon="location_on"
                             :rules="[v => !!v || 'Cet champs est obligatoire']"
                             ></v-text-field>
@@ -39,6 +58,7 @@
                             <v-text-field 
                             v-model="DV.organisme" 
                             label="Organisme" 
+                            :disabled="type =='Triater'"
                             prepend-icon="domain"
                             :rules="[v => !!v || 'Cet champs est obligatoire']"
                             ></v-text-field>
@@ -49,6 +69,7 @@
                             <v-textarea
                                 label="motif de deplacement"
                                 v-model="DV.motif_deplacement"
+                                :disabled="type =='Triater'"
                                 :rules="[v => !!v || 'Cet champs est obligatoire']"
                                 prepend-icon="list"
                             >
@@ -73,7 +94,10 @@
                             />
                         </v-col>
                         <v-col cols="12" sm="4" >
-                            <v-text-field v-model="DV.lieu_ramassage_d" label="Lieu de remassage *" prepend-icon="flight_takeoff"></v-text-field>
+                            <v-text-field v-model="DV.lieu_ramassage_d" 
+                            label="Lieu de remassage *" 
+                            prepend-icon="flight_takeoff"
+                            :disabled="type =='Triater'"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
@@ -92,29 +116,54 @@
                             />
                         </v-col>
                         <v-col cols="12" sm="4">
-                            <v-text-field v-model="DV.lieu_ramassage_r"
+                            <v-text-field 
+                            v-model="DV.lieu_ramassage_r"
                             label="Lieu de remassage *"
-                            prepend-icon="flight_land"></v-text-field>
+                            prepend-icon="flight_land"
+                            :disabled="type =='Triater'"></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row justify="center">
                         <v-col cols="12">
-                            <v-text-field v-model="DV.nature_marchandise" label="Nature marchandise transportée" prepend-icon='commute'></v-text-field>
+                            <v-text-field v-model="DV.nature_marchandise" 
+                            label="Nature marchandise transportée" 
+                            prepend-icon='commute'
+                            :disabled="type =='Triater'"></v-text-field>
                         </v-col>
                     </v-row>
                 </v-card-text>
                 </v-col>
                 </v-row>
-                <v-row justify="center">
-                    <v-btn v-if="type=='update'" :disabled="!valid" large class="deep-purple white--text ma-1" @click="update()" >
-                        <v-icon left>send</v-icon>
-                        Modifier demande
-                    </v-btn>
-                    <v-btn v-else :disabled="!valid" large class="deep-purple white--text ma-1" @click="sendDemande()" >
-                        <v-icon left>send</v-icon>
-                        Envoyer demande
-                    </v-btn>
-                </v-row>        
+                <v-row justify="center" v-if="type =='Triater'"> 
+                    <v-col cols="12" sm="10"> 
+                        <v-textarea
+                        v-model="motif"
+                        label="Motif" 
+                        prepend-icon="mdi-flag-outline" 
+                        :rules="[v => !!v || 'Ce champs est obligatoire']"></v-textarea>
+                    </v-col>   
+                </v-row>
+                <v-row justify="center"> 
+                              <v-btn v-if="type=='Triater'" 
+                                class="ma-1 red white--text"
+                                @click="Reject"
+                                :disabled="!valid">Rejeter la demande </v-btn>
+                                <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
+                                    :disabled="!valid"
+                                    @click="update">
+                                    <v-icon left>send</v-icon>
+                                    <span  >Modifier la demande</span> 
+                                </v-btn>
+                                <v-btn v-else-if="type=='Triater'" 
+                                  class="ma-1 green white--text"
+                                  @click="Accept">Accepter la demande </v-btn>
+                                <v-btn v-else class="ma-1 pink white--text" 
+                                    :disabled="!valid"
+                                    @click="sendDemande">
+                                    <v-icon left>send</v-icon>
+                                    <span  >Envoyer la demande</span> 
+                                </v-btn>
+                            </v-row>      
             </v-card> 
         </v-form>        
     </v-dialog>
@@ -178,7 +227,7 @@ export default {
             }
         },
         DV : function() {
-          if(this.type=="update" && this.dialog==true){
+          if((this.type=="update" || this.type=="Triater") && this.dialog==true){
             return this.demande
           }else{
             return this.DemandeVehicule
@@ -267,6 +316,19 @@ export default {
             this.DV.heure_retour=value
         },heureSortie : function(value){
             this.DV.heure_depart=value
+        },
+        Reject(){
+            this.$refs.form.validate();
+            axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, {State :'Rejectee', motif: this.motif, Demande: this.DV, typeD: 'demande véhicule'})
+            this.dialog = false
+            },
+        Accept(){
+            if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
+                axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, {State :'Acceptee1', motif: this.motif, Demande: this.DV, typeD: 'demande véhicule'})
+            else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
+                axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, {State :'Acceptee2', motif: this.motif, Demande: this.DV, typeD: 'demande véhicule'})    
+
+                this.dialog = false
         }
     },async created(){
         this.collegues = (await  axios.get("http://localhost:3030/team")).data
@@ -296,7 +358,8 @@ export default {
                 utilisateur1_ID : null,
                 utilisateur2_ID : null,
                 utilisateur3_ID : null
-            }
+            },
+            motif: '',
         }
     }
 }

@@ -2,7 +2,7 @@ var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
 
 // set new message
-async function  setDemandePriseEnCharge(Data){
+async function  setDemandePriseEnCharge(Data,io){
     try {
         await sql.connect(config)
         try {
@@ -20,7 +20,20 @@ async function  setDemandePriseEnCharge(Data){
             .input('MDT', sql.VarChar, Data.MoyDeTrans)
             .input('A', sql.VarChar, Data.Aeroport)
             .input('HV', sql.VarChar, Data.HeureDeVol)
-            .execute('InsertDemandePriseEnCharge');
+            .output('DID', sql.Int)
+            .output('DDATE', sql.DateTime)
+            .execute('InsertDemandePriseEnCharge').then((res,err) => {
+                if (err) 
+                    return 'CNID'
+                let Demand = {
+                     demande_ID: res.output.DID,
+                     demande_Date: res.output.DDATE,
+                     type_demande: 'demande prise en charge',
+                     etat: 'Encours',
+                     motif: '',
+                 }
+                 io.emit('NewDemandCD', Demand )
+             });
             console.log('Demande Inserted');
             sql.close();
             return  'DI' //Demand inserted

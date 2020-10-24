@@ -1,4 +1,4 @@
-mCREATE PROCEDURE GETVEHICULE
+CREATE PROCEDURE GETVEHICULE
 AS
 BEGIN
 	SELECT * FROM vehicule
@@ -37,10 +37,12 @@ ALTER PROCEDURE InsertDemandeVehicule
 	@utilisateur1 as varchar(50),
 	@utilisateur2 as varchar(50),
 	@utilisateur3 as varchar(50),
-	@demande_v_id as int output
+	@demande_v_id as int output,
+	@DDATE AS datetime OUTPUT
 AS
 BEGIN
 	INSERT INTO demande VALUES ((SELECT CONVERT (datetime, SYSDATETIME())),@userID,'Encours', null)
+	SELECT @DDATE = CONVERT (datetime, SYSDATETIME())
 	INSERT INTO demande_vehicule VALUES ((SELECT IDENT_CURRENT('demande')), @lieu, @organisme, @motif_deplacement, @date_depart, @lieu_remmassage_d ,
 	            @date_retour ,@lieu_remmassage_r,@nature_marchandise,@utilisateur1,@utilisateur2,@utilisateur3,null,null);
 	SELECT @demande_v_id = IDENT_CURRENT('demande');
@@ -63,14 +65,20 @@ END
 
 -------------------------------------------------
 
-CREATE PROCEDURE GetDemandeVehicule
+ALTER PROCEDURE GetDemandeVehicule
 	@id as int
 AS
 BEGIN
-	SELECT * FROM demande_vehicule
-	WHERE demande_V_ID = @id
+	SELECT	DV.*,
+			U.nomUtilisateur, 
+			U.prenomUtilisateur,
+			U.departement,
+			D.demande_Date 
+	FROM	demande_vehicule DV, utilisateurs U, demande D
+	WHERE	DV.demande_V_ID = @id
+	AND		D.demande_ID = DV.demande_V_ID
+	AND		U.email = D.utilisateurs_ID
 END
-
 
 --------------------------------------------------------
 CREATE PROCEDURE UpdateDemandeVehicule
