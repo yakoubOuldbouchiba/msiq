@@ -31,12 +31,63 @@ BEGIN
 	DELETE FROM demande WHERE demande_ID = @id
 END
 
-CREATE PROCEDURE GetDemandePEC
+ALTER PROCEDURE GetDemandePEC
 	@id AS int 
 AS
 BEGIN
-	SELECT collegue1_ID, collegue2_ID, collegue3_ID, collegue4_ID, collegue5_ID, 
-		destination, objet_mission, startDate, EndDate, moyen_transport, aeroport, heureDeVol
-	FROM demande_priseEnCharge
-	WHERE demande_P_ID = @id
+	SELECT	demande_P_ID,
+			collegue1_ID Collegues, 
+			collegue2_ID Collegues, 
+			collegue3_ID Collegues, 
+			collegue4_ID Collegues, 
+			collegue5_ID Collegues, 
+			destination, 
+			objet_mission, 
+			startDate, 
+			EndDate, 
+			moyen_transport, 
+			aeroport, 
+			heureDeVol,
+			U.nomUtilisateur, 
+			U.prenomUtilisateur,
+			U.departement,
+			D.demande_Date
+	FROM	demande_priseEnCharge DPEC, utilisateurs U, demande D
+	WHERE	DPEC.demande_P_ID = @id
+	AND		D.demande_ID = DPEC.demande_P_ID
+	AND		U.email = D.utilisateurs_ID
+END
+
+/*-------------------------------------------------------------------------------------------*/
+
+ALTER PROCEDURE UpdateDemandePEC
+	@id AS int,
+    @Col1_ID AS varchar(50), 
+    @Col2_ID AS varchar(50), 
+    @Col3_ID AS varchar(50), 
+    @Col4_ID AS varchar(50), 
+    @Col5_ID AS varchar(50),  
+    @Dest AS varchar(MAX),
+    @Objet AS varchar(MAX), 
+    @SD AS date,
+    @ED AS date,
+    @MDT AS varchar(250), 
+    @A AS varchar(250), 
+    @HV AS varchar(50)
+AS
+BEGIN
+	UPDATE demande_priseEnCharge
+	SET collegue1_ID = @Col1_ID,
+		collegue2_ID = @Col2_ID,
+		collegue3_ID = @Col3_ID,
+		collegue4_ID = @Col4_ID,
+		collegue5_ID = @Col5_ID,
+	    destination	 = @Dest,
+		objet_mission = @Objet,
+		startDate = @SD,
+		EndDate = @ED,
+		moyen_transport = @MDT,
+		aeroport = @A,
+		heureDeVol = @HV	
+	WHERE demande_P_ID= @id
 END

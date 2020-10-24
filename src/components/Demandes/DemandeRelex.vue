@@ -12,11 +12,30 @@
                 </v-toolbar>
                 <v-card-text>
                     <v-form v-model="valid" ref="form">
+                        <v-row justify="center" v-if="type == 'Triater'"> 
+                                <v-col cols="12" sm="6"> 
+                                    <v-text-field 
+                                    :value="DR.nomUtilisateur+' '+DR.prenomUtilisateur"
+                                    disabled
+                                    label="Nom et prenom"
+                                    prepend-icon="mdi-account" 
+                                    ></v-text-field>
+                                </v-col>  
+                                <v-col cols="12" sm="6"> 
+                                    <v-text-field  
+                                    :value="DR.departement"
+                                    disabled
+                                    label="Departement"
+                                    prepend-icon="mdi-office-building"
+                                    ></v-text-field>
+                                </v-col>  
+                            </v-row>
                         <v-row justify="center">
                             <v-col cols="12">
                                 <v-text-field
                                     v-model="DR.destination"
                                     label="Destination"
+                                    :disabled="type =='Triater'"
                                     prepend-icon="location_on"
                                     :rules="[v => !!v || 'Cet champs est obligatoire']"
                                 >
@@ -26,6 +45,7 @@
                             <v-text-field
                                 v-model="DR.objet_mission"
                                 label="Objet mission"
+                                :disabled="type =='Triater'"
                                 prepend-icon="business_center"
                                 :rules="[v => !!v || 'Cet champs est obligatoire']"
                             >
@@ -70,7 +90,7 @@
                                     v-model="DR.moyens_transport"
                                     :value="!DR.moyens_transport" 
                                     label="Moyens de transport"
-                                    :disabled="disabled"
+                                    :disabled="disabled || type =='Triater'"
                                     @click=" openDemandeVehicule"
                                     >
                                 </v-checkbox>
@@ -108,6 +128,7 @@
                             <v-col cols="12">
                                 <h3>Vous voulez prise en charge par la structure de destination ?</h3>
                                 <v-radio-group
+                                    :disabled="type =='Triater'"
                                     v-model="DR.prise_en_charge"
                                     row
                                     :rules="[v => v!=null || 'Cet champs est obligatoire']"
@@ -123,22 +144,36 @@
                                 </v-radio-group>
                             </v-col>
                         </v-row>
+                        <v-row justify="center" v-if="type =='Triater'"> 
+                            <v-col cols="12" sm="12"> 
+                                <v-textarea
+                                v-model="motif"
+                                label="Motif" 
+                                prepend-icon="mdi-flag-outline" 
+                                :rules="[v => !!v || 'Ce champs est obligatoire']"></v-textarea>
+                            </v-col>   
+                        </v-row>
                         <v-row justify="center"> 
-                            <v-btn v-if="type == 'update'" class="ma-1  white--text" 
-                                :color="color"
+                            <v-btn v-if="type=='Triater'" 
+                            class="ma-1 red white--text"
+                            @click="Reject"
+                            :disabled="!valid">Rejeter la demande </v-btn>
+                            <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
                                 :disabled="!valid"
                                 @click="update">
                                 <v-icon left>send</v-icon>
                                 <span  >Modifier la demande</span> 
                             </v-btn>
-                            <v-btn v-else class="ma-1  white--text" 
-                                :color="color"
+                            <v-btn v-else-if="type=='Triater'" 
+                                class="ma-1 green white--text"
+                                @click="Accept">Accepter la demande </v-btn>
+                            <v-btn v-else class="ma-1 pink white--text" 
                                 :disabled="!valid"
                                 @click="submit">
                                 <v-icon left>send</v-icon>
                                 <span  >Envoyer la demande</span> 
                             </v-btn>
-                        </v-row>
+                        </v-row>> 
                     </v-form>
                 </v-card-text>
             </v-card>  
@@ -209,7 +244,7 @@ export default {
             }
         },
         DR : function() {
-          if(this.type=="update" && this.dialog==true){
+          if((this.type=="update" || this.type=="Triater") && this.dialog==true){
             return this.demande
           }else{
             return this.DemandeRelex
@@ -349,7 +384,19 @@ export default {
         this.DR.heure_retour=value
     },heureSortie : function(value){
         this.DR.heure_depart=value
-    }
+    },Reject(){
+      this.$refs.form.validate();
+      axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, {State :'Rejectee', motif: this.motif, Demande: this.DR, typeD: 'demande relex'})
+      this.dialog = false
+    },
+    Accept(){
+      if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
+        axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, {State :'Acceptee1', motif: this.motif, Demande: this.DR, typeD: 'demande relex'})
+      else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
+        axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, {State :'Acceptee2', motif: this.motif, Demande: this.DR, typeD: 'demande relex'})    
+
+        this.dialog = false
+    },
 
 },
 data(){
@@ -373,7 +420,8 @@ data(){
             moyens_transport : false ,
             prise_en_charge : null,
             demande_V_ID : null
-        }
+        },
+        motif: '',
     }
 }
 }

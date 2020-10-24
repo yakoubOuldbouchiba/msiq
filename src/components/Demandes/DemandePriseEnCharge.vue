@@ -6,7 +6,7 @@
                 <v-toolbar flat dark color='indigo'  >
                     <v-toolbar-title > 
                         <v-icon large left class="white--text">flight</v-icon> 
-                        <span v-if="$store.state.ActionType == 'update'">Modification de votre demande PEC N° {{DPEC.demande_P_ID}}</span>
+                        <span v-if="type == 'update'">Modification de votre demande PEC N° {{DPEC.demande_P_ID}}</span>
                         <span v-else>Demande Prise en charge</span>
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
@@ -14,12 +14,31 @@
                 </v-toolbar>
                 <v-card-text>
                     <v-form v-model="valid" ref="form">
+                        <v-row justify="center" v-if="type == 'Triater'"> 
+                                <v-col cols="12" sm="5"> 
+                                    <v-text-field 
+                                    :value="DPEC.nomUtilisateur+' '+DPEC.prenomUtilisateur"
+                                    disabled
+                                    label="Nom et prenom"
+                                    prepend-icon="mdi-account" 
+                                    ></v-text-field>
+                                </v-col>  
+                                <v-col cols="12" sm="5"> 
+                                    <v-text-field  
+                                    :value="DPEC.departement"
+                                    disabled
+                                    label="Departement"
+                                    prepend-icon="mdi-office-building"
+                                    ></v-text-field>
+                                </v-col>  
+                            </v-row>
                         <v-row justify="center">
                             <v-col cols="10">
                                 <v-autocomplete
                                     v-model="DPEC.Collegues"
                                     :items="Users"
                                     item-text="email"
+                                    :disabled="type =='Triater'"
                                     counter=5
                                     multiple
                                     prepend-icon="mdi-account-group"
@@ -33,6 +52,7 @@
                             <v-col cols="10"> 
                                     <v-text-field 
                                     v-model="DPEC.destination" 
+                                    :disabled="type =='Triater'"
                                     label="Destination*" 
                                     prepend-icon="location_on" 
                                     :rules="[v => !!v || 'Cet champs est obligatoire']"></v-text-field>
@@ -42,15 +62,16 @@
                             <v-col cols="10"> 
                                     <v-text-field 
                                     v-model="DPEC.objet_mission" 
+                                    :disabled="type =='Triater'"
                                     label="Objet*" 
-                                    prepend-icon="location_on" 
+                                    prepend-icon="mdi-target" 
                                     :rules="[v => !!v || 'Cet champs est obligatoire']"></v-text-field>
                             </v-col> 
                         </v-row>
                         <v-row justify="center">
                             <v-col cols="8" sm="4"> 
                                 <Date 
-                                v-model="DPEC.startDate" 
+                                v-model="DPEC.startDate"
                                 :rules="[v => !!v || 'Cet champs est obligatoire']"
                                 label="Date de départ" 
                                 @date ="(date) => DPEC.startDate = date"
@@ -71,6 +92,7 @@
                             <v-col cols="10">   
                                 <v-text-field 
                                     v-model="DPEC.moyen_transport" 
+                                    :disabled="type =='Triater'"
                                     label="Moyen de transport*" 
                                     prepend-icon="mdi-taxi" 
                                     :rules="[v => !!v || 'Cet champs est obligatoire']"
@@ -81,6 +103,7 @@
                             <v-col cols="10" sm="6">
                                 <v-text-field
                                 prepend-icon="mdi-airport"
+                                :disabled="type =='Triater'"
                                 v-model="DPEC.aeroport"
                                 label='Aéroport'
                                 ></v-text-field>
@@ -92,22 +115,36 @@
                                 @heure="(value) => DPEC.heureDeVol = value"/>
                             </v-col>
                         </v-row>
+                        <v-row justify="center" v-if="type =='Triater'"> 
+                                <v-col cols="12" sm="10"> 
+                                    <v-textarea
+                                    v-model="motif"
+                                    label="Motif" 
+                                    prepend-icon="mdi-flag-outline" 
+                                    :rules="[v => !!v || 'Ce champs est obligatoire']"></v-textarea>
+                                </v-col>   
+                            </v-row>
                         <v-row justify="center"> 
-                            <v-col cols="9" sm="4">
-                                <v-btn  
-                                    v-if="$store.state.ActionType=='update'"
-                                    @click="update" 
-                                    :disabled="!valid" 
-                                    class="indigo white--text "
-                                ><v-icon left>send</v-icon>Modifier la demande</v-btn>
-                                <v-btn  
-                                    v-else
-                                    @click="submit" 
-                                    :disabled="!valid" 
-                                    class="indigo white--text "
-                                ><v-icon left>send</v-icon>Envoyer la demande</v-btn>
-                            </v-col>    
-                        </v-row> 
+                              <v-btn v-if="type=='Triater'" 
+                                class="ma-1 red white--text"
+                                @click="Reject"
+                                :disabled="!valid">Rejeter la demande </v-btn>
+                                <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
+                                    :disabled="!valid"
+                                    @click="update">
+                                    <v-icon left>send</v-icon>
+                                    <span  >Modifier la demande</span> 
+                                </v-btn>
+                                <v-btn v-else-if="type=='Triater'" 
+                                  class="ma-1 green white--text"
+                                  @click="Accept">Accepter la demande </v-btn>
+                                <v-btn v-else class="ma-1 pink white--text" 
+                                    :disabled="!valid"
+                                    @click="submit">
+                                    <v-icon left>send</v-icon>
+                                    <span  >Envoyer la demande</span> 
+                                </v-btn>
+                            </v-row>> 
                     </v-form>
                 </v-card-text>
             </v-card>  
@@ -159,7 +196,7 @@ import Heure from "./../Heure";
 import Axios from "axios";
 export default {
     name: 'DemandePriseEnCharge',
-    props : ['demande' , 'value'],
+    props : ['demande' , 'value', 'type'],
     computed:{
         dialog : {
             get : function(){
@@ -169,7 +206,7 @@ export default {
             }
       },
         DPEC : function() {
-          if(this.$store.state.ActionType=="update" && this.dialog==true){
+          if((this.type=="update" || this.type=="Triater") && this.dialog==true){
            return this.demande
           }else{
             return this.DemandePriseEnCharge
@@ -197,6 +234,7 @@ export default {
                 heureDeVol: '',
                 aeroport: '',
             }, 
+            motif: '',
             Users: [],
             AutoCRules: [
                 v => v.length !=  0 || 'Cet champs est obligatoire',
@@ -241,6 +279,19 @@ export default {
                 this.msg = err.response.data.title
             }
             )
+        },
+        Reject(){
+            this.$refs.form.validate();
+            Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID, {State :'Rejectee', motif: this.motif, Demande: this.DPEC, typeD: 'demande prise en charge'})
+            this.dialog = false
+            },
+        Accept(){
+            if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
+                Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID, {State :'Acceptee1', motif: this.motif, Demande: this.DPEC, typeD: 'demande prise en charge'})
+            else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
+                Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID, {State :'Acceptee2', motif: this.motif, Demande: this.DPEC, typeD: 'demande prise en charge'})    
+            
+            this.dialog = false
         }
     },
     

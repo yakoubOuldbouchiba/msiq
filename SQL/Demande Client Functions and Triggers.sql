@@ -1,12 +1,18 @@
-CREATE PROCEDURE InsertDemandeClient
+ALTER PROCEDURE InsertDemandeClient
 	@userID AS varchar(50),
 	@nature AS varchar(50),
 	@objet AS varchar(50),
-	@description AS varchar(max)
+	@description AS varchar(max),
+	@DID AS int OUTPUT,
+	@DDATE AS datetime OUTPUT
 AS
 BEGIN
+	
 	INSERT INTO demande VALUES ((SELECT CONVERT (datetime, SYSDATETIME())),@userID,'Encours', null)
-	INSERT INTO demande_client VALUES ((SELECT IDENT_CURRENT('demande')), @description, @nature, @objet, null, null , null, null)
+	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
+	INSERT INTO demande_client VALUES ((SELECT IDENT_CURRENT('demande')), @description, @nature, @objet, null, null , null, null)	
+	SELECT @DID = IDENT_CURRENT('demande')
+
 END
 
 ------------------------------------------------------
@@ -22,12 +28,19 @@ END
 
 -------------------------------------------------------------
 
-CREATE PROCEDURE GetDemandeClient 
+ALTER PROCEDURE GetDemandeClient 
 	@id as int
 AS
 BEGIN
-	SELECT * FROM demande_client 
-	WHERE demande_C_ID = @id
+	SELECT	DC.*,
+			U.nomUtilisateur, 
+			U.prenomUtilisateur,
+			U.departement,
+			D.demande_Date
+	FROM	demande_client DC,utilisateurs U,demande D
+	WHERE	DC.demande_C_ID = @id 
+	AND		D.demande_ID = DC.demande_C_ID
+	AND		U.email = D.utilisateurs_ID
 END
 
 ----------------------------------------------------------------
@@ -48,3 +61,4 @@ BEGIN
 END
 
 
+SELECT * FROM demande,demande_client

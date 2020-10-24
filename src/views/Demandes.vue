@@ -1,9 +1,9 @@
 <template>
-  <div>  
-    <v-container>
+  <div class="Dashboard">  
+    <v-container class="px-8">
       <div class="my-6">
         <v-row>
-          <span xs1 class="subheading blue--text">Demande à traiter</span>
+          <span xs1 class="subheading blue--text">Liste des  demandes à traiter</span>
           <v-spacer></v-spacer>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
@@ -13,9 +13,9 @@
                 v-bind="attrs"
                 v-on="on"
                 @click="sortBy('type_demande')"
-              >Trie par titre <v-icon small right >folder</v-icon></v-btn>    
+              >trie par titre <v-icon small right >folder</v-icon></v-btn>    
             </template>
-            <span>Trie par le titre</span>
+            <span>trie par le titre de la demande</span>
           </v-tooltip>
         </v-row>
       </div>
@@ -32,18 +32,18 @@
              </tr>
            </thead>
            <tbody>
-             <tr class="pa-2" v-for="Demande in Demandes" :key="Demande.demande_ID">
+             <tr class="pa-2" v-for="Demande in Demandes" :key="Demande.demande_ID" @click="updateItem(Demande)">
                <td :class="`demande ${Demande.etat}`" ><b>{{Demande.demande_ID}}</b></td>
                <td >{{Demande.type_demande}}</td>
                <td >{{Demande.demande_Date}}</td>
                <td class="text-center">
                  <v-chip
-                  v-if="Demande.etat == 'Acceptée3'"
+                  v-if="Demande.etat == 'Acceptee3'"
                   class="success"
                  >
                   {{Demande.etat}}
                  </v-chip>
-                 <v-chip v-else-if="Demande.etat == 'Rejectée'" 
+                 <v-chip v-else-if="Demande.etat == 'Rejectee'" 
                  class="error">
                   {{Demande.etat}}
                  </v-chip>
@@ -68,19 +68,6 @@
                 >
                   <v-icon dark>
                     delete
-                  </v-icon>
-                </v-btn>
-                 <v-btn
-                  class="mx-2"
-                  outlined
-                  color="teal"
-                  fab
-                  dark
-                  x-small
-                  @click="updateItem(Demande)"
-                >
-                  <v-icon dark>
-                    edit
                   </v-icon>
                 </v-btn>
                </td>
@@ -129,13 +116,13 @@
     <DemandeClient 
       v-model="openDialogClient"
       :demande="demande"
-      type= "update" 
+      type= "Triater" 
       @resetDemand="resetDemand"
     />
     <DemandeFourniture 
       v-model="openDialogFourniture"
       :demande="demande"
-      type= "update"
+      type= "Triater"
       name='demande de fourniture'
       icon='edit'
       color='red'
@@ -144,20 +131,22 @@
     <DemandeVehicule 
       v-model="openDialogVehicule"
       :demande="demande"
-      type= "update"
+      type= "Triater"
       forDemandeRelex="false"
       name ='demande de véhicule'
       icon ='commute'
       color ='deep-purple'
       @resetDemand="resetDemand"
        />
-    <DemandeTirage :demande="demande" v-model="openDialogTirage"/>
-    <DemandePriseEnCharge :demande="demande" v-model="openDialogPEC"/>
+    <DemandeTirage :demande="demande" 
+      v-model="openDialogTirage"
+      type='Triater'/>
+    <DemandePriseEnCharge :demande="demande" v-model="openDialogPEC" type='Triater'/>
     <DemandeRelex 
       v-model="openDialogRelex"
       :demande="demande"
       @resetDemand="resetDemand"
-      type= "update"
+      type= "Triater"
       name='demande activité relex' 
       icon='hotel' 
       color='blue'
@@ -174,10 +163,22 @@ import DemandeTirage from '../components/Demandes/DemandeTirage'
 import DemandeVehicule from '../components/Demandes/DemandeVehicule'
 import axios from 'axios'
 export default {
-name: 'dashboard',
+name: 'ListeDAT',
 components:{DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture},
-async beforeMount(){
-  this.Demandes = (await axios.get("http://localhost:3030/demandes/"+this.$store.state.user.email)).data.demandes
+async created(){
+  this.Demandes = (await axios.get("http://localhost:3030/demandesATraiter/"+this.$store.state.user.typeUtilisateur+'/'+this.$store.state.user.departement)).data.demandes.reverse()
+},
+mounted(){
+  if (this.$store.state.user.typeUtilisateur == 'Chef departement') {
+    this.$store.state.sokect.on('NewDemandCD', (newDemand) => {
+      this.Demandes.unshift(newDemand)
+    })
+  }
+  if (this.$store.state.user.typeUtilisateur == 'Directeur') {
+    this.$store.state.sokect.on('NewDemandD', (newDemand) => {
+      this.Demandes.unshift(newDemand)
+    })
+  } 
 },
 data(){
    return{
@@ -259,10 +260,8 @@ data(){
        this.moyens_transport = false
        this.openDialogRelex = true
      }else if(Demande.type_demande=='demande tirage'){
-       this.$store.commit('SetActionType', 'update')
        this.openDialogTirage = true
      }else if(Demande.type_demande=='demande prise en charge'){
-       this.$store.commit('SetActionType', 'update')
        this.demande.startDate = this.demande.startDate.substr(0,10)
        this.demande.EndDate = this.demande.EndDate.substr(0,10)
        this.demande.heureDeVol = this.demande.heureDeVol.substr(11,5)
@@ -296,7 +295,7 @@ data(){
                     this.msg = err.response.data.title
                 }
           )
-   }
+   },
  }
 }
 </script>

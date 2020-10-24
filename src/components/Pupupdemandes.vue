@@ -42,7 +42,7 @@
             :icon='demandes[1].icon' 
              />
 
-    <DemandeTirage v-model="openDialogTirage"/>
+    <DemandeTirage v-model="openDialogTirage" type='new'/>
 
     <DemandeVehicule 
         v-model="openDialogVehicule"
@@ -55,7 +55,7 @@
             :color='demandes[5].color'
             :icon='demandes[5].icon' 
             />
-    <DemandePriseEnCharge v-model="openDialogPEC"/>
+    <DemandePriseEnCharge v-model="openDialogPEC"  type='new'/>
 
 </div>
 </template>
@@ -105,7 +105,6 @@ export default {
             }
             if (demande==='demande de tirage'){
                 this.$store.commit('updateDialog');
-                this.$store.commit('SetActionType', 'new');
                 this.openDialogTirage = true;
             }
             if (demande==='demande activité relex'){
@@ -114,7 +113,6 @@ export default {
             }
             if (demande==='demande de prise en charge'){
                 this.$store.commit('updateDialog');
-                this.$store.commit('SetActionType', 'new');
                 this.openDialogPEC = true;
             }
         },
@@ -124,7 +122,3 @@ export default {
     }
 }
 </script>
-
-<style>
-
-</style>

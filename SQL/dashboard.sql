@@ -37,17 +37,17 @@ BEGIN
 	
 	
 	if(@is_vehicule_demande = 1)
-		set @demande_type = 'demande véhicule';
+		set @demande_type = 'Demande véhicule';
 	ELSE if(@is_fourniture_demande = 1)
-		set @demande_type = 'demande fourniture';
+		set @demande_type = 'Demande fourniture';
 	ELSE if(@is_client_demande = 1)
-		set @demande_type = 'demande client';
+		set @demande_type = 'Demande client';
 	ELSE if(@is_relex_demande = 1)
-		set @demande_type = 'demande relex';
+		set @demande_type = 'Demande relex';
 	ELSE if(@is_pec_demande = 1)
-		set @demande_type = 'demande prise en charge';
+		set @demande_type = 'Demande de prise en charge';
 	ELSE if(@is_tirage_demande = 1)
-		set @demande_type = 'demande tirage';
+		set @demande_type = 'Demande de tirage';
 return @demande_type
 
 END

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const dbOperationsDemandes = require('../../objects/demande_relex/dboperations.js');
 import * as auth from '../../services/auth-service.js'
-module.exports=()=>{
+module.exports=(io)=>{
     //get a list of demandes
     router.get('/DemandesRelex',auth.requireLogin,(req , res)=>{ 
         res.send({title : 'List of demandes'});
@@ -32,7 +32,7 @@ module.exports=()=>{
     //add a new demande
     router.post('/DemandeRelex',auth.requireLogin , (req , res)=>{
         
-        dbOperationsDemandes.setDemandeRelex( req.body)
+        dbOperationsDemandes.setDemandeRelex( req.body,io)
             .then(result => {
                 if(result ==='DI'){
                     res.status(200).json({

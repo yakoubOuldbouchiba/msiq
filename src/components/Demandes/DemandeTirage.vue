@@ -14,19 +14,38 @@
             <v-card flat>
                     <v-card-text>
                         <v-alert
-                            v-if="$store.state.ActionType == 'update'"
+                            v-if="type== 'update'"
                             class="ml-8 mb-6"
                             dense
                             outlined
-                            type="error"
+                            type="warning"
                             >
                         Si vous voulez changez le fichier, supprimez la demande et créez une autre
                         </v-alert>
                         <v-form v-model="valid" ref="form" enctype="multipart/form-data">
+                            <v-row justify="center" v-if="type == 'Triater'"> 
+                                    <v-col cols="12" sm="5"> 
+                                        <v-text-field 
+                                        :value="DT.nomUtilisateur+' '+DT.prenomUtilisateur"
+                                        disabled
+                                        label="Nom et prenom"
+                                        prepend-icon="mdi-account" 
+                                        ></v-text-field>
+                                    </v-col>  
+                                    <v-col cols="12" sm="5"> 
+                                        <v-text-field  
+                                        :value="DT.departement"
+                                        disabled
+                                        label="Departement"
+                                        prepend-icon="mdi-office-building"
+                                        ></v-text-field>
+                                    </v-col>  
+                                </v-row>
                             <v-row justify="space-around"> 
                                 <v-radio-group class="Reset"
                                     v-model="DT.type_document"
                                     row
+                                    :disabled="type =='Triater'"
                                     :rules="[v => !!v || 'Cet champs est obligatoire']"
                                     >
                                     <v-col cols="6" sm="3">
@@ -70,8 +89,8 @@
                                 <v-col cols="12" sm="10">
                                     <v-file-input @change="OnFileSelected"
                                     :rules="[() => !!DT.nom_document || 'Cet champs est obligatoire']"
-                                    :disabled="this.$store.state.ActionType == 'update'"
-                                    :label="this.$store.state.ActionType == 'update' ? DT.nom_document : 'Sélectionnez votre fichier'"
+                                    :disabled="type =='update' || type =='Triater'"
+                                    :label="type =='update' || type =='Triater' ? DT.nom_document : 'Sélectionnez votre fichier'"
                                     truncate-length="30"
                                     ></v-file-input>
                                 </v-col>
@@ -80,14 +99,14 @@
                                 <v-col cols="7" sm="3">
                                     Nombre des Feuilles
                                     <v-layout row class="pl-3">
-                                            <v-btn text icon 
+                                            <v-btn :disabled="type =='Triater'" text icon 
                                             @click="Remove">
                                             <v-icon class="primary--text pt-10">remove</v-icon>
                                             </v-btn>
                                         <v-flex xs4>
-                                            <v-text-field class="" v-model="DT.nombre_feuille" ></v-text-field>
+                                            <v-text-field :disabled="type =='Triater'" v-model="DT.nombre_feuille" ></v-text-field>
                                         </v-flex>
-                                        <v-btn text icon @click="DT.nombre_feuille++">
+                                        <v-btn text :disabled="type =='Triater'" icon @click="DT.nombre_feuille++">
                                             <v-icon class="primary--text pt-10">add</v-icon>
                                         </v-btn>
                                     </v-layout>
@@ -95,14 +114,14 @@
                                 <v-col cols="7" sm="3">
                                     Nombre des Copies
                                     <v-layout row class="pl-3">
-                                            <v-btn text icon
+                                            <v-btn :disabled="type =='Triater'" text icon
                                             @click="Remove2">
                                             <v-icon class="primary--text pt-10">remove</v-icon>
                                             </v-btn>
                                         <v-flex xs4 >
-                                            <v-text-field v-model="DT.nombre_exemplaire" ></v-text-field>
+                                            <v-text-field :disabled="type =='Triater'" v-model="DT.nombre_exemplaire" ></v-text-field>
                                         </v-flex>
-                                        <v-btn text icon @click="DT.nombre_exemplaire++">
+                                        <v-btn text :disabled="type =='Triater'" icon @click="DT.nombre_exemplaire++">
                                             <v-icon class="primary--text pt-10">add</v-icon>
                                         </v-btn>
                                     </v-layout>
@@ -113,10 +132,22 @@
                                         {{this.DT.nombre_feuille*this.DT.nombre_exemplaire}}                                        
                                     </div>                                            
                                 </v-col>     
-                            </v-row> 
+                            </v-row>
+                            <v-row justify="center" v-if="type =='Triater'"> 
+                                <v-col cols="12" sm="10"> 
+                                    <v-textarea
+                                    v-model="motif"
+                                    label="Motif" 
+                                    prepend-icon="mdi-flag-outline" 
+                                    :rules="[v => !!v || 'Ce champs est obligatoire']"></v-textarea>
+                                </v-col>   
+                            </v-row>  
                             <v-row justify="center"> 
+                                <v-btn v-if="type=='Triater'" 
+                                class="ma-1 red white--text"
+                                @click="Reject">Rejeter la demande </v-btn>
                                 <v-btn 
-                                    v-if="$store.state.ActionType=='update'" 
+                                    v-if="type =='update'" 
                                     class="ma-1 pink white--text" 
                                     :disabled="!valid"
                                     @click="update"
@@ -124,6 +155,9 @@
                                     <v-icon left>send</v-icon>
                                     <span  >Modifier la demande</span> 
                                 </v-btn>
+                                <v-btn v-else-if="type=='Triater'" 
+                                class="ma-1 green white--text"
+                                @click="Accept">Accepter la demande </v-btn>
                                 <v-btn 
                                     v-else 
                                     class="ma-1 pink white--text" 
@@ -192,7 +226,7 @@
 <script>
 import Axios from 'axios';
 export default {
-  props: ['demande' , 'value'],
+  props: ['demande' , 'value', 'type'],
   computed :{
       dialog : {
             get : function(){
@@ -202,7 +236,7 @@ export default {
             }
       },
       DT: function() {
-          if (this.$store.state.ActionType == 'update' && this.dialog==true) {
+          if ((this.type == 'update' || this.type == 'Triater') && this.dialog==true) {
               return this.demande
           } else {
               return this.DemandeTirage
@@ -224,6 +258,7 @@ export default {
               nombre_exemplaire: 1,
               nom_document: null,
           },
+          motif: '',
           loading: false,
       }
   },
@@ -290,6 +325,19 @@ export default {
     OnFileSelected(event) {
         this.DT.nom_document = event;
     },
+    Reject(){
+      this.$refs.form.validate();
+      Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, {State :'Rejectee', motif: this.motif, Demande: this.DT, typeD: 'demande tirage'})
+      this.dialog = false
+    },
+    Accept(){
+      if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
+        Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, {State :'Acceptee1', motif: this.motif, Demande: this.DT, typeD: 'demande tirage'})
+      else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
+        Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, {State :'Acceptee2', motif: this.motif, Demande: this.DT, typeD: 'demande tirage'})    
+
+        this.dialog = false
+    }
   }
 }
 </script>
