@@ -23,11 +23,11 @@ BEGIN
 	DELETE FROM demande WHERE demande_ID = @id
 END
 
-CREATE PROCEDURE GetDemandeTirage
+ALTER PROCEDURE GetDemandeTirage
 	@id AS int
 AS
 BEGIN
-	SELECT demande_T_ID, nom_document, nombre_feuille, nombre_exemplaire 
+	SELECT demande_T_ID, type_document , nom_document, nombre_feuille, nombre_exemplaire 
 	FROM demande_tirage,document
 	WHERE demande_T_ID = @id
 END

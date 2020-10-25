@@ -31,11 +31,11 @@ BEGIN
 	DELETE FROM demande WHERE demande_ID = @id
 END
 
-CREATE PROCEDURE GetDemandePEC
+ALTER PROCEDURE GetDemandePEC
 	@id AS int 
 AS
 BEGIN
-	SELECT collegue1_ID, collegue2_ID, collegue3_ID, collegue4_ID, collegue5_ID, 
+	SELECT demande_P_ID , collegue1_ID, collegue2_ID, collegue3_ID, collegue4_ID, collegue5_ID, 
 		destination, objet_mission, startDate, EndDate, moyen_transport, aeroport, heureDeVol
 	FROM demande_priseEnCharge
 	WHERE demande_P_ID = @id

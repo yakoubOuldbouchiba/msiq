@@ -207,8 +207,9 @@ export default {
     components: {Date, Heure},
     methods: {
         close(){
+            
             this.$refs.form.reset(),
-            this.$store.commit('updateDialogPEC')      
+            this.dialog = false;     
         },
         submit(){
             this.$refs.form.validate();

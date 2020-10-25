@@ -22,12 +22,14 @@ END
 
 -------------------------------------------------------------
 
-CREATE PROCEDURE GetDemandeClient 
+ALTER PROCEDURE GetDemandeClient 
 	@id as int
 AS
 BEGIN
-	SELECT * FROM demande_client 
-	WHERE demande_C_ID = @id
+	SELECT * FROM demande_client , demande , utilisateurs
+	WHERE demande_C_ID = @id 
+	AND demande_ID = @id
+	AND utilisateurs.email = demande.utilisateurs_ID
 END
 
 ----------------------------------------------------------------

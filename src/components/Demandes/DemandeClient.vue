@@ -148,7 +148,6 @@ export default {
   },
   methods:{
     close:function(){
-        this.$emit('resetDemand')
         this.$refs.form.reset(),
         this.dialog=false
     },
