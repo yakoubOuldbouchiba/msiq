@@ -73,7 +73,9 @@ BEGIN
 			U.nomUtilisateur, 
 			U.prenomUtilisateur,
 			U.departement,
-			D.demande_Date 
+			U.structure ,
+			U.posteTelephonique,
+			D.demande_Date
 	FROM	demande_vehicule DV, utilisateurs U, demande D
 	WHERE	DV.demande_V_ID = @id
 	AND		D.demande_ID = DV.demande_V_ID
@@ -81,7 +83,7 @@ BEGIN
 END
 
 --------------------------------------------------------
-CREATE PROCEDURE UpdateDemandeVehicule
+ALTER PROCEDURE UpdateDemandeVehicule
 	@demande_v_id AS int,
 	@lieu AS varchar(100),
 	@organisme As varchar(50),

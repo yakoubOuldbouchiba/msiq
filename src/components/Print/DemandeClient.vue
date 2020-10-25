@@ -33,16 +33,10 @@ export default {
     },
     methods :{
         async print(){
-            /*const doc = new jsPDF({
-            orientation: "landscape",
-            unit: "in"
-            });*/
             await axios.get('http://localhost:3030/DemandeClient/'+this.ID)
             .then(
                     res =>{
                     this.demande = res.data.demande;
-                    
-                    console.log(this.demande);
                     var doc = new jsPDF()
                     doc.setFont('times')
                     /** header */

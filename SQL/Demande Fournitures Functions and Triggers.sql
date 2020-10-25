@@ -36,7 +36,7 @@ END
 
 ALTER PROCEDURE InserObjetOftDemandeFourniture
     @demande_id as int, 
-	@code_objet as int,
+	@code_objet as varchar(6),
 	@qty_demande as int 
 AS
 BEGIN
@@ -50,9 +50,17 @@ ALTER PROCEDURE GetObjetOftDemandeFourniture
 	@demande_f_id as int
 AS
 BEGIN
-	SELECT * FROM demande_fourniture_object
-	WHERE demande_F_ID = @demande_f_id
+	SELECT 
+		DFC.demande_F_ID ,DFC.code_object ,  O.designation , DFC.qty_demande
+	FROM demande_fourniture_object  DFC , objet O
+	WHERE DFC.demande_F_ID = @demande_f_id
+	AND O.code_object = DFC.code_object
 END
+
+Execute GetObjetOftDemandeFourniture 1133
+
+
+Execute GetObjetOftDemandeFourniture 1130
 
 ALTER PROCEDURE deleteObjetOftDemandeFourniture
     @demande_id as int

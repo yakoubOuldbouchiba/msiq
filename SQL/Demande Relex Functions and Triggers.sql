@@ -38,6 +38,7 @@ BEGIN
 			U.nomUtilisateur,
 			U.prenomUtilisateur,
 			U.departement,
+			U.fonction,
 			D.demande_Date
 	FROM	demande_relex DR, demande D, utilisateurs U
 	WHERE	DR.demande_R_ID = D.demande_ID

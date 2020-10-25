@@ -1,10 +1,10 @@
 
-ALTER VIEW Demandes_A_Traiter AS
+Create VIEW Demandes_A_Traiter AS
 	SELECT utilisateurs.departement, dbo.DemandeType(demande.demande_ID) as type_demande, demande.*
 	FROM demande , utilisateurs
 	where demande.utilisateurs_ID = utilisateurs.email;
 
-ALTER PROCEDURE getDemandeATraiter 
+Create PROCEDURE getDemandeATraiter 
 	@UserType AS varchar(50),
 	@Depart AS varchar(50)
 AS
@@ -29,7 +29,7 @@ BEGIN
 		WHERE etat = 'Acceptee3' AND type_demande = 'Demande véhicule'
 END
 
-ALTER PROCEDURE UpdateDemandState 
+Create PROCEDURE UpdateDemandState 
 	@Demand_ID AS int,
 	@motif AS varchar(max),
 	@State AS varchar(50)
