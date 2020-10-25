@@ -136,14 +136,15 @@ CREATE TABLE objet (
 )ON [PRIMARY];
 
 /*------------------------------------------------------------------------------------------------------------------------*/
-
+DROP TABLE demande_fourniture_object
 CREATE TABLE demande_fourniture_object (
     demande_F_ID int,
-	code_object int,
+	code_object VarChar(6),
 	qty_demande int,
 	qty_accordee int,
 	observation varchar(MAX)
 	PRIMARY KEY(demande_F_ID , code_object),
+	CONSTRAINT FK_demande_fourniture_object_objet FOREIGN KEY (code_object) REFERENCES objet(code_object),
 	CONSTRAINT FK_demande_fourniture_object_demande_fourniture FOREIGN KEY (demande_F_ID) REFERENCES demande_fourniture(demande_F_ID)
 ) ON [PRIMARY]
 

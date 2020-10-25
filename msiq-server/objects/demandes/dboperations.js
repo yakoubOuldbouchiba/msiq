@@ -7,7 +7,7 @@ async function  getDemandes(email){
         try{
             let demandes = await new sql.Request()
             .input('email',sql.VarChar , email)
-            .execute('getDemande')
+            .execute('getDemandes')
             return  {
                 result : 'DG',
                 demandes : demandes.recordset
@@ -29,6 +29,35 @@ async function  editDemande(){
         let pool = await sql.connect(config);
     }catch(error){
         console.log(error);
+    }
+}
+// get Demand
+async function  getDemande(id){
+    try{
+        await sql.connect(config);
+        try{
+            console.log(id);
+            let res = await new sql.Request()
+            .input('id',sql.Int,id)
+            .execute('GetDemande');
+            sql.close();
+            console.log("demand get it")
+            return(
+                {
+                    result :"DG",
+                    demande : res.recordset[0] 
+                }
+            ) 
+            
+
+        }catch(error){
+            console.log('can not get Demande');
+            sql.close();
+            return 'CNGD'; // can not delete Demand
+        }
+    }catch (error) {
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
     }
 }
 // delete message
@@ -101,6 +130,7 @@ async function  UpdateDemandState(DemandeID, state, motif){
 }
 module.exports = {
     getDemandes,
+    getDemande,
     editDemande,
     deleteDemande,
     getDemandesATraiter,

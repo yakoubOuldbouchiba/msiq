@@ -51,6 +51,8 @@ BEGIN
 			U.nomUtilisateur, 
 			U.prenomUtilisateur,
 			U.departement,
+			U.structure,
+			U.posteTelephonique,
 			D.demande_Date
 	FROM	demande_priseEnCharge DPEC, utilisateurs U, demande D
 	WHERE	DPEC.demande_P_ID = @id
@@ -60,7 +62,7 @@ END
 
 /*-------------------------------------------------------------------------------------------*/
 
-ALTER PROCEDURE UpdateDemandePEC
+CREATE PROCEDURE UpdateDemandePEC
 	@id AS int,
     @Col1_ID AS varchar(50), 
     @Col2_ID AS varchar(50), 

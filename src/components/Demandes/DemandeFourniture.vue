@@ -253,7 +253,7 @@ export default {
     async created(){
         for(let i=0 ; i<this.totalObject ; i++){
             this.DemandeFourniture.objetsDemande.push({
-                code_objet:null,    
+                code_object:null,    
                 qty_demande:null
                 });
         }

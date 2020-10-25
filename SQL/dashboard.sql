@@ -60,7 +60,7 @@ ALTER VIEW demande_view AS
 	where demande.utilisateurs_ID = utilisateurs.email;
 
 
-ALTER PROCEDURE getDemande 
+CREATE PROCEDURE getDemandes 
 @email as varchar(max)
 AS
 BEGIN
