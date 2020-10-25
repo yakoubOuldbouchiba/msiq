@@ -84,6 +84,7 @@
                     edit
                   </v-icon>
                 </v-btn>
+                <PrintDemande :type="Demande.type_demande" :ID="Demande.demande_ID" />
                </td>
              </tr>
            </tbody>
@@ -176,10 +177,11 @@ import DemandePriseEnCharge from '../components/Demandes/DemandePriseEnCharge'
 import DemandeRelex from '../components/Demandes/DemandeRelex'
 import DemandeTirage from '../components/Demandes/DemandeTirage'
 import DemandeVehicule from '../components/Demandes/DemandeVehicule'
+import PrintDemande from '../components/Print/Demande'
 import axios from 'axios'
 export default {
 name: 'dashboard',
-components:{Pupupdemandes , DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture},
+components:{Pupupdemandes ,   PrintDemande , DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture},
 async created(){
   this.Demandes = (await axios.get("http://localhost:3030/demandes/"+this.$store.state.user.email)).data.demandes.reverse()
 },

@@ -31,11 +31,11 @@ END
 ALTER PROCEDURE GetDemandeClient 
 	@id as int
 AS
-BEGIN
 	SELECT	DC.*,
 			U.nomUtilisateur, 
 			U.prenomUtilisateur,
 			U.departement,
+      U.structure,                      
 			D.demande_Date
 	FROM	demande_client DC,utilisateurs U,demande D
 	WHERE	DC.demande_C_ID = @id 
