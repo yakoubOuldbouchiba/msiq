@@ -13,7 +13,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 const upload = multer({
     dest : './FilesTirage/'
 });
-module.exports=()=>{
+module.exports=(io)=>{
    //this part the get the fie 
     router.post('/DemandeTirage', upload.single('FileData'), (req , res)=>{
         jwt.verify((req.headers.authorization || req.headers['Authorization']),'TMPK3Y',
@@ -37,7 +37,7 @@ module.exports=()=>{
                 NombreTot: req.body.NombreTot,
             };
             
-            await dbOperationsDemandeTirage.setDemandeTirage(infoToSend)
+            await dbOperationsDemandeTirage.setDemandeTirage(infoToSend,io)
             .then(result => {
                 if(result ==='DI'){
                     res.status(200).json({

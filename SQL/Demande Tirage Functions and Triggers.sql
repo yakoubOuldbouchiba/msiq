@@ -27,11 +27,26 @@ ALTER PROCEDURE GetDemandeTirage
 	@id AS int
 AS
 BEGIN
-	SELECT demande_T_ID, type_document , nom_document, nombre_feuille, nombre_exemplaire 
-	FROM demande_tirage,document
-	WHERE demande_T_ID = @id
+	SELECT	DT.*, 
+			Dc.nom_document, 
+			Dc.nombre_feuille,
+			Dc.total_feuille,
+			Dc.nombre_exemplaire,
+			Dc.type_document,
+			Dc.autre,
+			Dc.stored_name,
+			U.nomUtilisateur,
+			U.prenomUtilisateur,
+			U.departement,
+			D.demande_Date
+	FROM	demande_tirage DT, document Dc, utilisateurs U, demande D
+	WHERE	DT.demande_T_ID = D.demande_ID
+	AND		DT.document_ID = Dc.document_ID
+	AND		D.utilisateurs_ID = U.email
+	AND		DT.demande_T_ID = @id
 END
 
+SELECT * from demande_tirage,document,utilisateurs,demande
 ALTER PROCEDURE UpdatetDemandeTirage
 	@id AS int,
 	@NF AS int,

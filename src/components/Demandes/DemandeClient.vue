@@ -18,11 +18,30 @@
             <v-card flat>
                     <v-card-text>
                         <v-form v-model="valid" ref="form">
+                          <v-row justify="center" v-if="type == 'Triater'"> 
+                                <v-col cols="12" sm="4"> 
+                                    <v-text-field 
+                                    :value="DC.nomUtilisateur+' '+DC.prenomUtilisateur"
+                                    disabled
+                                    label="Nom et prenom"
+                                    prepend-icon="mdi-account" 
+                                    ></v-text-field>
+                                </v-col>  
+                                <v-col cols="12" sm="4"> 
+                                    <v-text-field  
+                                    :value="DC.departement"
+                                    disabled
+                                    label="Departement"
+                                    prepend-icon="mdi-office-building"
+                                    ></v-text-field>
+                                </v-col>  
+                            </v-row>
                             <v-row justify="space-around"> 
                                 <v-radio-group
                                     v-model="DC.nature"
                                     row
-                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
+                                    :disabled="type =='Triater'"
+                                    :rules="[v => !!v || 'Ce champs est obligatoire']"
                                     >
                                     <v-radio
                                         label="Produit"
@@ -38,33 +57,51 @@
                                 <v-col cols="12" sm="8"> 
                                     <v-text-field 
                                     v-model="DC.objet" 
+                                    :disabled="type =='Triater'"
                                     label="Objet" 
-                                    prepend-icon="title" 
-                                    :rules="[v => !!v || 'Cet champs est obligatoire']"></v-text-field>
+                                    prepend-icon="mdi-target" 
+                                    :rules="[v => !!v || 'Ce champs est obligatoire']"></v-text-field>
                                 </v-col>  
                                 <v-col cols="12" sm="8"> 
                                     <v-textarea 
                                     v-model="DC.demande_C_description" 
+                                    :disabled="type =='Triater'"
                                     label="Description" 
                                     prepend-icon="notes"
-                                    :rules="[v => !!v || 'Cet champs est obligatoire']">Description</v-textarea>
+                                    :rules="[v => !!v || 'Ce champs est obligatoire']">Description</v-textarea>
                                 </v-col>  
                             </v-row>  
-                            <v-row justify="center"> 
-                                    <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
-                                        :disabled="!valid"
-                                        @click="update">
-                                        <v-icon left>send</v-icon>
-                                       <span  >Modifier la demande</span> 
-                                    </v-btn>
-                                    <v-btn v-else class="ma-1 pink white--text" 
-                                        :disabled="!valid"
-                                        @click="submit">
-                                        <v-icon left>send</v-icon>
-                                       <span  >Envoyer la demande</span> 
-                                    </v-btn>
+                            <v-row justify="center" v-if="type =='Triater'"> 
+                                <v-col cols="12" sm="8"> 
+                                    <v-textarea
+                                    v-model="motif"
+                                    label="Motif" 
+                                    prepend-icon="mdi-flag-outline" 
+                                    :rules="[v => !!v || 'Ce champs est obligatoire']"></v-textarea>
+                                </v-col>   
                             </v-row> 
-                        </v-form>
+                            <v-row justify="center"> 
+                              <v-btn v-if="type=='Triater'" 
+                                class="ma-1 red white--text"
+                                @click="Reject"
+                                :disabled="!valid">Rejeter la demande </v-btn>
+                                <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
+                                    :disabled="!valid"
+                                    @click="update">
+                                    <v-icon left>send</v-icon>
+                                    <span  >Modifier la demande</span> 
+                                </v-btn>
+                                <v-btn v-else-if="type=='Triater'" 
+                                  class="ma-1 green white--text"
+                                  @click="Accept">Accepter la demande </v-btn>
+                                <v-btn v-else class="ma-1 pink white--text" 
+                                    :disabled="!valid"
+                                    @click="submit">
+                                    <v-icon left>send</v-icon>
+                                    <span  >Envoyer la demande</span> 
+                                </v-btn>
+                            </v-row>
+                        </v-form> 
                     </v-card-text>
              </v-card> 
         </v-card>  
@@ -125,14 +162,14 @@ export default {
             }
         },
         DC : function() {
-          if(this.type=="update" && this.dialog==true){
+          if((this.type=="update" || this.type=="Triater" ) && this.dialog==true){
             return this.demande
           }else{
             return this.DemandeClient
           }
         }
-    }
-  ,data(){
+    },
+    data(){
       return{
           msg: '',
           Done: false,
@@ -143,7 +180,8 @@ export default {
               nature:'',
               objet:'',
               demande_C_description:'',
-          }
+          },
+          motif: '',
       }
   },
   methods:{
@@ -153,7 +191,7 @@ export default {
     },
     submit () {
         this.$refs.form.validate();
-        Axios.post('http://localhost:3030/DemandeClient', this.DC )
+        Axios.post('http://localhost:3030/DemandeClient', this.DC)
         .then(
           res =>{
             this.msg = res.data.title,
@@ -183,11 +221,20 @@ export default {
               this.msg = err.response.data.title
           }
         )
+    },
+    Reject(){
+      this.$refs.form.validate();
+      Axios.put('http://localhost:3030/UpdateDemandState/'+this.DC.demande_C_ID, {State :'Rejectee', motif: this.motif})
+      this.dialog = false
+    },
+    Accept(){
+      if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
+        Axios.put('http://localhost:3030/UpdateDemandState/'+this.DC.demande_C_ID, {State :'Acceptee1', motif: this.motif, Demande: this.DC, typeD: 'demande client'})
+      else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
+        Axios.put('http://localhost:3030/UpdateDemandState/'+this.DC.demande_C_ID, {State :'Acceptee2', motif: this.motif, Demande: this.DC, typeD: 'demande client'})    
+
+        this.dialog = false
     }
   }
 }
 </script>
-
-<style>
-
-</style>

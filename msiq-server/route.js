@@ -39,17 +39,17 @@ module.exports = (io)=>{
         console.log('someone is onligne');
     })
     router.use(chauffeurs());
-    router.use(demandes());
-    router.use(demande_relex());
-    router.use(demande_vehicule());
-    router.use(demande_fourniture());
+    router.use(demandes(io));
+    router.use(demande_relex(io));
+    router.use(demande_vehicule(io));
+    router.use(demande_fourniture(io));
     router.use(fournitures());
     router.use(messages(Messages , Users,io));
     router.use(produits());
     router.use(users());
     router.use(vehicules());
-    router.use(DemandeClient());
-    router.use(DemandeTirage());
-    router.use(DemandePriseEnCharge());
+    router.use(DemandeClient(io));
+    router.use(DemandeTirage(io));
+    router.use(DemandePriseEnCharge(io));
     return router
 }

@@ -27,7 +27,7 @@ async function getDemandeClient(id){
 }
 
 // set new message
-async function  setDemandeClient(Demande){
+async function  setDemandeClient(Demande,io){
     try {
         await sql.connect(config)
         try {
@@ -37,12 +37,26 @@ async function  setDemandeClient(Demande){
             .input('nature', sql.VarChar, Demande.rb.nature)
             .input('objet', sql.VarChar, Demande.rb.objet)
             .input('description', sql.VarChar, Demande.rb.demande_C_description)
-            .execute('InsertDemandeClient');
+            .output('DID', sql.Int)
+            .output('DDATE', sql.DateTime)
+            .execute('InsertDemandeClient').then((res,err) => {
+               if (err) 
+                   return 'CNID'
+                let Demand = {
+                    demande_ID: res.output.DID,
+                    demande_Date: res.output.DDATE,
+                    type_demande: 'demande client',
+                    etat: 'Encours',
+                    motif: '',
+                }
+                io.emit('NewDemandCD', Demand )
+            })
             console.log('Demande Inserted');
             sql.close();
             return  'DI' //Demand inserted
         } catch (error) {
             console.log('can not instert Demande');
+            console.log(error);
             sql.close();
             return 'CNID'; // can not insert Demand
         }

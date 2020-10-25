@@ -9,7 +9,7 @@
                     <v-toolbar flat dark :color='color'  >
                         <v-toolbar-title> 
                             <v-icon large left class="white--text">{{icon}}</v-icon> 
-                            <span v-if="type=='update'&&dialog==true">Modofier la {{name}} numréo {{objetsDF[0].demande_F_ID}}</span>
+                            <span v-if="type=='update'&&dialog==true">Modifier la {{name}} numréo {{objetsDF[0].demande_F_ID}}</span>
                             <span v-else >{{name}}</span>
                         </v-toolbar-title>
                         <v-spacer></v-spacer>
@@ -55,7 +55,7 @@
                                                     item-value="code_object"
                                                     :label="getDesign(objet.code_object)"
                                                     prepend-inner-icon="edit"
-                                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
+                                                    :rules="[v => !!v || 'Ce champs est obligatoire']"
                                                 ></v-autocomplete>
                                                 <v-autocomplete
                                                     flat
@@ -68,7 +68,7 @@
                                                     item-value="code_object"
                                                     :label="'Objet '+(index + 1)"
                                                     prepend-inner-icon="edit"
-                                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
+                                                    :rules="[v => !!v || 'Ce champs est obligatoire']"
                                                 ></v-autocomplete>
                                             </td>
                                             <td>
@@ -79,7 +79,7 @@
                                                     label="Quantite damande"
                                                     type="number"
                                                     min=0
-                                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
+                                                    :rules="[v => !!v || 'Ce champs est obligatoire']"
                                                 ></v-text-field>
                                             </td>
                                             <td>

@@ -3,7 +3,7 @@ const router = express.Router();
 const dbOperationsDemandePriseEnCharge = require('../../objects/DemandePriseEnCharge/dboperations');
 import * as auth from '../../services/auth-service.js'
 const jwt = require('jsonwebtoken');
-module.exports=()=>{
+module.exports=(io)=>{
    //add a new demande
     router.post('/DemandePriseEnCharge' , (req , res)=>{
         jwt.verify((req.headers.authorization || req.headers['Authorization']),'TMPK3Y',
@@ -27,7 +27,7 @@ module.exports=()=>{
                 Aeroport: req.body.aeroport,
             };
             console.log(InfoToSend);
-            dbOperationsDemandePriseEnCharge.setDemandePriseEnCharge(InfoToSend)
+            dbOperationsDemandePriseEnCharge.setDemandePriseEnCharge(InfoToSend,io)
             .then(result => {
                 if(result ==='DI'){
                     res.status(200).json({

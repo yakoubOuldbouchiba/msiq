@@ -32,9 +32,6 @@ export default new Vuex.Store({
         reciever_ID : null,
         dialogNewMessage:false,
         dialog:false,
-        dialogPEC: false,
-        dialogTirage: false,
-        ActionType: '',
     },
     mutations:{
         
