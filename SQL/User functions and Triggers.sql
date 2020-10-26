@@ -19,18 +19,18 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-CREATE PROCEDURE SetUsers
+ALTER PROCEDURE SetUsers
 	@email AS varChar(50),
 	@pw AS nvarchar(Max),
 	@ln AS varChar(50),
 	@fn AS varChar(50),
 	@tu AS varChar(50),
 	@bd AS DATE ,
-	@tel AS int,
+	@tel AS varchar(15),
 	@job AS varChar(50),
 	@struc AS varChar(50),
 	@depart AS varChar(50),
-	@pt AS int
+	@pt AS varchar(15)
 AS
 BEGIN 
 	INSERT INTO utilisateurs
@@ -63,7 +63,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-CREATE PROCEDURE setAccountDemand
+ALTER PROCEDURE setAccountDemand
 	@email AS varChar(50),
 	@pw AS nvarchar(max),
 	@ln AS varChar(50),
@@ -97,7 +97,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-CREATE PROCEDURE UpdateUser
+ALTER PROCEDURE UpdateUser
 	@email AS varchar(50),
 	@ln AS varChar(50),
 	@fn AS varChar(50),
@@ -120,5 +120,3 @@ BEGIN
 		departement = @depart
 	WHERE email=@email
 END
-
-SELECT  * FROM utilisateurs

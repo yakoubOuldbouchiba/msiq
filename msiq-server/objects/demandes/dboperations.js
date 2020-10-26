@@ -63,6 +63,7 @@ async function  getDemandesATraiter(Params){
             let demandes = await new sql.Request()
             .input('UserType',sql.VarChar , Params.UserType)
             .input('Depart',sql.VarChar , Params.Depart)
+            .input('Struct', sql.VarChar, Params.Struct)
             .execute('getDemandeATraiter')
             console.log(demandes.recordset);
             return  demandes.recordset

@@ -28,9 +28,16 @@ ALTER PROCEDURE InsertDemandeFourniture
     @DDATE AS DateTime OUTPUT
 AS
 BEGIN 
-	INSERT INTO demande VALUES ((SELECT CONVERT (datetime, SYSDATETIME())),@userID,'Encours', null)
+	INSERT INTO demande 
+	VALUES (	(SELECT CONVERT (datetime, SYSDATETIME())),
+				@userID,
+				'Chef Departement', 
+				null,
+				0)
 	SELECT @DDATE = CONVERT (datetime, SYSDATETIME())
-	INSERT INTO demande_fourniture VALUES ((SELECT IDENT_CURRENT('demande')), null );
+	INSERT INTO demande_fourniture 
+	VALUES (	(SELECT IDENT_CURRENT('demande')), 
+				null);
 	SELECT @demande_id = IDENT_CURRENT('demande')
 END
 
@@ -60,5 +67,3 @@ AS
 BEGIN
 	DELETE  FROM demande_fourniture_object where demande_F_ID = @demande_id
 END
-
-INSERT INTO objet VALUES('505M', 'Black Pen', 100)

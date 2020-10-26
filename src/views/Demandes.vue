@@ -28,22 +28,21 @@
                <th>Date de création</th>
                <th class="text-center">Etat</th>
                <th class="text-center">Motif</th>
-               <th class="text-center">Action</th>
              </tr>
            </thead>
            <tbody>
-             <tr class="pa-2" v-for="Demande in Demandes" :key="Demande.demande_ID" @click="updateItem(Demande)">
+             <tr :class="`pa-2 ${Demande.seen? 'grey lighten-3' : 'grey lighten-3'}`" v-for="Demande in Demandes" :key="Demande.demande_ID" @click="updateItem(Demande)">
                <td :class="`demande ${Demande.etat}`" ><b>{{Demande.demande_ID}}</b></td>
                <td >{{Demande.type_demande}}</td>
                <td >{{Demande.demande_Date}}</td>
                <td class="text-center">
                  <v-chip
-                  v-if="Demande.etat == 'Acceptee3'"
+                  v-if="Demande.etat == 'Acceptee'"
                   class="success"
                  >
                   {{Demande.etat}}
                  </v-chip>
-                 <v-chip v-else-if="Demande.etat == 'Rejectee'" 
+                 <v-chip v-else-if="Demande.etat == 'Rejetee'" 
                  class="error">
                   {{Demande.etat}}
                  </v-chip>
@@ -56,21 +55,6 @@
                  <span v-if="!Demande.motif">-</span>
                  {{Demande.motif}}
               </td>
-               <td class="text-center">
-                 <v-btn
-                  class="mx-2"
-                  outlined
-                  color="indigo"
-                  fab
-                  dark
-                  x-small
-                  @click='deleteItem(Demande)'
-                >
-                  <v-icon dark>
-                    delete
-                  </v-icon>
-                </v-btn>
-               </td>
              </tr>
            </tbody>
          </v-simple-table>
@@ -166,19 +150,58 @@ export default {
 name: 'ListeDAT',
 components:{DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture},
 async created(){
-  this.Demandes = (await axios.get("http://localhost:3030/demandesATraiter/"+this.$store.state.user.typeUtilisateur+'/'+this.$store.state.user.departement)).data.demandes.reverse()
+  this.Demandes = (await axios.get("http://localhost:3030/demandesATraiter/"+this.$store.state.user.typeUtilisateur+'/'+this.$store.state.user.departement+'/'+this.$store.state.user.structure)).data.demandes.reverse()
 },
 mounted(){
   if (this.$store.state.user.typeUtilisateur == 'Chef departement') {
     this.$store.state.sokect.on('NewDemandCD', (newDemand) => {
       this.Demandes.unshift(newDemand)
     })
-  }
-  if (this.$store.state.user.typeUtilisateur == 'Directeur') {
+    this.$store.state.sokect.on('RemoveDemandCD', (Demand) => {
+      let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
+      this.Demandes.splice(index , 1)
+    })
+  }else if (this.$store.state.user.typeUtilisateur == 'Directeur') {
     this.$store.state.sokect.on('NewDemandD', (newDemand) => {
       this.Demandes.unshift(newDemand)
     })
-  } 
+    this.$store.state.sokect.on('RemoveDemandD', (Demand) => {
+      let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
+      this.Demandes.splice(index , 1)
+    })   
+  }else if (this.$store.state.user.typeUtilisateur == 'Responsable DAM') {
+    this.$store.state.sokect.on('NewDemandRD', (newDemand) => {
+      this.Demandes.unshift(newDemand)
+    })
+    this.$store.state.sokect.on('RemoveDemandRD', (Demand) => {
+      let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
+      this.Demandes.splice(index , 1)
+    })
+  }else if (this.$store.state.user.typeUtilisateur == 'Chef de parc') {
+    this.$store.state.sokect.on('NewDemandCP', (newDemand) => {
+      this.Demandes.unshift(newDemand)
+    })
+    this.$store.state.sokect.on('RemoveDemandCP', (Demand) => {
+      let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
+      this.Demandes.splice(index , 1)
+    })
+  }else if (this.$store.state.user.typeUtilisateur == 'Agent de Tirage') {
+    this.$store.state.sokect.on('NewDemandAT', (newDemand) => {
+      this.Demandes.unshift(newDemand)
+    })
+    this.$store.state.sokect.on('RemoveDemandAT', (Demand) => {
+      let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
+      this.Demandes.splice(index , 1)
+    })
+  }else{
+    this.$store.state.sokect.on('NewDemandAM', (newDemand) => {
+        this.Demandes.unshift(newDemand)
+    })
+    this.$store.state.sokect.on('RemoveDemandAM', (Demand) => {
+      let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
+      this.Demandes.splice(index , 1)
+    })
+  }   
 },
 data(){
    return{
@@ -205,17 +228,17 @@ data(){
    },
    async deleteItem(demande){
      let type = ''
-     if(demande.type_demande=="demande véhicule"){
+     if(demande.type_demande== 'Demande véhicule'){
           type='/DemandeVehicule/' 
-     } else if(demande.type_demande=="demande client"){
+     } else if(demande.type_demande== 'Demande client'){
           type='/DemandeClient/' 
-     } else if(demande.type_demande=="demande fourniture"){
+     } else if(demande.type_demande== 'Demande fourniture'){
           type='/DemandeFourniture/' 
-     }else if(demande.type_demande=="demande prise en charge"){
+     }else if(demande.type_demande== 'Demande de prise en charge'){
           type='/DemandePriseEnCharge/' 
-     }else if(demande.type_demande=="demande tirage"){
+     }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
-     }else if(demande.type_demande=="demande relex"){
+     }else if(demande.type_demande== 'Demande relex'){
           type='/DemandeRelex/' 
      }else{
        type='/demande/'
@@ -238,11 +261,11 @@ data(){
    },
    async updateItem(Demande){
      await this.getDemande(Demande);
-     if(Demande.type_demande=='demande client'){
+     if(Demande.type_demande=='Demande client'){
        this.openDialogClient = true;
-     }else if(Demande.type_demande=='demande fourniture'){
+     }else if(Demande.type_demande=='Demande fourniture'){
        this.openDialogFourniture = true;
-     }else if(Demande.type_demande=='demande véhicule'){
+     }else if(Demande.type_demande=='Demande véhicule'){
        let dp = this.demande.date_depart;
        let dr = this.demande.date_retour
        this.demande.date_depart = dp.substr(0,10)
@@ -250,7 +273,7 @@ data(){
        this.demande.heure_depart = dp.substr(11,5)
        this.demande.heure_retour = dr.substr(11,5)
        this.openDialogVehicule = true
-     }else if(Demande.type_demande=='demande relex'){
+     }else if(Demande.type_demande== 'Demande relex'){
        let dp = this.demande.date_depart;
        let dr = this.demande.date_retour
        this.demande.date_depart = dp.substr(0,10)
@@ -259,9 +282,9 @@ data(){
        this.demande.heure_retour = dr.substr(11,5)
        this.moyens_transport = false
        this.openDialogRelex = true
-     }else if(Demande.type_demande=='demande tirage'){
+     }else if(Demande.type_demande== 'Demande de tirage'){
        this.openDialogTirage = true
-     }else if(Demande.type_demande=='demande prise en charge'){
+     }else if(Demande.type_demande== 'Demande de prise en charge'){
        this.demande.startDate = this.demande.startDate.substr(0,10)
        this.demande.EndDate = this.demande.EndDate.substr(0,10)
        this.demande.heureDeVol = this.demande.heureDeVol.substr(11,5)
@@ -270,17 +293,17 @@ data(){
    },
    async getDemande(demande){
       let type = ''
-     if(demande.type_demande=="demande véhicule"){
+     if(demande.type_demande== 'Demande véhicule'){
           type='/DemandeVehicule/' 
-     } else if(demande.type_demande=="demande client"){
+     } else if(demande.type_demande== 'Demande client'){
           type='/DemandeClient/' 
-     } else if(demande.type_demande=="demande fourniture"){
+     } else if(demande.type_demande== 'Demande fourniture'){
           type='/DemandeFourniture/' 
-     }else if(demande.type_demande=="demande prise en charge"){
+     }else if(demande.type_demande== 'Demande de prise en charge'){
           type='/DemandePriseEnCharge/' 
-     }else if(demande.type_demande=="demande tirage"){
+     }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
-     }else if(demande.type_demande=="demande relex"){
+     }else if(demande.type_demande== 'Demande relex'){
           type='/DemandeRelex/' 
      }else{
        type='/demande/'

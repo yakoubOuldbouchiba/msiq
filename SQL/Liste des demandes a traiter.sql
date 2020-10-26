@@ -1,38 +1,56 @@
-
-ALTER VIEW Demandes_A_Traiter AS
-	SELECT utilisateurs.departement, dbo.DemandeType(demande.demande_ID) as type_demande, demande.*
-	FROM demande , utilisateurs
-	where demande.utilisateurs_ID = utilisateurs.email;
+ALTER VIEW 	Demandes_A_Traiter 
+	AS
+	SELECT 	U.departement, 
+			U.structure,
+			dbo.DemandeType(D.demande_ID) as type_demande, 
+			D.*
+	FROM	demande D, utilisateurs U
+	where	D.utilisateurs_ID = U.email;
 
 ALTER PROCEDURE getDemandeATraiter 
-	@UserType AS varchar(50),
-	@Depart AS varchar(50)
+	@UserType	AS varchar(50),
+	@Depart		AS varchar(50),
+	@Struct		AS varchar(50)
 AS
 BEGIN
 	if(@UserType = 'Chef departement')
-		select * from Demandes_A_Traiter
-		WHERE etat IN ('Encours', 'Rejectee') AND departement = @Depart
+		SELECT	* 
+		FROM	Demandes_A_Traiter
+		WHERE	etat = 'Chef Departement' 
+		AND		departement = @Depart
+
 	if(@UserType = 'Directeur')
-		select * from Demandes_A_Traiter
-		WHERE etat = 'Acceptee1' AND departement = @Depart
-	if(@UserType = 'Directeur DAM')
-		select * from Demandes_A_Traiter
-		WHERE etat = 'Acceptee2' AND departement = @Depart
+		SELECT	* 
+		FROM	Demandes_A_Traiter
+		WHERE	etat = 'Directeur' 
+		AND		structure = @Struct
+
+	if(@UserType = 'Responsable DAM')
+		SELECT	* 
+		FROM	Demandes_A_Traiter
+		WHERE	etat = 'DAM'
+
 	if(@UserType = 'Agent de magasin')
-		select * from Demandes_A_Traiter
-		WHERE etat = 'Acceptee3' AND type_demande NOT IN ('Demande tirage', 'Demande véhicule')
+		SELECT	* 
+		FROM	Demandes_A_Traiter
+		WHERE	etat = 'Agent de magasin'
+
 	if(@UserType = 'Agent de Tirage')
-		select * from Demandes_A_Traiter
-		WHERE etat = 'Acceptee3' AND type_demande = 'Demande tirage'
+		SELECT	* 
+		FROM	Demandes_A_Traiter
+		WHERE	type_demande = 'Demande de tirage'
+		AND		etat = 'Acceptee'
+
 	if(@UserType = 'Chef de parc')
-		select * from Demandes_A_Traiter
-		WHERE etat = 'Acceptee3' AND type_demande = 'Demande véhicule'
+		SELECT	* 
+		FROM	Demandes_A_Traiter
+		WHERE	etat = 'Chef de parc'
 END
 
 ALTER PROCEDURE UpdateDemandState 
-	@Demand_ID AS int,
-	@motif AS varchar(max),
-	@State AS varchar(50)
+	@Demand_ID	AS int,
+	@motif		AS varchar(max),
+	@State		AS varchar(50)
 AS
 BEGIN
 	UPDATE	demande

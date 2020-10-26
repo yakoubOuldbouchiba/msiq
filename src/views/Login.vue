@@ -86,7 +86,7 @@ export default {
         password: '',
         role:''
       },
-      items: ['Client', 'Directeur', 'Directeur DAM', 'Chef departement', 'Chef de parc', 'Agent de Tirage', 'Agent de magasin'],
+      items: ['Client', 'Directeur', 'Responsable DAM', 'Chef departement', 'Chef de parc', 'Agent de Tirage', 'Agent de magasin'],
     }),
     methods:{
       async login (){

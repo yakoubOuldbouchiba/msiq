@@ -55,7 +55,7 @@ module.exports=(io)=>{
     });
     
     // Liste des demandes à traiter 
-    router.get('/demandesATraiter/:UserType/:Depart',auth.requireLogin,(req , res)=>{
+    router.get('/demandesATraiter/:UserType/:Depart/:Struct',auth.requireLogin,(req , res)=>{
         console.log(req.params);
         dbOperationsDemandes.getDemandesATraiter(req.params)
         .then(result => {
@@ -76,15 +76,15 @@ module.exports=(io)=>{
     //Update Demand state
     router.put('/UpdateDemandState/:id',auth.requireLogin,(req , res)=>{ 
         let DID = null
-        if (req.body.typeD == 'demande client') 
+        if (req.body.typeD == 'Demande client') 
             DID = req.body.Demande.demande_C_ID
-        else if (req.body.typeD == 'demande véhicule') 
+        else if (req.body.typeD == 'Demande véhicule') 
             DID = req.body.Demande.demande_V_ID
-        else if (req.body.typeD == 'demande fourniture') 
+        else if (req.body.typeD == 'Demande fourniture') 
             DID = req.body.Demande.demande_F_ID
-        else if (req.body.typeD == 'demande prise en charge') 
+        else if (req.body.typeD == 'Demande de prise en charge') 
             DID = req.body.Demande.demande_P_ID
-        else if (req.body.typeD == 'demande tirage') 
+        else if (req.body.typeD == 'Demande de tirage') 
             DID = req.body.Demande.demande_T_ID
         else 
             DID = req.body.Demande.demande_R_ID
@@ -94,10 +94,10 @@ module.exports=(io)=>{
             demande_Date: req.body.Demande.demande_Date,
             type_demande: req.body.typeD,
             etat: req.body.State,
-            motif: '',
+            motif: req.body.Demande.motif,
+            seen: 0,
         }
-        //io.emit('NewDemandCD', Demand )
-        dbOperationsDemandes.UpdateDemandState(req.params.id,req.body.State,req.body.motif)
+        dbOperationsDemandes.UpdateDemandState(req.params.id,req.body.State,req.body.Demande.motif)
         .then(result => {
             if(result==='DU'){
                 res.status(200).json({
@@ -111,11 +111,53 @@ module.exports=(io)=>{
                 })
             }
         })
-        if (req.body.State == 'Acceptee1') 
+        io.emit(req.body.Demande.email+'E', Demand )
+        if (req.body.State == 'Directeur'){ 
             io.emit('NewDemandD', Demand )
-        else 
-            io.emit('NewDemandDDAM', Demand )
-        
+            io.emit('RemoveDemandCD', Demand)
+        }else if (req.body.State == 'DAM'){
+            io.emit('NewDemandRD', Demand )  
+            io.emit('RemoveDemandD', Demand )       
+        }else if (req.body.State == 'Chef de parc') {
+            io.emit('NewDemandCP', Demand )  
+            io.emit('RemoveDemandD', Demand ) 
+        }else if (req.body.State == 'Agent de Tirage'){
+            io.emit('NewDemandAT', Demand )  
+            io.emit('RemoveDemandD', Demand )       
+        }else if (req.body.State == 'Agent de magasin') {
+            io.emit('NewDemandAM', Demand )  
+            io.emit('RemoveDemandRD', Demand ) 
+        }else if (req.body.State == 'Acceptee') {
+            if (req.body.typeD == 'Demande client'){
+                io.emit('NewDemandAM', Demand )
+                io.emit('RemoveDemandRD', Demand ) 
+            }              
+            else if (req.body.typeD == 'Demande véhicule') 
+                io.emit('RemoveDemandCP', Demand ) 
+            else if (req.body.typeD == 'Demande fourniture'){
+                io.emit('NewDemandAM', Demand )
+                io.emit('RemoveDemandRD', Demand ) 
+            }  
+            else if (req.body.typeD == 'Demande de prise en charge') 
+                io.emit('RemoveDemandD', Demand ) 
+            else if (req.body.typeD == 'Demande de tirage') 
+                io.emit('RemoveDemandAT', Demand ) 
+            else 
+                io.emit('RemoveDemandD', Demand ) 
+        }else{
+            if (req.body.UT == 'Chef departement')
+                io.emit('RemoveDemandCD', Demand)
+            else if (req.body.UT == 'Directeur')
+                io.emit('RemoveDemandD', Demand)
+            else if (req.body.UT == 'Responsable DAM')
+                io.emit('RemoveDemandRD', Demand)
+            else if (req.body.UT == 'Agent de Tirage')
+                io.emit('RemoveDemandAT', Demand)
+            else if (req.body.UT == 'Agent de magasin')
+                io.emit('RemoveDemandAM', Demand)
+            else if (req.body.UT == 'Chef de parc')
+                io.emit('RemoveDemandCP', Demand)
+        }   
     });
     return router;
 }

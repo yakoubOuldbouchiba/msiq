@@ -52,12 +52,13 @@ return @demande_type
 
 END
 
-select dbo.DemandeType(7) as type_demande
-
-ALTER VIEW demande_view AS
-	SELECT utilisateurs.email,dbo.DemandeType(demande.demande_ID) as type_demande, demande.*,  utilisateurs.nomUtilisateur , utilisateurs.prenomUtilisateur
-	FROM demande , utilisateurs
-	where demande.utilisateurs_ID = utilisateurs.email;
+ALTER VIEW demande_view 
+	AS
+	SELECT	U.email, 
+			dbo.DemandeType(D.demande_ID) as type_demande, 
+			D.*  
+	FROM	demande D , utilisateurs U
+	where	D.utilisateurs_ID = U.email;
 
 
 ALTER PROCEDURE getDemande 

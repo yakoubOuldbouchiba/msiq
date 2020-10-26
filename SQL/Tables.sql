@@ -1,4 +1,4 @@
-
+DROP TABLE utilisateurs
 CREATE TABLE utilisateurs (
     email varchar(50) NOT NULL PRIMARY KEY,
 	userPassword nvarchar(MAX) NOT NULL,
@@ -6,26 +6,18 @@ CREATE TABLE utilisateurs (
     prenomUtilisateur varchar(50) NOT NULL,
 	typeUtilisateur varchar(50) NOT NULL,
 	dateNaissance Date NOT NULL,
-    mobile int NOT NULL,
+    mobile varchar(15) NOT NULL,
 	fonction varchar(225) NOT NULL ,
 	structure varchar(50) NOT NULL,
-	posteTelephonique int NOT NULL,
+	posteTelephonique varchar(15) NOT NULL,
 	departement varchar(50) NULL,
-	CONSTRAINT CHK_typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Directeur DAM' , 'Chef departement'
-	, 'Chef departement DAM', 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
+	CONSTRAINT CHK_typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Responsable DAM' , 'Chef departement'
+	, 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
 ) ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
-CREATE TABLE demande (
-	demande_ID int IDENTITY(1, 1) PRIMARY KEY NOT NULL,
-	demande_Date datetime NOT NULL,
-	utilisateurs_ID varchar(50) NOT NULL,
-	etat varchar(50) NOT NULL,
-	motif varchar(MAX) NULL,
-	CONSTRAINT CHK_etat CHECK(etat IN ('Accept�e1','Accept�e2','Accept�e3', 'Reject�e', 'Encours')),
-	CONSTRAINT FK_utilisateurs_demande FOREIGN KEY (utilisateurs_ID) REFERENCES utilisateurs(email)
-) ON [PRIMARY]
------------------------------------------------------------------------------------
+
+DROP TABLE demande_compte
 CREATE TABLE demande_compte(
 	email varchar(50) NOT NULL PRIMARY KEY,
 	userPassword nvarchar(max) NOT NULL,
@@ -33,29 +25,32 @@ CREATE TABLE demande_compte(
     prenomUtilisateur varchar(50) NOT NULL,
 	typeUtilisateur varchar(50) NOT NULL,
 	dateNaissance Date NOT NULL,
-    mobile int NOT NULL,
+    mobile varchar(15) NOT NULL,
 	fonction varchar(225) NOT NULL ,
 	structure varchar(50) NOT NULL,
-	posteTelephonique int NOT NULL,
+	posteTelephonique varchar(15) NOT NULL,
 	departement varchar(50) NULL,
-	CONSTRAINT CHK__typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Directeur DAM' , 'Chef departement'
-	, 'Chef departement DAM', 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
+	CONSTRAINT CHK__typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Responsable DAM' , 'Chef departement'
+	, 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
 ) ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
+DROP TABLE demande
 CREATE TABLE demande (
 	demande_ID int IDENTITY(1, 1) PRIMARY KEY NOT NULL,
 	demande_Date datetime NOT NULL,
 	utilisateurs_ID varchar(50) NOT NULL,
 	etat varchar(50) NOT NULL,
 	motif varchar(MAX) NULL,
-	CONSTRAINT CHK_etat CHECK(etat IN ('Acceptee1','Acceptee2','Acceptee3', 'Rejectee', 'Encours')),
+	seen bit, 
+	CONSTRAINT CHK_etat CHECK(etat IN ('Directeur','DAM','Agent de Tirage', 'Agent de magasin', 'Chef de parc', 'Acceptee','Rejetee', 'Chef Departement')),
 	CONSTRAINT FK_utilisateurs_demande FOREIGN KEY (utilisateurs_ID) REFERENCES utilisateurs(email)
 ) ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
+DROP TABLE  demande_client
 CREATE TABLE demande_client (
 	demande_C_ID int PRIMARY KEY NOT NULL,
 	demande_C_description varchar(MAX) NOT NULL,
@@ -64,12 +59,14 @@ CREATE TABLE demande_client (
 	mise_disposition bit NULL,
 	date_mise_dispostion date NULL,
 	achat bit NULL,
+	nAchat int NULL,
 	date_achat date NULL,
+	oAchats varchar(max) NULL
 	CONSTRAINT FK_demande_client_demande FOREIGN KEY (demande_C_ID) REFERENCES demande(demande_ID)
 ) ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
-DROP TABLE demande_relex;
+
 DROP TABLE demande_vehicule;
 CREATE TABLE demande_vehicule (
 	demande_V_ID int PRIMARY KEY NOT NULL,
@@ -96,6 +93,7 @@ CREATE TABLE demande_vehicule (
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
+DROP TABLE demande_tirage
 CREATE TABLE demande_tirage (
 	demande_T_ID int PRIMARY KEY,
 	numero_ordre int,
@@ -121,6 +119,7 @@ CREATE TABLE document (
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
+DROP TABLE demande_fourniture
 CREATE TABLE  demande_fourniture(
 	demande_F_ID int PRIMARY KEY,
 	date_recu date,
@@ -137,6 +136,7 @@ CREATE TABLE objet (
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
+DROP TABLE demande_fourniture_object
 CREATE TABLE demande_fourniture_object (
     demande_F_ID int,
 	code_object int,
@@ -173,6 +173,7 @@ CREATE TABLE demande_priseEnCharge (
 )ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
+
 DROP TABLE demande_relex;
 CREATE TABLE demande_relex (
 	demande_R_ID int PRIMARY KEY,
@@ -215,5 +216,4 @@ CREATE TABLE chauffeur(
 	telephone varchar(Max),
 	email varchar(MAX),
 	PRIMARY KEY (chauffeur_id)
-
 )

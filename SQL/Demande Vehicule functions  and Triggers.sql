@@ -41,10 +41,28 @@ ALTER PROCEDURE InsertDemandeVehicule
 	@DDATE AS datetime OUTPUT
 AS
 BEGIN
-	INSERT INTO demande VALUES ((SELECT CONVERT (datetime, SYSDATETIME())),@userID,'Encours', null)
+	INSERT INTO demande 
+	VALUES (	(SELECT CONVERT (datetime, SYSDATETIME())),
+				@userID,
+				'Chef Departement', 
+				null,
+				0)
 	SELECT @DDATE = CONVERT (datetime, SYSDATETIME())
-	INSERT INTO demande_vehicule VALUES ((SELECT IDENT_CURRENT('demande')), @lieu, @organisme, @motif_deplacement, @date_depart, @lieu_remmassage_d ,
-	            @date_retour ,@lieu_remmassage_r,@nature_marchandise,@utilisateur1,@utilisateur2,@utilisateur3,null,null);
+	INSERT INTO demande_vehicule 
+	VALUES (	(SELECT IDENT_CURRENT('demande')), 
+				@lieu, 
+				@organisme, 
+				@motif_deplacement, 
+				@date_depart,
+				@lieu_remmassage_d ,
+	            @date_retour ,
+	            @lieu_remmassage_r,
+	            @nature_marchandise,
+	            @utilisateur1,
+	            @utilisateur2,
+	            @utilisateur3,
+	            null,
+	            null);
 	SELECT @demande_v_id = IDENT_CURRENT('demande');
 END
 
@@ -70,6 +88,7 @@ ALTER PROCEDURE GetDemandeVehicule
 AS
 BEGIN
 	SELECT	DV.*,
+			U.email,
 			U.nomUtilisateur, 
 			U.prenomUtilisateur,
 			U.departement,

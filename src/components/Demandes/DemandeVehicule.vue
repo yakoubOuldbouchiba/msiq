@@ -6,7 +6,7 @@
                 <v-toolbar flat dark color='deep-purple' class="my-0" >
                     <v-toolbar-title> 
                         <v-icon large left class="white--text">commute</v-icon> 
-                         <span v-if="type=='update' && dialog==true"> modifier demande véhicule némuro {{demande.demande_V_ID}} </span>
+                         <span v-if="type=='update' && dialog==true"> modifier Demande véhicule némuro {{demande.demande_V_ID}} </span>
                          <span v-else>Demande véhicule</span>
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
@@ -319,21 +319,40 @@ export default {
         },
         Reject(){
             this.$refs.form.validate();
-            axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, {State :'Rejectee', motif: this.motif, Demande: this.DV, typeD: 'demande véhicule'})
+            axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, 
+                {State :'Rejetee',
+                    Demande: this.DV,
+                    typeD: 'Demande véhicule', 
+                    UT: this.$store.state.user.typeUtilisateur})
             this.dialog = false
             },
         Accept(){
             if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
-                axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, {State :'Acceptee1', motif: this.motif, Demande: this.DV, typeD: 'demande véhicule'})
+                axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, 
+                    {State :'Directeur', 
+                    Demande: this.DV, 
+                    typeD: 'Demande véhicule', 
+                    UT: this.$store.state.user.typeUtilisateur})
             else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
-                axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, {State :'Acceptee2', motif: this.motif, Demande: this.DV, typeD: 'demande véhicule'})    
+                axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, 
+                    {State :'Chef de parc',  
+                        Demande: this.DV, 
+                        typeD: 'Demande véhicule',
+                        UT: this.$store.state.user.typeUtilisateur})    
+            else if(this.$store.state.user.typeUtilisateur == 'Chef de parc') 
+                axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, 
+                    {State :'Acceptee',
+                        Demande: this.DV, 
+                        typeD: 'Demande véhicule', 
+                        UT: this.$store.state.user.typeUtilisateur})
+                        .then(this.update())    
 
-                this.dialog = false
+            this.dialog = false
         }
     },async created(){
-        this.collegues = (await  axios.get("http://localhost:3030/team")).data
-    }
-    ,
+        await this.$store.dispatch('getTeam')
+        this.collegues = this.$store.state.users
+    },
     data(){
         return{
             
@@ -357,9 +376,9 @@ export default {
                 nature_marchandise : null,
                 utilisateur1_ID : null,
                 utilisateur2_ID : null,
-                utilisateur3_ID : null
-            },
-            motif: '',
+                utilisateur3_ID : null,
+                motif: '',
+            },           
         }
     }
 }

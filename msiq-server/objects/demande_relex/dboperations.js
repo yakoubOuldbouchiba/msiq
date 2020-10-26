@@ -57,11 +57,13 @@ async function  setDemandeRelex(Demande,io){
                 let Demand = {
                      demande_ID: res.output.DID,
                      demande_Date: res.output.DDATE,
-                     type_demande: 'demande relex',
-                     etat: 'Encours',
+                     type_demande: 'Demande relex',
+                     etat: 'Chef Departement',
                      motif: '',
+                     seen: 0,
                  }
                  io.emit('NewDemandCD', Demand )
+                 io.emit(Demande.userID , Demand )
              });
             console.log('Demande Inserted');
             sql.close();
