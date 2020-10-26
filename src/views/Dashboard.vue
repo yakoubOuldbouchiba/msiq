@@ -33,18 +33,18 @@
              </tr>
            </thead>
            <tbody>
-             <tr class="pa-2" v-for="Demande in Demandes" :key="Demande.demande_ID">
+             <tr class="pa-2" v-for="Demande in Demandes" :key="Demande.demande_ID" @click="updateItem(Demande)">
                <td :class="`demande ${Demande.etat}`" ><b>{{Demande.demande_ID}}</b></td>
                <td >{{Demande.type_demande}}</td>
                <td >{{Demande.demande_Date}}</td>
                <td class="text-center">
                  <v-chip
-                  v-if="Demande.etat == 'Acceptee3'"
+                  v-if="Demande.etat == 'Acceptee'"
                   class="success"
                  >
                   {{Demande.etat}}
                  </v-chip>
-                 <v-chip v-else-if="Demande.etat == 'Rejectee'" 
+                 <v-chip v-else-if="Demande.etat == 'Rejetee'" 
                  class="error">
                   {{Demande.etat}}
                  </v-chip>
@@ -65,23 +65,9 @@
                   fab
                   dark
                   x-small
-                  @click='deleteItem(Demande)'
-                >
+                  @click='deleteItem(Demande)'>
                   <v-icon dark>
                     delete
-                  </v-icon>
-                </v-btn>
-                 <v-btn
-                  class="mx-2"
-                  outlined
-                  color="teal"
-                  fab
-                  dark
-                  x-small
-                  @click="updateItem(Demande)"
-                >
-                  <v-icon dark>
-                    edit
                   </v-icon>
                 </v-btn>
                 <PrintDemande :type="Demande.type_demande" :ID="Demande.demande_ID" />
@@ -156,7 +142,7 @@
     <DemandeTirage :demande="demande" 
     v-model="openDialogTirage"
     type='update'/>
-    <DemandePriseEnCharge :demande="demande" v-model="openDialogPEC"/>
+    <DemandePriseEnCharge :demande="demande" v-model="openDialogPEC" type='update'/>
     <DemandeRelex 
       v-model="openDialogRelex"
       :demande="demande"
@@ -186,8 +172,12 @@ async created(){
   this.Demandes = (await axios.get("http://localhost:3030/demandes/"+this.$store.state.user.email)).data.demandes.reverse()
 },
 mounted(){
-    this.$store.state.sokect.on('NewDemand', (newDemand) => {
+    this.$store.state.sokect.on(this.$store.state.user.email, (newDemand) => {
       this.Demandes.unshift(newDemand)
+    })
+    this.$store.state.sokect.on(this.$store.state.user.email+'E', (Demand) => {
+      let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
+      this.Demandes.splice(index , 1, Demand)
     })
 },
 data(){
@@ -215,17 +205,17 @@ data(){
    },
    async deleteItem(demande){
      let type = ''
-     if(demande.type_demande=="demande véhicule"){
+     if(demande.type_demande== 'Demande véhicule'){
           type='/DemandeVehicule/' 
-     } else if(demande.type_demande=="demande client"){
+     } else if(demande.type_demande== 'Demande client'){
           type='/DemandeClient/' 
-     } else if(demande.type_demande=="demande fourniture"){
+     } else if(demande.type_demande== 'Demande fourniture'){
           type='/DemandeFourniture/' 
-     }else if(demande.type_demande=="demande prise en charge"){
+     }else if(demande.type_demande== 'Demande de prise en charge'){
           type='/DemandePriseEnCharge/' 
-     }else if(demande.type_demande=="demande tirage"){
+     }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
-     }else if(demande.type_demande=="demande relex"){
+     }else if(demande.type_demande== 'Demande relex'){
           type='/DemandeRelex/' 
      }else{
        type='/demande/'
@@ -248,11 +238,11 @@ data(){
    },
    async updateItem(Demande){
      await this.getDemande(Demande);
-     if(Demande.type_demande=='demande client'){
+     if(Demande.type_demande=='Demande client'){
        this.openDialogClient = true;
-     }else if(Demande.type_demande=='demande fourniture'){
+     }else if(Demande.type_demande=='Demande fourniture'){
        this.openDialogFourniture = true;
-     }else if(Demande.type_demande=='demande véhicule'){
+     }else if(Demande.type_demande=='Demande véhicule'){
        let dp = this.demande.date_depart;
        let dr = this.demande.date_retour
        this.demande.date_depart = dp.substr(0,10)
@@ -260,7 +250,7 @@ data(){
        this.demande.heure_depart = dp.substr(11,5)
        this.demande.heure_retour = dr.substr(11,5)
        this.openDialogVehicule = true
-     }else if(Demande.type_demande=='demande relex'){
+     }else if(Demande.type_demande== 'Demande relex'){
        let dp = this.demande.date_depart;
        let dr = this.demande.date_retour
        this.demande.date_depart = dp.substr(0,10)
@@ -269,11 +259,9 @@ data(){
        this.demande.heure_retour = dr.substr(11,5)
        this.moyens_transport = false
        this.openDialogRelex = true
-     }else if(Demande.type_demande=='demande tirage'){
-       this.$store.commit('SetActionType', 'update')
+     }else if(Demande.type_demande== 'Demande de tirage'){
        this.openDialogTirage = true
-     }else if(Demande.type_demande=='demande prise en charge'){
-       this.$store.commit('SetActionType', 'update')
+     }else if(Demande.type_demande== 'Demande de prise en charge'){
        this.demande.startDate = this.demande.startDate.substr(0,10)
        this.demande.EndDate = this.demande.EndDate.substr(0,10)
        this.demande.heureDeVol = this.demande.heureDeVol.substr(11,5)
@@ -282,17 +270,17 @@ data(){
    },
    async getDemande(demande){
       let type = ''
-     if(demande.type_demande=="demande véhicule"){
+     if(demande.type_demande== 'Demande véhicule'){
           type='/DemandeVehicule/' 
-     } else if(demande.type_demande=="demande client"){
+     } else if(demande.type_demande== 'Demande client'){
           type='/DemandeClient/' 
-     } else if(demande.type_demande=="demande fourniture"){
+     } else if(demande.type_demande== 'Demande fourniture'){
           type='/DemandeFourniture/' 
-     }else if(demande.type_demande=="demande prise en charge"){
+     }else if(demande.type_demande== 'Demande de prise en charge'){
           type='/DemandePriseEnCharge/' 
-     }else if(demande.type_demande=="demande tirage"){
+     }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
-     }else if(demande.type_demande=="demande relex"){
+     }else if(demande.type_demande== 'Demande relex'){
           type='/DemandeRelex/' 
      }else{
        type='/demande/'
@@ -315,10 +303,10 @@ data(){
   .demande{
     border-left:4px solid orange;
   }
-  .demande.Acceptee3{
+  .demande.Acceptee{
     border-left:4px solid springgreen;
   }
-  .demande.Rejectee{
+  .demande.Rejetee{
     border-left:4px solid tomato;
   }
   

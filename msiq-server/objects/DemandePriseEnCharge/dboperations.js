@@ -28,11 +28,13 @@ async function  setDemandePriseEnCharge(Data,io){
                 let Demand = {
                      demande_ID: res.output.DID,
                      demande_Date: res.output.DDATE,
-                     type_demande: 'demande prise en charge',
-                     etat: 'Encours',
+                     type_demande: 'Demande de prise en charge',
+                     etat: 'Chef Departement',
                      motif: '',
+                     seen: 0,
                  }
                  io.emit('NewDemandCD', Demand )
+                 io.emit(Data.UserID , Demand )
              });
             console.log('Demande Inserted');
             sql.close();

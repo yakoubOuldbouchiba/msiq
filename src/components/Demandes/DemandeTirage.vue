@@ -133,10 +133,26 @@
                                     </div>                                            
                                 </v-col>     
                             </v-row>
+                            <v-row justify="center" v-if="$store.state.user.typeUtilisateur == 'Agent de Tirage'"> 
+                                <v-col cols="12" sm="5"> 
+                                    <v-text-field
+                                    v-model="DT.NOrdre"
+                                    label="N° ordre" 
+                                    prepend-icon="nothing" 
+                                    :rules="[v => !!v || 'Ce champs est obligatoire']"></v-text-field>
+                                </v-col> 
+                                <v-col cols="12" sm="5"> 
+                                    <Date 
+                                        v-model="DT.DatePres"
+                                        label="Date"
+                                        @date ="(date) => DT.DatePres = date"
+                                    />
+                                </v-col>
+                            </v-row>  
                             <v-row justify="center" v-if="type =='Triater'"> 
                                 <v-col cols="12" sm="10"> 
                                     <v-textarea
-                                    v-model="motif"
+                                    v-model="DT.motif"
                                     label="Motif" 
                                     prepend-icon="mdi-flag-outline" 
                                     :rules="[v => !!v || 'Ce champs est obligatoire']"></v-textarea>
@@ -225,8 +241,10 @@
 
 <script>
 import Axios from 'axios';
+import Date from '../Date'
 export default {
   props: ['demande' , 'value', 'type'],
+  components: {Date},
   computed :{
       dialog : {
             get : function(){
@@ -257,8 +275,10 @@ export default {
               nombre_feuille: 1,
               nombre_exemplaire: 1,
               nom_document: null,
+              NOrdre: null,
+              DatePres: null,
+              motif: '',
           },
-          motif: '',
           loading: false,
       }
   },
@@ -327,15 +347,33 @@ export default {
     },
     Reject(){
       this.$refs.form.validate();
-      Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, {State :'Rejectee', motif: this.motif, Demande: this.DT, typeD: 'demande tirage'})
+      Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, 
+        {State :'Rejetee',
+            Demande: this.DT, 
+            typeD: 'Demande de tirage', 
+            UT: this.$store.state.user.typeUtilisateur})
       this.dialog = false
     },
     Accept(){
-      if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
-        Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, {State :'Acceptee1', motif: this.motif, Demande: this.DT, typeD: 'demande tirage'})
-      else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
-        Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, {State :'Acceptee2', motif: this.motif, Demande: this.DT, typeD: 'demande tirage'})    
-
+        if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
+            Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, 
+                {State :'Directeur',
+                    Demande: this.DT, 
+                    typeD: 'Demande de tirage',
+                    UT: this.$store.state.user.typeUtilisateur})
+        else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
+            Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, 
+                {State :'Agent de Tirage',
+                    Demande: this.DT, 
+                    typeD: 'Demande de tirage',
+                    UT: this.$store.state.user.typeUtilisateur})    
+        else if(this.$store.state.user.typeUtilisateur == 'Agent de Tirage') 
+            Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, 
+                {State :'Acceptee', 
+                   Demande: this.DT, 
+                   typeD: 'Demande de tirage',
+                   UT: this.$store.state.user.typeUtilisateur})
+                   .then(this.update())    
         this.dialog = false
     }
   }

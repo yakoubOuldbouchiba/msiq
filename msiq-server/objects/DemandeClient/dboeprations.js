@@ -1,7 +1,7 @@
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
 
-// get a demande client 
+// get a Demande client 
 async function getDemandeClient(id){
     try{
         let pool = await (sql.connect(config));
@@ -45,11 +45,13 @@ async function  setDemandeClient(Demande,io){
                 let Demand = {
                     demande_ID: res.output.DID,
                     demande_Date: res.output.DDATE,
-                    type_demande: 'demande client',
-                    etat: 'Encours',
+                    type_demande: 'Demande client',
+                    etat: 'Chef Departement',
                     motif: '',
+                    seen: 0
                 }
                 io.emit('NewDemandCD', Demand )
+                io.emit(Demande.uID , Demand )
             })
             console.log('Demande Inserted');
             sql.close();
@@ -98,12 +100,19 @@ async function  updateDemandeClient(Demande){
             .input('demande_C_ID', sql.Int, Demande.demande_C_ID)    
             .input('nature', sql.VarChar, Demande.nature)
             .input('objet', sql.VarChar, Demande.objet)
-            .input('description', sql.VarChar, Demande.demande_C_description)
+            .input('des', sql.VarChar, Demande.demande_C_description)
+            .input('MED', sql.Bit, Demande.MED)
+            .input('DMED', sql.Date, Demande.DateMED)
+            .input('achat', sql.Bit, Demande.Achats)
+            .input('nAchat', sql.Int, Demande.NAchats)
+            .input('Dachat', sql.Date, Demande.DateAchats)
+            .input('oAchat', sql.VarChar, Demande.OAchats)
             .execute('updateDemandeClient');
             console.log('Demande Updated');
             sql.close();
             return  'DU' //Demand updated
         } catch (error) {
+            console.log(error);
             console.log('can not update Demande');
             sql.close();
             return 'CNUD'; // can not update Demand

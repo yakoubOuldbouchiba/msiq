@@ -63,11 +63,13 @@ async function  setDemandeVehicule(Demande,io){
             let Demand = {
                     demande_ID: result.output.demande_v_id,
                     demande_Date: result.output.DDATE,
-                    type_demande: 'demande véhicule',
-                    etat: 'Encours',
+                    type_demande: 'Demande véhicule',
+                    etat: 'Chef Departement',
                     motif: '',
+                    seen: 0,
                 }
             io.emit('NewDemandCD', Demand )
+            io.emit(Demande.UserID , Demand )
             console.log('Demande Inserted');
             sql.close();
             return  ({

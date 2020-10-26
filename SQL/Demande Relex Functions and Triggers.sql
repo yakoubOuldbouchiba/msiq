@@ -10,10 +10,22 @@ ALTER PROCEDURE InsertDemandeRelex
 	@DDATE AS datetime OUTPUT
 AS
 BEGIN
-	INSERT INTO demande VALUES ((SELECT CONVERT (datetime, SYSDATETIME())),@userID,'Encours', null)
-	SELECT @DDATE = CONVERT (datetime, SYSDATETIME())
-	INSERT INTO demande_relex VALUES ((SELECT IDENT_CURRENT('demande')), @destination,@objet_mission,@date_depart,@date_retour,@prise_en_charge,@demande_V_ID)
-	SELECT @DID= IDENT_CURRENT('demande')
+	INSERT INTO demande 
+	VALUES (	(SELECT CONVERT (datetime, SYSDATETIME())),
+				@userID,
+				'Chef Departement', 
+				null,
+				0)
+	SELECT 		@DDATE = CONVERT (datetime, SYSDATETIME())
+	INSERT INTO demande_relex 
+	VALUES (	(SELECT IDENT_CURRENT('demande')), 
+				@destination,
+				@objet_mission,
+				@date_depart,
+				@date_retour,
+				@prise_en_charge,
+				@demande_V_ID)
+	SELECT 		@DID= IDENT_CURRENT('demande')
 END
 
 --------------------------------------
@@ -34,12 +46,13 @@ ALTER PROCEDURE GetDemandeRelex
 	@id as int
 AS
 BEGIN
-	SELECT	DR.* ,
+	SELECT	DR.*,
+			U.email,
 			U.nomUtilisateur,
 			U.prenomUtilisateur,
 			U.departement,
 			U.fonction,
-			D.demande_Date
+			D.*
 	FROM	demande_relex DR, demande D, utilisateurs U
 	WHERE	DR.demande_R_ID = D.demande_ID
 	AND		D.utilisateurs_ID = U.email
@@ -65,5 +78,3 @@ BEGIN
 	prise_en_charge = @prise_en_charge
 	WHERE demande_R_ID = @demande_R_ID
 END
-
-EXECUTE GetDemandeRelex 140

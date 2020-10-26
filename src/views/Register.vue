@@ -8,7 +8,7 @@
         <v-toolbar flat dark color='indigo pl-5'  >
                 <v-toolbar-title class="amber--text">Enregistez-vous</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn text @click="dialog = flase"> <v-icon> clear </v-icon></v-btn>
+                <v-btn text @click="dialog = false"> <v-icon> clear </v-icon></v-btn>
             </v-toolbar>
         <v-card-text>
     <v-form v-model="valid" ref="form">
@@ -102,19 +102,22 @@
             </v-row>
             <v-row>
                 <v-col cols="12" sm="6">
-                    <v-text-field 
+                    <v-select
                     v-model="user.structure" 
                     label="Structure*"
+                    :items="Structures"
                     :rules="[v => !!v || 'Cet champs est obligatoire']" 
                     prepend-icon="mdi-factory" 
                     required>
-                    </v-text-field>
+                    </v-select>
                 </v-col>
                 <v-col cols="12" sm="6">
-                    <v-text-field v-model="user.departement" 
+                    <v-select 
+                    v-model="user.departement" 
                     label="Département"
+                    :items="Departements"
                     prepend-icon="mdi-office-building">
-                    </v-text-field>
+                    </v-select>
                 </v-col>
             </v-row>
             <v-row>
@@ -191,8 +194,9 @@ export default {
     data() {
         return{
             Users: [],
-            items: ['Administrator', 'Chef de parc', 'Directeur', 
-            'Client','Agent de Tirage','Agent de magasin'],
+            items: ['Administrator', 'Chef de parc', 'Directeur', 'Client','Agent de Tirage','Agent de magasin'],
+            Departements: ['Informatique'],
+            Structures: ['DAM'],
             valid:true,
             dialog: false,
             msg: '',

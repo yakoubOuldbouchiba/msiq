@@ -147,10 +147,9 @@
                         <v-row justify="center" v-if="type =='Triater'"> 
                             <v-col cols="12" sm="12"> 
                                 <v-textarea
-                                v-model="motif"
+                                v-model="DR.motif"
                                 label="Motif" 
-                                prepend-icon="mdi-flag-outline" 
-                                :rules="[v => !!v || 'Ce champs est obligatoire']"></v-textarea>
+                                prepend-icon="mdi-flag-outline"></v-textarea>
                             </v-col>   
                         </v-row>
                         <v-row justify="center"> 
@@ -352,28 +351,10 @@ export default {
             )
     },
     async close (){
-        this.$refs.form.reset();
-        if(this.type!=="update" && this.DR.demande_V_ID!==null){
-            await axios.delete('http://localhost:3030/DemandeVehicule/'+this.DR.demande_V_ID)
-            .then(
-                    res =>{
-                        this.msg = res.data.title,
-                        this.$refs.form.reset(),
-                        this.Errr = true,
-                        this.dialog=false
-                        this.DeleteDV = false
-                        this.DR.demande_V_ID=null    
-                    },
-                    err => {
-                        
-                        this.Errr = true,
-                        this.msg = err.response.data.title
-                    }
-                )
-            }else{
-                this.dialog=false;
-            }
-        },
+        this.$emit('resetDemand')
+        this.$refs.form.reset(),
+        this.dialog=false
+    },
     // the date & the hour actions which means getting its values 
     dateRetour : function(value){
         this.DR.date_retour=value
@@ -386,15 +367,23 @@ export default {
         this.DR.heure_depart=value
     },Reject(){
       this.$refs.form.validate();
-      axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, {State :'Rejectee', motif: this.motif, Demande: this.DR, typeD: 'demande relex'})
+      axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
+        {State :'Rejetee',
+            Demande: this.DR, typeD: 'Demande relex', 
+            UT: this.$store.state.user.typeUtilisateur})
       this.dialog = false
     },
     Accept(){
       if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
-        axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, {State :'Acceptee1', motif: this.motif, Demande: this.DR, typeD: 'demande relex'})
+        axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
+            {State :'Directeur',
+                Demande: this.DR, typeD: 'Demande relex', 
+                UT: this.$store.state.user.typeUtilisateur})
       else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
-        axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, {State :'Acceptee2', motif: this.motif, Demande: this.DR, typeD: 'demande relex'})    
-
+        axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
+            {State :'Acceptee',
+            Demande: this.DR, typeD: 'Demande relex',
+            UT: this.$store.state.user.typeUtilisateur})    
         this.dialog = false
     },
 
@@ -419,9 +408,9 @@ data(){
             heure_retour : null,
             moyens_transport : false ,
             prise_en_charge : null,
-            demande_V_ID : null
-        },
-        motif: '',
+            demande_V_ID : null,
+            motif: '',
+        },    
     }
 }
 }

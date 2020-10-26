@@ -115,10 +115,10 @@
                                 @heure="(value) => DPEC.heureDeVol = value"/>
                             </v-col>
                         </v-row>
-                        <v-row justify="center" v-if="type =='Triater'"> 
+                        <v-row justify="center" v-if="$store.state.user.typeUtilisateur == 'Directeur' || $store.state.user.typeUtilisateur == 'Chef departement'"> 
                                 <v-col cols="12" sm="10"> 
                                     <v-textarea
-                                    v-model="motif"
+                                    v-model="DPEC.motif"
                                     label="Motif" 
                                     prepend-icon="mdi-flag-outline" 
                                     :rules="[v => !!v || 'Ce champs est obligatoire']"></v-textarea>
@@ -207,6 +207,7 @@ export default {
       },
         DPEC : function() {
           if((this.type=="update" || this.type=="Triater") && this.dialog==true){
+              console.log('here');
            return this.demande
           }else{
             return this.DemandePriseEnCharge
@@ -233,11 +234,10 @@ export default {
                 moyen_transport: '',
                 heureDeVol: '',
                 aeroport: '',
+                motif: '',
             }, 
-            motif: '',
             Users: [],
             AutoCRules: [
-                v => v.length !=  0 || 'Cet champs est obligatoire',
                 v => v.length <  6 || 'Trop de membre choisé'
             ]
         }
@@ -282,14 +282,26 @@ export default {
         },
         Reject(){
             this.$refs.form.validate();
-            Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID, {State :'Rejectee', motif: this.motif, Demande: this.DPEC, typeD: 'demande prise en charge'})
+            Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID, 
+                {State :'Rejetee', 
+                    Demande: this.DPEC, 
+                    typeD: 'Demande de prise en charge', 
+                    UT: this.$store.state.user.typeUtilisateur})
             this.dialog = false
             },
         Accept(){
             if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
-                Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID, {State :'Acceptee1', motif: this.motif, Demande: this.DPEC, typeD: 'demande prise en charge'})
+                Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID, 
+                    {State :'Directeur', 
+                    Demande: this.DPEC, 
+                    typeD: 'Demande de prise en charge', 
+                    UT: this.$store.state.user.typeUtilisateur})
             else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
-                Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID, {State :'Acceptee2', motif: this.motif, Demande: this.DPEC, typeD: 'demande prise en charge'})    
+                Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID,   
+                    {State :'Acceptee',
+                    Demande: this.DPEC, 
+                    typeD: 'Demande de prise en charge', 
+                    UT: this.$store.state.user.typeUtilisateur})    
             
             this.dialog = false
         }

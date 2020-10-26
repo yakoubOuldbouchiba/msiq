@@ -24,11 +24,13 @@ async function  setDemandeTirage(Data,io){
                 let Demand = {
                      demande_ID: res.output.DID,
                      demande_Date: res.output.DDATE,
-                     type_demande: 'demande tirage',
-                     etat: 'Encours',
+                     type_demande: 'Demande de tirage',
+                     etat: 'Chef Departement',
                      motif: '',
+                     seen: 0,
                  }
-                 io.emit('NewDemandCD', Demand )
+                 io.emit('NewDemandCD', Demand)
+                 io.emit(Data.userID , Demand)
              });
             console.log('Demande Inserted');
             sql.close();
@@ -100,12 +102,15 @@ async function  upDemandeTirage(Data){
             .input('NTF', sql.Int, Data.nombre_exemplaire*Data.nombre_feuille)
             .input('TF', sql.VarChar, Data.type_document)
             .input('A', sql.VarChar, Data.autre)
+            .input('NO', sql.Int, Data.NOrdre)
+            .input('DP', sql.Date, Data.DatePres)
             .execute('UpdatetDemandeTirage');
             console.log('Demande Inserted');
             sql.close();
             return  'DE' //Demand inserted
         } catch (error) {
             console.log('can not Edit Demande');
+            console.log(Data);
             console.log(error);
             sql.close();
             return 'CNED'; // can not insert Demand
