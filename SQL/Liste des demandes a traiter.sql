@@ -7,10 +7,19 @@ ALTER VIEW 	Demandes_A_Traiter
 	FROM	demande D, utilisateurs U
 	where	D.utilisateurs_ID = U.email;
 
-ALTER PROCEDURE getDemandeATraiter 
-	@UserType	AS varchar(50),
-	@Depart		AS varchar(50),
-	@Struct		AS varchar(50)
+ALTER VIEW 	Demandes_A_Traiter 
+	AS
+	SELECT 	U.departement, 
+			U.structure,
+			dbo.DemandeType(D.demande_ID) as type_demande, 
+			D.*
+	FROM	demande D, utilisateurs U
+	where	D.utilisateurs_ID = U.email;
+
+Create PROCEDURE getDemandeATraiter 
+	@UserType AS varchar(50),
+	@Depart   AS varchar(50)
+  @Struct		AS varchar(50)
 AS
 BEGIN
 	if(@UserType = 'Chef departement')
@@ -46,6 +55,7 @@ BEGIN
 		FROM	Demandes_A_Traiter
 		WHERE	etat = 'Chef de parc'
 END
+
 
 ALTER PROCEDURE UpdateDemandState 
 	@Demand_ID	AS int,

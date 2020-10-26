@@ -13,12 +13,12 @@ module.exports=(io)=>{
         .then(result => {
             if(result.result ==='DG'){
                 res.status(200).json({
-                    title: 'Votre demande relex a get',
+                    title: 'Votre demande relex is a get',
                     demande : result.demande
                 })
             }else if (result ==='CNGD') {
                 res.status(401).json({
-                    title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                    title: 'Quelque chose s\'est mal passé. Veuillez verifier vos données',
                     error: 'CNIU'
                 })
             } else {
@@ -36,11 +36,11 @@ module.exports=(io)=>{
             .then(result => {
                 if(result ==='DI'){
                     res.status(200).json({
-                        title: 'Votre demande activité de relex a été envoyée',
+                        title: 'Votre demande activité relex a été envoyée',
                     })
                 }else if (result ==='CNID') {
                     res.status(401).json({
-                        title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                        title: 'Quelque chose s\'est mal passé. Veuillez verifier vos données',
                         error: 'CNIU'
                     })
                 } else {
@@ -66,7 +66,7 @@ module.exports=(io)=>{
                 })
             }else if (result ==='CNDD') {
                 res.status(401).json({
-                    title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                    title: 'Quelque chose s\'est mal passé. Veuillez verifier vos données',
                     error: 'CNIU'
                 })
             } else {
@@ -87,7 +87,7 @@ module.exports=(io)=>{
                     })
                 }else if (result ==='CNUD') {
                     res.status(401).json({
-                        title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                        title: 'Quelque chose s\'est mal passé. Veuillez verifier vos données',
                         error: 'CNIU'
                     })
                 } else {

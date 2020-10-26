@@ -52,7 +52,9 @@ BEGIN
 			U.nomUtilisateur, 
 			U.prenomUtilisateur,
 			U.departement,
-			D.*
+			U.posteTelephonique,
+			U.structure,                      
+      D.*
 	FROM	demande_client DC,utilisateurs U,demande D
 	WHERE	DC.demande_C_ID = @id 
 	AND		D.demande_ID = DC.demande_C_ID

@@ -53,7 +53,27 @@ module.exports=(io)=>{
             }
         })
     });
-    
+    // get a demande
+    router.get('/demande/:id',auth.requireLogin,(req , res)=>{ 
+        dbOperationsDemandes.getDemande(req.params.id)
+        .then(result => {
+            if(result.result ==='DG'){
+                res.status(200).json({
+                    demande : result.demande
+                })
+            }else if (result ==='CNGD') {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                    error: 'CNGU'
+                })
+            } else {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé dans le serveur',
+                    error: 'CNCTDB' 
+                })
+            }
+        })
+    });
     // Liste des demandes à traiter 
     router.get('/demandesATraiter/:UserType/:Depart/:Struct',auth.requireLogin,(req , res)=>{
         console.log(req.params);

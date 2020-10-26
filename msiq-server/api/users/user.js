@@ -13,7 +13,7 @@ module.exports=()=>{
     //get a specific  user
     router.get('/users/:id',auth.requireLogin,(req , res)=>{ 
         dbOperationsClient.getUser(req.params.id).then(result=>{
-            res.send(result[0]);
+            res.send(result);
         }); 
     });
     //add a new user
