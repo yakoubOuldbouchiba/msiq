@@ -16,6 +16,7 @@ module.exports=(io)=>{
             }
             console.log(req.body);
             let InfoToSend = {
+                struct : decoded.user.structure,
                 UserID: decoded.user.email,
                 Collegues: req.body.Collegues,
                 Destination: req.body.destination,
@@ -26,7 +27,7 @@ module.exports=(io)=>{
                 HeureDeVol: req.body.heureDeVol,
                 Aeroport: req.body.aeroport,
             };
-            console.log(InfoToSend);
+            //console.log(InfoToSend);
             dbOperationsDemandePriseEnCharge.setDemandePriseEnCharge(InfoToSend,io)
             .then(result => {
                 if(result ==='DI'){
@@ -48,10 +49,13 @@ module.exports=(io)=>{
         });
     })
         // delete a demande
-    router.delete('/DemandePriseEnCharge/:id',auth.requireLogin,(req , res)=>{ 
+    router.delete('/DemandePriseEnCharge/:id/struct',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandePriseEnCharge.deleteDemandePriseEnCharge(req.params.id)
         .then(result => {
-            if(result ==='DD'){
+            if(result.result ==='DD'){
+                if(result.typedelete){
+                    io.emit(req.params.struct+"DPD")
+                }
                 res.status(200).json({
                     title: 'Votre demande prise en charge a été supprimée',
                 })

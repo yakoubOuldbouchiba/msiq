@@ -17,7 +17,8 @@ BEGIN
 				@userID,
 				'Chef Departement', 
 				null,
-				0)
+				0,
+				1)
 	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 	INSERT INTO document 
 	VALUES (	@FN, 
@@ -37,12 +38,28 @@ BEGIN
 END
 
 ALTER PROCEDURE DeleteDemandeTirage
-	@id as int
+	@id as int,
+	@typedelete as bit output
 AS
 BEGIN
-	DELETE FROM demande_tirage WHERE demande_T_ID = @id;
-	DELETE FROM document WHERE document_ID = (select document_ID from demande_tirage where demande_T_ID = @id) ;
-	DELETE FROM demande WHERE demande_ID = @id
+	Declare @etat  varchar(max)
+	select @etat = D.etat 
+	From demande D
+	where D.demande_ID = @id
+	IF(@etat='Acceptee'or @etat='Rejetee')
+	BEGIN
+		Update demande
+		set shown = 0
+		where demande_ID = @id;
+		set @typedelete = 0;
+	END
+	ELSE
+	BEGIN
+		DELETE FROM demande_tirage WHERE demande_T_ID = @id;
+		DELETE FROM document WHERE document_ID = (select document_ID from demande_tirage where demande_T_ID = @id) ;
+		DELETE FROM demande WHERE demande_ID = @id
+		set @typedelete = 1;
+	END
 END
 
 ALTER PROCEDURE GetDemandeTirage
@@ -61,6 +78,7 @@ BEGIN
 			U.nomUtilisateur,
 			U.prenomUtilisateur,
 			U.departement,
+			U.structure,
 			D.demande_Date
 	FROM	demande_tirage DT, document Dc, utilisateurs U, demande D
 	WHERE	DT.demande_T_ID = D.demande_ID

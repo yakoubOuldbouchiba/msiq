@@ -61,6 +61,18 @@
                  <v-btn
                   class="mx-2"
                   outlined
+                  color="blue-grey"
+                  fab
+                  dark
+                  x-small
+                  @click='updateItem(Demande)'>
+                  <v-icon dark>
+                    edit
+                  </v-icon>
+                </v-btn>
+                 <v-btn
+                  class="mx-2"
+                  outlined
                   color="indigo"
                   fab
                   dark
@@ -216,11 +228,12 @@ data(){
      }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
      }else if(demande.type_demande== 'Demande relex'){
+          console.log("here")
           type='/DemandeRelex/' 
      }else{
        type='/demande/'
      }
-     await axios.delete('http://localhost:3030'+type+demande.demande_ID)
+     await axios.delete('http://localhost:3030'+type+demande.demande_ID+"/"+this.$store.state.user.structure)
           .then(
                 res =>{
                     this.msg = res.data.title,
@@ -238,6 +251,7 @@ data(){
    },
    async updateItem(Demande){
      await this.getDemande(Demande);
+     console.log(Demande.type_demande)
      if(Demande.type_demande=='Demande client'){
        this.openDialogClient = true;
      }else if(Demande.type_demande=='Demande fourniture'){

@@ -31,6 +31,8 @@ async function  setDemandeTirage(Data,io){
                  }
                  io.emit('NewDemandCD', Demand)
                  io.emit(Data.userID , Demand)
+                 //console.log(Data);
+                 io.emit(Data.struct+"TD" , Demand )
              });
             console.log('Demande Inserted');
             sql.close();
@@ -51,12 +53,18 @@ async function  deleteDemandeTirage(id){
     try{
         await sql.connect(config);
         try{
-            await new sql.Request()
+            let res = await new sql.Request()
             .input('id',sql.Int,id)
+            .output('typedelete',sql.Bit)
             .execute('DeleteDemandeTirage');
             sql.close();
             console.log("demande deleted")
-            return "DD"
+            return (
+                {
+                    result : "DD",
+                    typedelete :res.output.typedelete
+                }
+            )
 
         }catch(error){
             console.log('can not delete Demande');

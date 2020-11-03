@@ -269,6 +269,7 @@ export default {
           valid:false,
           msg: '',
           DemandeTirage :{
+              structure : this.$store.state.user.structure,
               demande_T_ID: 0,
               type_document: '',
               autre: '',
@@ -309,6 +310,7 @@ export default {
     async submit () {
         this.$refs.form.validate();
         let formData = new FormData();
+        formData.append('structure', this.$store.state.user.structure);
         formData.append('FileData', this.DT.nom_document);
         formData.append('DocType', JSON.stringify(this.DT.type_document))
         formData.append('AutreDes', JSON.stringify(this.DT.autre))
@@ -351,7 +353,8 @@ export default {
         {State :'Rejetee',
             Demande: this.DT, 
             typeD: 'Demande de tirage', 
-            UT: this.$store.state.user.typeUtilisateur})
+            UT: this.$store.state.user.typeUtilisateur,
+            struct : this.$store.state.structure})
       this.dialog = false
     },
     Accept(){
@@ -372,7 +375,8 @@ export default {
                 {State :'Acceptee', 
                    Demande: this.DT, 
                    typeD: 'Demande de tirage',
-                   UT: this.$store.state.user.typeUtilisateur})
+                   UT: this.$store.state.user.typeUtilisateur,
+                   struct : this.$store.state.structure})
                    .then(this.update())    
         this.dialog = false
     }

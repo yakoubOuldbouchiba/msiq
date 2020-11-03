@@ -70,6 +70,7 @@ async function  setDemandeVehicule(Demande,io){
                 }
             io.emit('NewDemandCD', Demand )
             io.emit(Demande.UserID , Demand )
+            io.emit(Demande.struct+"VD" , Demand )
             console.log('Demande Inserted');
             sql.close();
             return  ({
@@ -93,12 +94,16 @@ async function  deleteDemandeVehicule(id){
         await sql.connect(config);
         try{
             console.log(id);
-            await new sql.Request()
+            let res = await new sql.Request()
             .input('id',sql.Int,id)
+            .output('typedelete',sql.Bit)
             .execute('DeleteDemandeVehicule');
             sql.close();
             console.log("demande deleted")
-            return "DD"
+            return ({
+                result :"DD",
+                typedelete : res.output.typedelete
+            })
 
         }catch(error){
             console.log('can not delete Demande');

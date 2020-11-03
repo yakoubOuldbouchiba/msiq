@@ -46,7 +46,8 @@ BEGIN
 				@userID,
 				'Chef Departement', 
 				null,
-				0)
+				0,
+				1)
 	SELECT @DDATE = CONVERT (datetime, SYSDATETIME())
 	INSERT INTO demande_vehicule 
 	VALUES (	(SELECT IDENT_CURRENT('demande')), 
@@ -72,13 +73,28 @@ END
 
 
 ALTER PROCEDURE DeleteDemandeVehicule
-	@id as int
-
+	@id as int,
+	@typedelete as bit output
 AS
-BEGIN
-	UPDATE demande_relex set demande_V_ID = null WHERE demande_V_ID = @id
-	DELETE FROM demande_vehicule WHERE demande_V_ID = @id;
-	DELETE FROM demande WHERE demande_ID = @id
+	BEGIN
+	Declare @etat  varchar(max)
+	select @etat = D.etat 
+	From demande D
+	where D.demande_ID = @id
+	IF(@etat='Acceptee'or @etat='Rejetee')
+	BEGIN
+		Update demande
+		set shown = 0
+		where demande_ID = @id;
+		set @typedelete = 0;
+	END
+	ELSE
+	BEGIN
+		UPDATE demande_relex set demande_V_ID = null WHERE demande_V_ID = @id
+		DELETE FROM demande_vehicule WHERE demande_V_ID = @id;
+		DELETE FROM demande WHERE demande_ID = @id
+		set @typedelete = 1;
+	END
 END
 
 -------------------------------------------------

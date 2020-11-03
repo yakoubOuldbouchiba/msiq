@@ -132,6 +132,23 @@ module.exports=(io)=>{
             }
         })
         io.emit(req.body.Demande.email+'E', Demand )
+        //io.emit(req.body.Demande.structure+'E', Demand )
+        if (req.body.typeD == 'Demande client'){ 
+            io.emit(req.body.Demande.structure+'ECD', Demand )
+        }              
+        else if (req.body.typeD == 'Demande véhicule'){
+            io.emit(req.body.Demande.structure+'ETD', Demand )
+        } 
+        else if (req.body.typeD == 'Demande fourniture'){
+            io.emit(req.body.Demande.structure+'EFD', Demand )
+        }  
+        else if (req.body.typeD == 'Demande de prise en charge'){
+            io.emit(req.body.Demande.structure+'EPD', Demand )
+        } 
+        else if (req.body.typeD == 'Demande de tirage') {
+            io.emit(req.body.Demande.structure+'ETD', Demand )
+        }
+
         if (req.body.State == 'Directeur'){ 
             io.emit('NewDemandD', Demand )
             io.emit('RemoveDemandCD', Demand)
@@ -148,20 +165,29 @@ module.exports=(io)=>{
             io.emit('NewDemandAM', Demand )  
             io.emit('RemoveDemandRD', Demand ) 
         }else if (req.body.State == 'Acceptee') {
+            
             if (req.body.typeD == 'Demande client'){
                 io.emit('NewDemandAM', Demand )
                 io.emit('RemoveDemandRD', Demand ) 
+              //io.emit(req.body.Demande.structure+'ECD', Demand )
             }              
-            else if (req.body.typeD == 'Demande véhicule') 
+            else if (req.body.typeD == 'Demande véhicule'){
                 io.emit('RemoveDemandCP', Demand ) 
+                //io.emit(req.body.Demande.structure+'ETD', Demand )
+            } 
             else if (req.body.typeD == 'Demande fourniture'){
                 io.emit('NewDemandAM', Demand )
                 io.emit('RemoveDemandRD', Demand ) 
+                //io.emit(req.body.Demande.structure+'EFD', Demand )
             }  
-            else if (req.body.typeD == 'Demande de prise en charge') 
+            else if (req.body.typeD == 'Demande de prise en charge'){
                 io.emit('RemoveDemandD', Demand ) 
-            else if (req.body.typeD == 'Demande de tirage') 
+                //io.emit(req.body.Demande.structure+'EPD', Demand )
+            } 
+            else if (req.body.typeD == 'Demande de tirage') {
                 io.emit('RemoveDemandAT', Demand ) 
+                //io.emit(req.body.Demande.structure+'ETD', Demand )
+            }
             else 
                 io.emit('RemoveDemandD', Demand ) 
         }else{

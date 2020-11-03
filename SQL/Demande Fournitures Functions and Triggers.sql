@@ -33,7 +33,8 @@ BEGIN
 				@userID,
 				'Chef Departement', 
 				null,
-				0)
+				0,
+				1)
 	SELECT @DDATE = CONVERT (datetime, SYSDATETIME())
 	INSERT INTO demande_fourniture 
 	VALUES (	(SELECT IDENT_CURRENT('demande')), 

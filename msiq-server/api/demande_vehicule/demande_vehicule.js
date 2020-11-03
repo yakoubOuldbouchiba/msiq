@@ -70,10 +70,13 @@ module.exports=(io)=>{
             })
     });
     // delete a demande
-    router.delete('/DemandeVehicule/:id',auth.requireLogin,(req , res)=>{ 
+    router.delete('/DemandeVehicule/:id/:struct',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandes.deleteDemandeVehicule(req.params.id)
         .then(result => {
-            if(result ==='DD'){
+            if(result.result ==='DD'){
+                if(result.typedelete){
+                    io.emit(req.params.struct+"DVD")
+                }
                 res.status(200).json({
                     title: 'Votre demande véhicule a été supprimée',
                     demande_v_id : result.demande_v_id
