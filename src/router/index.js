@@ -163,7 +163,7 @@ Vue.use(VueRouter)
       // ...
       if(store.state.token){
         let typeuser = jwt.decode(localStorage.getItem("token"),'TMPK3Y')
-        if(typeuser.typeUtilisateur=="Directeur")
+        if( typeuser.user.typeUtilisateur==="Directeur")
         {
           next();
         }else{

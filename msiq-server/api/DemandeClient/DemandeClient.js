@@ -14,7 +14,13 @@ module.exports=(io)=>{
                     error: 'CNCTDB' 
                 })
             }
-            dbOperationsDemandes.setDemandeClient({uID: decoded.user.email, rb: req.body},io)
+            dbOperationsDemandes.setDemandeClient(
+                {
+                    uID: decoded.user.email,
+                    struct :decoded.user.structure ,
+                    rb: req.body
+                },
+                io)
             .then(result => {
                 if(result ==='DI'){
                     res.status(200).json({
@@ -65,10 +71,13 @@ module.exports=(io)=>{
         });
     })
     // delete a demande
-    router.delete('/DemandeClient/:id',auth.requireLogin,(req , res)=>{ 
+    router.delete('/DemandeClient/:id/:struct',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandes.deleteDemandeClient(req.params.id)
         .then(result => {
-            if(result ==='DD'){
+            if(result.result ==='DD'){
+                if(result.typedelete){
+                    io.emit(req.params.struct+"DCD",req.params.id)
+                }
                 res.status(200).json({
                     title: 'Votre demande client a été supprimée',
                     demande_v_id : result.demande_v_id

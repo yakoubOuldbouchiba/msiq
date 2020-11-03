@@ -26,6 +26,7 @@ module.exports=(io)=>{
             };
             console.log(req.body);
             let infoToSend = {
+                struct : decoded.user.structure,
                 userID: decoded.user.email,
                 OriginalFileName: req.file.originalname,
                 StoringName: req.file.filename,
@@ -60,7 +61,7 @@ module.exports=(io)=>{
         })
     })
     // delete a demande
-    router.delete('/DemandeTirage/:id',(req , res)=>{
+    router.delete('/DemandeTirage/:id/:struct',(req , res)=>{
             jwt.verify((req.headers.authorization || req.headers['Authorization']),'TMPK3Y',
             async (err,decoded) => {
                 if (err) {
@@ -71,7 +72,10 @@ module.exports=(io)=>{
                 };
                 dbOperationsDemandeTirage.deleteDemandeTirage(req.params.id)
                     .then(result => {
-                        if(result ==='DD'){
+                        if(result.result ==='DD'){
+                            if(result.typedelete){
+                                io.emit(req.params.struct+"DTD")
+                            }
                             res.status(200).json({
                                 title: 'Votre demande tirage a été supprimée'
                             })

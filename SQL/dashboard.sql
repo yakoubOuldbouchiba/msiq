@@ -52,13 +52,15 @@ return @demande_type
 
 END
 
+
 ALTER VIEW demande_view 
 	AS
 	SELECT	U.email, 
 			dbo.DemandeType(D.demande_ID) as type_demande, 
 			D.*  
 	FROM	demande D , utilisateurs U
-	where	D.utilisateurs_ID = U.email;
+	where	D.utilisateurs_ID = U.email
+	AND D.shown = '1'
 
 
 CREATE PROCEDURE getDemandes 

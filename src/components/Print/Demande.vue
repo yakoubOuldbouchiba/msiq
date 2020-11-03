@@ -1,11 +1,11 @@
 <template>
   <span>
-      <DemandeClient v-if="type =='demande client'" :ID='ID' />
-      <DemandeFourniture v-if="type == 'demande fourniture'" :ID='ID' />
-      <DemandePriseEnCharge v-if="type =='demande prise en charge'" :ID='ID' />
-      <DemandeRelex v-if="type == 'demande relex'" :ID='ID' />
-      <DemandeVehicule v-if="type == 'demande véhicule'" :ID='ID' />
-      <DemandeTirage v-if="type =='demande tirage'" :ID='ID' />
+      <DemandeClient v-if="type =='Demande client'" :ID='ID' />
+      <DemandeFourniture v-if="type == 'Demande fourniture'" :ID='ID' />
+      <DemandePriseEnCharge v-if="type =='Demande de prise en charge'" :ID='ID' />
+      <DemandeRelex v-if="type == 'Demande relex'" :ID='ID' />
+      <DemandeVehicule v-if="type == 'Demande véhicule'" :ID='ID' />
+      <DemandeTirage v-if="type =='Demande de tirage'" :ID='ID' />
   </span>
 </template>
 <script>

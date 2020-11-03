@@ -323,7 +323,8 @@ export default {
                 {State :'Rejetee',
                     Demande: this.DV,
                     typeD: 'Demande véhicule', 
-                    UT: this.$store.state.user.typeUtilisateur})
+                    UT: this.$store.state.user.typeUtilisateur,
+                    struct : this.$store.state.structure})
             this.dialog = false
             },
         Accept(){
@@ -344,7 +345,8 @@ export default {
                     {State :'Acceptee',
                         Demande: this.DV, 
                         typeD: 'Demande véhicule', 
-                        UT: this.$store.state.user.typeUtilisateur})
+                        UT: this.$store.state.user.typeUtilisateur,
+                        struct : this.$store.state.structure})
                         .then(this.update())    
 
             this.dialog = false
@@ -363,6 +365,7 @@ export default {
             valid:false,
             collegues: [],
             DemandeVehicule : {
+                struct : this.$store.state.user.structure,
                 UserID: this.$store.state.user.email,
                 lieu : null,
                 organisme :null,

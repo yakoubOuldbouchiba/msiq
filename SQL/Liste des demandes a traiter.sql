@@ -16,9 +16,9 @@ ALTER VIEW 	Demandes_A_Traiter
 	FROM	demande D, utilisateurs U
 	where	D.utilisateurs_ID = U.email;
 
-Create PROCEDURE getDemandeATraiter 
+ALTER PROCEDURE getDemandeATraiter 
 	@UserType AS varchar(50),
-	@Depart   AS varchar(50)
+	@Depart   AS varchar(50),
   @Struct		AS varchar(50)
 AS
 BEGIN
