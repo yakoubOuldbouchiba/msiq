@@ -68,14 +68,16 @@ BEGIN
 	AND		D.utilisateurs_ID = U.email
 	AND		DT.demande_T_ID = @id
 END
-
+GetDemandeTirage 1
 ALTER PROCEDURE UpdatetDemandeTirage
 	@id AS int,
 	@NF AS int,
 	@NE AS int,
 	@NTF AS int,
 	@TF AS varchar(max),
-	@A AS varchar(max)
+	@A AS varchar(max),
+	@NO AS int,
+	@DP AS Date
 AS
 BEGIN
 	UPDATE 	document
@@ -87,4 +89,9 @@ BEGIN
 	WHERE 	document_ID 		= (SELECT document_ID 
 									FROM demande_tirage 
 									WHERE demande_T_ID = @id)
+	UPDATE	demande_tirage
+	SET		numero_ordre = @NO,
+			date_prestation = @DP
+	WHERE	demande_T_ID = @id
+
 END

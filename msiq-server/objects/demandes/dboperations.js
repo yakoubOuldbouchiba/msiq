@@ -8,12 +8,14 @@ async function  getDemandes(email){
             let demandes = await new sql.Request()
             .input('email',sql.VarChar , email)
             .execute('getDemandes')
+            console.log(demandes.recordset);
             return  {
                 result : 'DG',
                 demandes : demandes.recordset
             } // demande getted 
         }catch(err){
-            console.log('can not instert Demande');
+            console.log('can not get Demandes dashboard');
+            console.log(err);
             sql.close();
             return 'CNGD'; // can not get Demand
         }
@@ -97,6 +99,7 @@ async function  getDemandesATraiter(Params){
             console.log(demandes.recordset);
             return  demandes.recordset
         }catch(err){
+            console.log(err);
             console.log('can not get the demandes');
             sql.close();
             return null; // can not get Demand

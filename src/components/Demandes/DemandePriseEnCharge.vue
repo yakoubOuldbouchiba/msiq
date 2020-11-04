@@ -125,26 +125,28 @@
                                 </v-col>   
                             </v-row>
                         <v-row justify="center"> 
-                              <v-btn v-if="type=='Triater'" 
+                              <v-btn v-if="type=='Triater' &&($store.state.user.typeUtilisateur != 'Responsable PEC')" 
                                 class="ma-1 red white--text"
                                 @click="Reject"
                                 :disabled="!valid">Rejeter la demande </v-btn>
+
+                                <v-btn v-if="type=='Triater' &&($store.state.user.typeUtilisateur != 'Responsable PEC')" 
+                                  class="ma-1 green white--text"
+                                  @click="Accept">Accepter la demande </v-btn>
+
                                 <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
                                     :disabled="!valid"
                                     @click="update">
                                     <v-icon left>send</v-icon>
                                     <span  >Modifier la demande</span> 
                                 </v-btn>
-                                <v-btn v-else-if="type=='Triater'" 
-                                  class="ma-1 green white--text"
-                                  @click="Accept">Accepter la demande </v-btn>
-                                <v-btn v-else class="ma-1 pink white--text" 
+                                <v-btn v-if="type=='new'" class="ma-1 pink white--text" 
                                     :disabled="!valid"
                                     @click="submit">
                                     <v-icon left>send</v-icon>
-                                    <span  >Envoyer la demande</span> 
+                                    <span>Envoyer la demande</span> 
                                 </v-btn>
-                            </v-row>> 
+                            </v-row> 
                     </v-form>
                 </v-card-text>
             </v-card>  

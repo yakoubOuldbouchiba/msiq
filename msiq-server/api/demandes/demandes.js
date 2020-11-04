@@ -158,12 +158,16 @@ module.exports=(io)=>{
                 io.emit('NewDemandAM', Demand )
                 io.emit('RemoveDemandRD', Demand ) 
             }  
-            else if (req.body.typeD == 'Demande de prise en charge') 
-                io.emit('RemoveDemandD', Demand ) 
+            else if (req.body.typeD == 'Demande de prise en charge') {
+                io.emit('NewDemandRPEC', Demand )   
+                io.emit('RemoveDemandD', Demand ) }
             else if (req.body.typeD == 'Demande de tirage') 
                 io.emit('RemoveDemandAT', Demand ) 
-            else 
+            else {
+                io.emit('NewDemandRR', Demand )
                 io.emit('RemoveDemandD', Demand ) 
+            }
+                
         }else{
             if (req.body.UT == 'Chef departement')
                 io.emit('RemoveDemandCD', Demand)

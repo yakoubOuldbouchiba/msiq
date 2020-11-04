@@ -78,6 +78,7 @@ async function  GetDemandeTirage(id){
             .input('id',sql.Int,id)
             .execute('GetDemandeTirage');
             console.log("demande has been loaded")
+            console.log(demande.recordset[0]);
             return demande.recordset[0]
 
         }catch(error){
@@ -102,8 +103,8 @@ async function  upDemandeTirage(Data){
             .input('NTF', sql.Int, Data.nombre_exemplaire*Data.nombre_feuille)
             .input('TF', sql.VarChar, Data.type_document)
             .input('A', sql.VarChar, Data.autre)
-            .input('NO', sql.Int, Data.NOrdre)
-            .input('DP', sql.Date, Data.DatePres)
+            .input('NO', sql.Int, Data.numero_ordre)
+            .input('DP', sql.Date, Data.date_prestation)
             .execute('UpdatetDemandeTirage');
             console.log('Demande Inserted');
             sql.close();

@@ -16,10 +16,10 @@ ALTER VIEW 	Demandes_A_Traiter
 	FROM	demande D, utilisateurs U
 	where	D.utilisateurs_ID = U.email;
 
-Create PROCEDURE getDemandeATraiter 
+ALTER PROCEDURE getDemandeATraiter 
 	@UserType AS varchar(50),
-	@Depart   AS varchar(50)
-  @Struct		AS varchar(50)
+	@Depart   AS varchar(50),
+	@Struct		AS varchar(50)
 AS
 BEGIN
 	if(@UserType = 'Chef departement')
@@ -42,7 +42,9 @@ BEGIN
 	if(@UserType = 'Agent de magasin')
 		SELECT	* 
 		FROM	Demandes_A_Traiter
-		WHERE	etat = 'Agent de magasin'
+		WHERE	type_demande = 'Demande client'
+		OR		type_demande = 'Demande fourniture'
+		AND		etat = 'Acceptee'
 
 	if(@UserType = 'Agent de Tirage')
 		SELECT	* 
@@ -54,6 +56,18 @@ BEGIN
 		SELECT	* 
 		FROM	Demandes_A_Traiter
 		WHERE	etat = 'Chef de parc'
+
+	if(@UserType = 'Responsable PEC')
+		SELECT	* 
+		FROM	Demandes_A_Traiter
+		WHERE	etat = 'Acceptee'
+		AND		type_demande = 'Demande de prise en charge'
+
+	if(@UserType = 'Responsable AR')
+		SELECT	* 
+		FROM	Demandes_A_Traiter
+		WHERE	etat = 'Acceptee'
+		AND		type_demande = 'Demande relex'
 END
 
 

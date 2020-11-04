@@ -69,72 +69,76 @@
                     <v-row  v-if="$store.state.user.typeUtilisateur == 'Agent de magasin' || $store.state.user.typeUtilisateur == 'Responsable DAM'"> 
                       <v-col cols="12" sm="5" offset-sm="2"> 
                         <v-checkbox
-                        v-model="DC.MED"
+                        v-model="DC.mise_disposition"
                         label="Mise en disposition"
                         :disabled="$store.state.user.typeUtilisateur == 'Agent de magasin'"
                         prepend-icon="mdi-archive-arrow-down"></v-checkbox>
                       </v-col>  
                       <v-col cols="12" sm="3" v-if="DC.MED">
                         <Date 
-                            v-model="DC.DateMED"
+                            v-model="DC.date_mise_dispostion"
                             label="Date"
-                            @date ="(date) => DC.DateMED = date"
+                            @date ="(date) => DC.date_mise_dispostion = date"
                         />
                       </v-col> 
                     </v-row> 
                     <v-row  v-if="$store.state.user.typeUtilisateur == 'Agent de magasin' || $store.state.user.typeUtilisateur == 'Responsable DAM'"> 
                       <v-col cols="12" sm="2" offset-sm="2"> 
                         <v-checkbox
-                        v-model="DC.Achats"
+                        v-model="DC.achat"
                         label="Achats"
                         :disabled="$store.state.user.typeUtilisateur == 'Agent de magasin'"
                         prepend-icon="mdi-cart"></v-checkbox>
                       </v-col> 
-                      <v-col cols="12" sm="2" offset-sm="1" v-if="DC.Achats">
+                      <v-col cols="12" sm="2" offset-sm="1" v-if="DC.achat">
                         <v-text-field
-                        v-model="DC.NAchats"
+                        v-model="DC.nAchat"
                         :disabled="$store.state.user.typeUtilisateur == 'Agent de magasin'"
                         label="N°....."></v-text-field>
                       </v-col>  
-                      <v-col cols="12" sm="3" v-if="DC.Achats">
+                      <v-col cols="12" sm="3" v-if="DC.achat">
                         <Date 
-                            v-model="DC.DateAchats" 
+                            v-model="DC.date_achat" 
                             label="Date" 
-                            @date ="(date) => DC.DateAchats = date"
+                            @date ="(date) => DC.date_achat = date"
                         />
                       </v-col> 
                     </v-row> 
-                    <v-row justify="center" v-if="$store.state.user.typeUtilisateur == 'Agent de magasin'"> 
+                    <v-row justify="center" v-if="$store.state.user.typeUtilisateur == 'Agent de magasin' || $store.state.user.typeUtilisateur == 'Responsable DAM'"> 
                       <v-col cols="12" sm="8"> 
                           <v-textarea
-                          v-model="DC.OAchats"
+                          v-model="DC.oAchats"
                           label="Orientations d'achats" 
+                          :disabled="$store.state.user.typeUtilisateur == 'Agent de magasin'"
                           prepend-icon="mdi-directions-fork"></v-textarea>
                       </v-col>   
                     </v-row> 
-                    <v-row justify="center" v-if="$store.state.user.typeUtilisateur != 'Client'"> 
+                    <v-row justify="center" v-if="$store.state.user.typeUtilisateur != 'Client' && ($store.state.user.typeUtilisateur != 'Agent de magasin')  && (type != 'new') "> 
                       <v-col cols="12" sm="8"> 
                           <v-textarea
                           v-model="DC.motif"
+                          
                           label="Motif" 
                           prepend-icon="mdi-flag-outline"></v-textarea>
                       </v-col>   
-                    </v-row> 
+                    </v-row>
                     <v-row justify="center"> 
-                      <v-btn v-if="type=='Triater'" 
+                      <v-btn v-if="type=='Triater' && ($store.state.user.typeUtilisateur != 'Agent de magasin')" 
                         class="ma-1 red white--text"
                         @click="Reject"
                         :disabled="!valid">Rejeter la demande</v-btn>
+
+                       <v-btn v-if="type=='Triater' && ($store.state.user.typeUtilisateur != 'Agent de magasin')" 
+                        class="ma-1 green white--text"
+                        @click="Accept">Accepter la demande </v-btn>
+
                       <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
                         :disabled="!valid"
                         @click="update">
                         <v-icon left>send</v-icon>
                         <span  >Modifier la demande</span> 
                       </v-btn>
-                      <v-btn v-else-if="type=='Triater'" 
-                        class="ma-1 green white--text"
-                        @click="Accept">Accepter la demande </v-btn>
-                      <v-btn v-else class="ma-1 pink white--text" 
+                      <v-btn v-if="type=='new'" class="ma-1 pink white--text" 
                         :disabled="!valid"
                         @click="submit">
                         <v-icon left>send</v-icon>
@@ -223,12 +227,12 @@ export default {
             demande_C_description:'',
             nature:'',
             objet:'',
-            MED: false,
-            DateMED: null,
-            Achats: false,
-            NAchats: null,
-            DateAchats: null,
-            OAchats: null,
+            mise_disposition: false,
+            date_mise_dispostion: null,
+            achat: false,
+            nAchat: null,
+            date_achat: null,
+            oAchats: null,
             motif: '',
           },
       }
@@ -240,7 +244,7 @@ export default {
     },
     submit () {
         this.$refs.form.validate();
-        Axios.post('http://localhost:3030/DemandeClient', this.DC)
+        Axios.post('http://localhost:3030/DemandeClient', {D: this.DC ,UT :this.$store.state.user.typeUtilisateur})
         .then(
           res =>{
             this.msg = res.data.title,

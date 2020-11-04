@@ -137,7 +137,7 @@
                 <v-row justify="center" v-if="type =='Triater'"> 
                     <v-col cols="12" sm="10"> 
                         <v-textarea
-                        v-model="motif"
+                        v-model="DV.motif"
                         label="Motif" 
                         prepend-icon="mdi-flag-outline" 
                         :rules="[v => !!v || 'Ce champs est obligatoire']"></v-textarea>
@@ -378,6 +378,9 @@ export default {
                 utilisateur2_ID : null,
                 utilisateur3_ID : null,
                 motif: '',
+                matricule: null,
+                chauffeur_ID: null,
+                observation: null,
             },           
         }
     }

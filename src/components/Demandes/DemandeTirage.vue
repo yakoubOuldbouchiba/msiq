@@ -133,23 +133,24 @@
                                     </div>                                            
                                 </v-col>     
                             </v-row>
+                            {{DT}}
                             <v-row justify="center" v-if="$store.state.user.typeUtilisateur == 'Agent de Tirage'"> 
                                 <v-col cols="12" sm="5"> 
                                     <v-text-field
-                                    v-model="DT.NOrdre"
+                                    v-model="DT.numero_ordre"
                                     label="N° ordre" 
                                     prepend-icon="nothing" 
                                     :rules="[v => !!v || 'Ce champs est obligatoire']"></v-text-field>
                                 </v-col> 
                                 <v-col cols="12" sm="5"> 
                                     <Date 
-                                        v-model="DT.DatePres"
+                                        v-model="DT.date_prestation"
                                         label="Date"
-                                        @date ="(date) => DT.DatePres = date"
+                                        @date ="(date) => DT.date_prestation = date"
                                     />
                                 </v-col>
                             </v-row>  
-                            <v-row justify="center" v-if="type =='Triater'"> 
+                            <v-row justify="center" v-if="type =='Triater' && ($store.state.user.typeUtilisateur != 'Agent de Tirage')"> 
                                 <v-col cols="12" sm="10"> 
                                     <v-textarea
                                     v-model="DT.motif"
@@ -159,30 +160,28 @@
                                 </v-col>   
                             </v-row>  
                             <v-row justify="center"> 
+                                <v-btn v-if="type=='Triater' && ($store.state.user.typeUtilisateur != 'Agent de Tirage')" 
+                                    class="ma-1 red white--text"
+                                    @click="Reject">Rejeter la demande </v-btn>
+
                                 <v-btn v-if="type=='Triater'" 
-                                class="ma-1 red white--text"
-                                @click="Reject">Rejeter la demande </v-btn>
-                                <v-btn 
-                                    v-if="type =='update'" 
+                                    class="ma-1 green white--text"
+                                    @click="Accept">Accepter la demande </v-btn>
+
+                                <v-btn v-if="type =='update'" 
                                     class="ma-1 pink white--text" 
                                     :disabled="!valid"
                                     @click="update"
                                     type="submit">
                                     <v-icon left>send</v-icon>
-                                    <span  >Modifier la demande</span> 
-                                </v-btn>
-                                <v-btn v-else-if="type=='Triater'" 
-                                class="ma-1 green white--text"
-                                @click="Accept">Accepter la demande </v-btn>
-                                <v-btn 
-                                    v-else 
+                                    <span  >Modifier la demande</span></v-btn>
+
+                                <v-btn  v-if="type=='new'"
                                     class="ma-1 pink white--text" 
                                     :disabled="!valid"
-                                    @click="submit"
-                                    >
+                                    @click="submit">
                                     <v-icon left>send</v-icon>
-                                    <span  >Envoyer la demande</span> 
-                                </v-btn>
+                                    <span  >Envoyer la demande</span></v-btn>
                             </v-row> 
                             <template v-if="loading">
                                 <v-text-field class="text-center"
@@ -275,8 +274,8 @@ export default {
               nombre_feuille: 1,
               nombre_exemplaire: 1,
               nom_document: null,
-              NOrdre: null,
-              DatePres: null,
+              numero_ordre: null,
+              date_prestation: null,
               motif: '',
           },
           loading: false,
@@ -363,7 +362,7 @@ export default {
                     UT: this.$store.state.user.typeUtilisateur})
         else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
             Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, 
-                {State :'Agent de Tirage',
+                {State :'Acceptee',
                     Demande: this.DT, 
                     typeD: 'Demande de tirage',
                     UT: this.$store.state.user.typeUtilisateur})    

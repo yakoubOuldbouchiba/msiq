@@ -193,7 +193,23 @@ mounted(){
       let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
       this.Demandes.splice(index , 1)
     })
-  }else{
+  }else if (this.$store.state.user.typeUtilisateur == 'Responsable PEC') {
+    this.$store.state.sokect.on('NewDemandRPEC', (newDemand) => {
+      this.Demandes.unshift(newDemand)
+    })
+    this.$store.state.sokect.on('RemoveDemandRPEC', (Demand) => {
+      let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
+      this.Demandes.splice(index , 1)
+    })
+  } else if (this.$store.state.user.typeUtilisateur == 'Responsable AR') {
+    this.$store.state.sokect.on('NewDemandRR', (newDemand) => {
+      this.Demandes.unshift(newDemand)
+    })
+    this.$store.state.sokect.on('RemoveDemandRR', (Demand) => {
+      let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
+      this.Demandes.splice(index , 1)
+    })
+  } else {
     this.$store.state.sokect.on('NewDemandAM', (newDemand) => {
         this.Demandes.unshift(newDemand)
     })

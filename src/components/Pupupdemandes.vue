@@ -33,7 +33,7 @@
                     </v-container>
                 </v-card>
     </v-dialog> 
-    <DemandeClient v-model="openDialogClient"/>
+    <DemandeClient v-model="openDialogClient" type="new"/>
 
     <DemandeFourniture
             v-model="openDialogFourniture"
@@ -54,7 +54,7 @@
             :name='demandes[5].name'
             :color='demandes[5].color'
             :icon='demandes[5].icon' 
-            />
+            type ='new'/>
     <DemandePriseEnCharge v-model="openDialogPEC"  type='new'/>
 
 </div>

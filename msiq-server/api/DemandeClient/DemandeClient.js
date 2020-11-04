@@ -14,6 +14,7 @@ module.exports=(io)=>{
                     error: 'CNCTDB' 
                 })
             }
+            console.log(req.body);
             dbOperationsDemandes.setDemandeClient({uID: decoded.user.email, rb: req.body},io)
             .then(result => {
                 if(result ==='DI'){
