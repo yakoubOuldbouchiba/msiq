@@ -93,9 +93,108 @@ async function  getTotalDay(struct){
         return 'CNCTDB';  //can not connect to database
     }
 }
+// maxDep 
+async function  maxDep (struct , peroid , typeDemand){
+    try{
+        await sql.connect(config);
+        try{
+            let max = await new sql.Request()
+            .input("struct", sql.VarChar, struct)
+            .input("typeDemand", sql.VarChar, typeDemand)
+            .input("peroidVarchar", sql.VarChar, peroid)
+            .execute('MaxDemandByDep')
+            sql.close();
+            return {
+                 result : 'TG' , //total getted
+                 max : max.recordset
+            }  
+        }catch(error){
+            console.log('can not get total');
+            sql.close();
+            return 'CNGT'; // can not get Demand
+        }
+    }catch(error){
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
+    }
+}
+// maxUser
+async function  maxUser(struct ,peroid , typeDemand){
+    try{
+        await sql.connect(config);
+        try{
+            let max = await new sql.Request()
+            .input("struct", sql.VarChar, struct)
+            .input("typeDemand", sql.VarChar, typeDemand)
+            .input("peroidVarchar", sql.VarChar, peroid)
+            .execute('MaxDemandByUser')
+            sql.close();
+            return {
+                 result : 'TG' , //total getted
+                 max : max.recordset
+            }  
+        }catch(error){
+            console.log('can not get total');
+            sql.close();
+            return 'CNGT'; // can not get Demand
+        }
+    }catch(error){
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
+    }
+}
+// AvgDep  
+async function  AvgDep (struct ,peroid , typeDemand){
+    try{
+        await sql.connect(config);
+        try{
+            let avg = await new sql.Request()
+            .input("struct", sql.VarChar, struct)
+            .input("typeDemand", sql.VarChar, typeDemand)
+            .input("peroidVarchar", sql.VarChar, peroid)
+            .execute('AvgDemandByDep')
+            sql.close();
+            return {
+                 result : 'TG' , //total getted
+                 avg : avg.recordset
+            }  
+        }catch(error){
+            console.log('can not get total');
+            sql.close();
+            return 'CNGT'; // can not get Demand
+        }
+    }catch(error){
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
+    }
+}
+// AvgUser 
+async function  AvgUser (struct ,peroid , typeDemand){
+    try{
+        await sql.connect(config);
+        try{
+            let avg = await new sql.Request()
+            .input("struct", sql.VarChar, struct)
+            .input("typeDemand", sql.VarChar, typeDemand)
+            .input("peroidVarchar", sql.VarChar, peroid)
+            .execute('AvgDemandByUser')
+            sql.close();
+            return {
+                 result : 'TG' , //total getted
+                 avg : avg.recordset
+            }  
+        }catch(error){
+            console.log('can not get total');
+            sql.close();
+            return 'CNGT'; // can not get Demand
+        }
+    }catch(error){
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
+    }
+}
 // getting total By Demand 
 async function  getTotalByDemand(struct , date){
-    console.log(struct + " "+date);
     try{
         await sql.connect(config);
         try{
@@ -117,7 +216,6 @@ async function  getTotalByDemand(struct , date){
                 .input("struct", sql.VarChar, struct)
                 .execute('TotalByDemandInDay')
             }
-            console.log(total.recordset);
             console.log('Total getted');
             sql.close();
             return {
@@ -140,5 +238,9 @@ module.exports = {
     getTotalYear,
     getTotalMonth,
     getTotalDay,
-    getTotalByDemand
+    getTotalByDemand,
+    maxUser,
+    maxDep,
+    AvgDep,
+    AvgUser
 }

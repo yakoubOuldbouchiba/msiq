@@ -43,7 +43,7 @@ BEGIN
 	ELSE if(@is_client_demande = 1)
 		set @demande_type = 'Demande client';
 	ELSE if(@is_relex_demande = 1)
-		set @demande_type = 'Demande relex';
+		set @demande_type = 'Demande activité relex';
 	ELSE if(@is_pec_demande = 1)
 		set @demande_type = 'Demande de prise en charge';
 	ELSE if(@is_tirage_demande = 1)
