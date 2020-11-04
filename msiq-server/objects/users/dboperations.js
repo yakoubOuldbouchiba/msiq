@@ -21,7 +21,7 @@ async function getUser(email){
         let user = await pool.request()
         .input("email", sql.VarChar, email)
         .execute("GetUser")
-        console.log(user.recordset[0])
+        //console.log(user.recordset[0])
         return user.recordset[0];
     }catch(error){
         return 0;

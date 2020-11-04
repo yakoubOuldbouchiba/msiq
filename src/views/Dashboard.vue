@@ -264,7 +264,7 @@ data(){
        this.demande.heure_depart = dp.substr(11,5)
        this.demande.heure_retour = dr.substr(11,5)
        this.openDialogVehicule = true
-     }else if(Demande.type_demande== 'Demande relex'){
+     }else if(Demande.type_demande== 'Demande activité relex'){
        let dp = this.demande.date_depart;
        let dr = this.demande.date_retour
        this.demande.date_depart = dp.substr(0,10)

@@ -26,10 +26,14 @@ ALTER VIEW demandeNewEtat
 		dbo.DemandeType(D.demande_ID) as type_demande , 
 		dbo.DemandeEtat(D.demande_ID) as etat , 
 		D.demande_Date , 
-		U.structure
+		U.structure,
+		U.departement,
+		U.email,
+		U.nomUtilisateur,
+		U.prenomUtilisateur
 	FROM demande D , utilisateurs U
 	WHERE U.email = D.utilisateurs_ID
-
+	
 ALTER PROCEDURE Total
 	@struct as varchar(max)
 AS
@@ -56,6 +60,7 @@ BEGIN
 	SELECT D.etat , count(D.demande_ID) as total
 	FROM demandeNewEtat D
 	WHERE MONTH(CONVERT (datetime, SYSDATETIME()))= MONTH(D.demande_Date)
+	AND YEAR(CONVERT (datetime, SYSDATETIME()))= YEAR(D.demande_Date)
 	AND D.structure = @struct
 	GROUP BY D.etat
 END
@@ -66,6 +71,8 @@ BEGIN
 	SELECT D.etat , count(D.demande_ID) as total
 	FROM demandeNewEtat D
 	WHERE DAY(CONVERT (datetime, SYSDATETIME()))= DAY(D.demande_Date)
+	AND MONTH(CONVERT (datetime, SYSDATETIME()))= MONTH(D.demande_Date)
+	AND YEAR(CONVERT (datetime, SYSDATETIME()))= YEAR(D.demande_Date)
 	AND D.structure = @struct
 	GROUP BY D.etat
 END
@@ -92,7 +99,7 @@ BEGIN
 END
 
 
-CREATE PROCEDURE TotalByDemandInMonth
+ALTER PROCEDURE TotalByDemandInMonth
 	@struct as varchar(max)
 AS
 BEGIN
@@ -100,10 +107,11 @@ BEGIN
 	FROM demandeNewEtat D
 	Where D.structure = @struct
 	AND Month(CONVERT (datetime, SYSDATETIME()))= Month(D.demande_Date)
+	AND YEAR(CONVERT (datetime, SYSDATETIME()))= YEAR(D.demande_Date)
 	GROUP BY D.etat , type_demande
 END
 
-CREATE PROCEDURE TotalByDemandInDay
+ALTER PROCEDURE TotalByDemandInDay
 	@struct as varchar(max)
 AS
 BEGIN
@@ -111,6 +119,8 @@ BEGIN
 	FROM demandeNewEtat D
 	Where D.structure = @struct
 	AND day(CONVERT (datetime, SYSDATETIME()))= day(D.demande_Date)
+	AND MONTH(CONVERT (datetime, SYSDATETIME()))= MONTH(D.demande_Date)
+	AND YEAR(CONVERT (datetime, SYSDATETIME()))= YEAR(D.demande_Date)
 	GROUP BY D.etat , type_demande
 END
 

@@ -238,7 +238,7 @@ data(){
           type='/DemandePriseEnCharge/' 
      }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
-     }else if(demande.type_demande== 'Demande relex'){
+     }else if(demande.type_demande== 'Demande activité relex'){
           type='/DemandeRelex/' 
      }else{
        type='/demande/'

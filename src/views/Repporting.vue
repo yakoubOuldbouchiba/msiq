@@ -7,8 +7,8 @@
                     <v-app>
                         <v-container>
                             <v-flex>
-                                <v-card class="ma-5 text-center mt-4" shaped  elevation="3">
-                                    <v-card-title class="layout justify-center">Nombre</v-card-title>
+                                <v-card class="ma-5 text-center" tile  elevation="3">
+                                    <v-card-title class="layout">Nombre</v-card-title>
                                     <v-list class="mt-n7">
                                         <v-list-item>
                                             <v-list-item-title class="indigo--text text--darken-1">Total</v-list-item-title>
@@ -46,16 +46,16 @@
                                 </v-card>
                             </v-flex>
                             <v-flex>
-                                <v-card class="ma-5 mt-n2" shaped elevation="3">
+                                <v-card class="ma-5 mt-n2" tile elevation="3">
                                    <v-card-title>
                                        <v-avatar  size="10" class="mx-2 indigo darken-1"></v-avatar>
                                        Nombre par demande
                                    </v-card-title>
                                     <v-list>
                                           
-                                            <v-tabs align-with-title>
+                                            <v-tabs >
                                                 <v-tab>
-                                                    <v-btn text x-small @click="getTotalByDemand('total')" class="indigo--text text--darken-1" >
+                                                    <v-btn text small @click="getTotalByDemand('total')" class="indigo--text text--darken-1" >
                                                          Total
                                                     </v-btn>
                                                 </v-tab>
@@ -112,16 +112,22 @@
                     </v-app>
                 </v-flex>
                 <v-flex md7>
-                    <v-card height="100%"  shaped class="ma-3 text-center mx-6" color="grey lighten-4" elevation="3">
+                    <v-card  tile class="ma-7 text-center mx-6"  elevation="3">
                         <v-carousel height="100%"   v-model="model">
-                            <v-carousel-item v-for="item in sheets" :key="item">
-                                <v-sheet height="100%" tile class="white black--text">
+                            <v-carousel-item color="white"  v-for="item in sheets" :key="item.icon">
                                     <div>
-                                        <v-toolbar color="white black--text">
-                                            <v-toolbar-title>{{item}}</v-toolbar-title>
+                                        <v-toolbar :color="item.color">
+                                            <v-icon left>{{item.icon}}</v-icon>
+                                            <v-toolbar-title>{{item.name}}</v-toolbar-title>
                                         </v-toolbar>
+                                        <v-row class="mb-12">
+                                                <StatByDemand 
+                                                    :name="item.name"
+                                                    :color="item.color"
+                                                />
+                                        </v-row>
                                     </div>
-                                </v-sheet>
+                               
                             </v-carousel-item>
                         </v-carousel>
                     </v-card>
@@ -132,8 +138,10 @@
 </template>
 <script>
 import axios from 'axios'
+import StatByDemand from '../components/Reporting/StatByDemand'
 export default {
     name:'Reporting',
+    components: {StatByDemand},
     async created(){
         /** total */
         this.total = (await axios.get("http://localhost:3030/Total/"+this.$store.state.user.structure)).data.total
@@ -271,9 +279,12 @@ export default {
             totalByDemand : [],
             model :0 ,
             sheets  : [
-                'structure',
-                'departement',
-                'emlpoyee'
+                {prefix:'CD',name:'Demande client',icon:'devices',color:'pink'},
+                {prefix:'FD',name:'Demande fourniture',icon:'edit',color:'red'},
+                {prefix:'VD',name:'Demande véhicule',icon:'commute',color:'deep-purple'},
+                {prefix:'TD',name:'Demande de tirage',icon:'print',color:'purple'},
+                {prefix:'PD',name:'Demande de prise en charge',icon:'flight',color:'indigo'},
+                {prefix:'RD',name:'Demande activité relex',icon:'hotel',color:'blue'}
             ],
             demandes :[
                 {prefix:'CD',name:'Demande client',icon:'devices',color:'pink'},
@@ -281,7 +292,7 @@ export default {
                 {prefix:'VD',name:'Demande véhicule',icon:'commute',color:'deep-purple'},
                 {prefix:'TD',name:'Demande de tirage',icon:'print',color:'purple'},
                 {prefix:'PD',name:'Demande de prise en charge',icon:'flight',color:'indigo'},
-                {prefix:'RD',name:'Demande relex',icon:'hotel',color:'blue'}
+                {prefix:'RD',name:'Demande activité relex',icon:'hotel',color:'blue'}
             ]
         })
     }
