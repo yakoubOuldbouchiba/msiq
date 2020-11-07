@@ -108,7 +108,7 @@ async function  getDemandesATraiter(Params){
 }
 
 // Update demand State.
-async function  UpdateDemandState(DemandeID, state, motif){
+async function  UpdateDemandState(DemandeID, state, motif , valider , io){
     try{
         await sql.connect(config);
         try{
@@ -116,8 +116,25 @@ async function  UpdateDemandState(DemandeID, state, motif){
             .input('Demand_ID',sql.VarChar , DemandeID)
             .input('motif', sql.VarChar, motif)
             .input('State',sql.VarChar , state)
-            .execute('UpdateDemandState')
+            .output('userID',sql.VarChar)// for notif
+            .output('NID', sql.Int) // for notif
+            .output('desc',sql.VarChar) //for notif
+            .execute('UpdateDemandState').then((res , err)=>{
+                if(err) console.log(err)
+                let Notif = {// notification Info 
+                    userID : res.output.userID,
+                    notification_ID : res.output.NID,
+                    demande_ID: DemandeID,
+                    seen : 0,
+                    description_notif : res.output.desc
+                
+                }
+                io.emit("addNotif"+res.output.userID , Notif)//notifier le C.
+                io.emit("DeleteNofit"+valider , DemandeID)//notifier le valideur.
+            })
             return 'DU'
+           
+            
         }catch(err){
             console.log(err);
             console.log('can not Edit demande');

@@ -47,7 +47,17 @@ CREATE TABLE demande (
 	CONSTRAINT CHK_etat CHECK(etat IN ('Directeur','DAM','Agent de Tirage', 'Agent de magasin', 'Chef de parc', 'Acceptee','Rejetee', 'Chef Departement')),
 	CONSTRAINT FK_utilisateurs_demande FOREIGN KEY (utilisateurs_ID) REFERENCES utilisateurs(email)
 ) ON [PRIMARY]
-
+/*------------------------------------------------------------------------------------------------------------------------*/
+DROP TABLE notification;
+CREATE TABLE notification(
+	notification_ID int IDENTITY(1, 1) PRIMARY KEY NOT NULL, 
+	demande_ID int ,
+	recevoir_ID varchar(Max),
+	seen bit,
+	date_notification datetime , 
+	description_notif varchar(max) ,
+	icon varchar(max)
+)ON [PRIMARY]
 /*------------------------------------------------------------------------------------------------------------------------*/
 
 DROP TABLE  demande_client

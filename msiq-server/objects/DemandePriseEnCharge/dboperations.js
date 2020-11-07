@@ -21,6 +21,8 @@ async function  setDemandePriseEnCharge(Data,io){
             .input('A', sql.VarChar, Data.Aeroport)
             .input('HV', sql.VarChar, Data.HeureDeVol)
             .output('DID', sql.Int)
+            .output('FID', sql.Int)//For notif
+            .output('recevoir_ID', sql.VarChar)//For notif
             .output('DDATE', sql.DateTime)
             .execute('InsertDemandePriseEnCharge').then((res,err) => {
                 if (err) 
@@ -33,9 +35,18 @@ async function  setDemandePriseEnCharge(Data,io){
                      motif: '',
                      seen: 0,
                  }
+                 let Notif = {// notification Info 
+                    userID : Data.UserID,
+                    notification_ID : res.output.FID,
+                    demande_ID: res.output.DID,
+                    seen : 0,
+                    description_notif : 'est effecuté(e) une nouvelle demande activité relex',
+                    icon:'hotel'
+                }
                  io.emit('NewDemandCD', Demand )
                  io.emit(Data.UserID , Demand )
-                 io.emit(Data.struct+"PD" , Demand )
+                 io.emit(Data.struct+"PD" , Demand )//for reporting 
+                 io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
              });
             console.log('Demande Inserted');
             sql.close();
@@ -60,12 +71,14 @@ async function  deleteDemandePriseEnCharge(id){
            let res = await new sql.Request()
             .input('id',sql.Int,id)
             .output('typedelete',sql.Bit)
+            .output('recevoir_ID',sql.VarChar)//for notif
             .execute('DeleteDemandePEC');
             sql.close();
             console.log("demande deleted")
             return ({
                 result : "DD",
-                typedelete : res.output.typedelete
+                typedelete : res.output.typedelete,
+                recevoir_ID :res.output.recevoir_ID// for notif
             })
 
         }catch(error){
@@ -99,7 +112,7 @@ async function  GetDemandePriseEnCharge(id){
 }
 
 //Get Demand
-async function  UpdateDemandePriseEnCharge(Data){
+async function  UpdateDemandePriseEnCharge(Data , io){
     try{
         await sql.connect(config);
         try{
@@ -117,7 +130,20 @@ async function  UpdateDemandePriseEnCharge(Data){
             .input('MDT', sql.VarChar, Data.moyen_transport)
             .input('A', sql.VarChar, Data.aeroport)
             .input('HV', sql.VarChar, Data.heureDeVol)
-            .execute('UpdateDemandePEC');
+            .output('NID',sql.Int)//for notif
+            .output('recevoir_ID',sql.VarChar)// for notif
+            .execute('UpdateDemandePEC').then((res , err)=>{
+                if(err)return 'CNUD';
+                let Notif = {// notification Info 
+                    userID : Data.uID,
+                    notification_ID : res.output.NID,
+                    demande_ID: Data.demande_P_ID,
+                    seen : 0,
+                    description_notif : 'est modifé(e) la demande de prise en charge numéro ' +Data.demande_P_ID,
+                    icon:'flight'
+                }
+                io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+            });
             console.log('Demande Edited');
             return 'DE'
         }catch(error){

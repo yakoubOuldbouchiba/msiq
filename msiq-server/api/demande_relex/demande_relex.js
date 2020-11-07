@@ -51,15 +51,13 @@ module.exports=(io)=>{
                 }
             }) 
     });
-    //update a demande
-    router.put('/DemandeRelex/:id',auth.requireLogin,(req , res)=>{ 
-        res.send({method : 'update a demande'});
-    });
+    
     // delete a demande
     router.delete('/DemandeRelex/:id/:struct',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandes.deleteDemandeRelex(req.params.id)
         .then(result => {
             if(result.result ==='DD'){
+                io.emit("DeleteNofit"+result.recevoir_ID, req.params.id)//for notif CD
                 if(result.typedelete){
                     io.emit(req.params.struct+"DRD")
                 }
@@ -81,7 +79,7 @@ module.exports=(io)=>{
     });
         //update a  demande
         router.post('/UpdateDemandeRelex',auth.requireLogin , (req , res)=>{
-            dbOperationsDemandes.editDemandeRelex(req.body)
+            dbOperationsDemandes.editDemandeRelex(req.body,io)
             .then(result => {
                 if(result ==='DU'){
                     res.status(200).json({

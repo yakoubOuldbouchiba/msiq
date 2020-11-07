@@ -38,6 +38,8 @@ ALTER PROCEDURE InsertDemandeVehicule
 	@utilisateur2 as varchar(50),
 	@utilisateur3 as varchar(50),
 	@demande_v_id as int output,
+	@FID AS int OUTPUT,--for notification
+	@recevoir_ID as varchar(max) OUTPUT,--for notification
 	@DDATE AS datetime OUTPUT
 AS
 BEGIN
@@ -65,6 +67,20 @@ BEGIN
 	            null,
 	            null);
 	SELECT @demande_v_id = IDENT_CURRENT('demande');
+	/*Notification part */
+	DECLARE @email as varchar(max) 
+	SELECT @email = U.email
+	FROM utilisateurs U , (
+		SELECT U.structure , U.departement
+		FROM utilisateurs U
+		WHERE U.email = @userID	
+	)as I
+	WHERE I.structure = U.structure
+	AND I.departement = U.departement
+	AND U.typeUtilisateur = 'Chef departement'
+	EXECUTE CREE_NOTIFICATION  @demande_v_id,@email , 'est effecuté(e) une nouvelle demande véhicule','commute'
+	SELECT @FID = IDENT_CURRENT('notification')
+	set @recevoir_ID = @email
 END
 
 
@@ -74,7 +90,8 @@ END
 
 ALTER PROCEDURE DeleteDemandeVehicule
 	@id as int,
-	@typedelete as bit output
+	@typedelete as bit output,
+	@recevoir_ID as varchar(max) OUTPUT--For notif
 AS
 	BEGIN
 	Declare @etat  varchar(max)
@@ -90,6 +107,8 @@ AS
 	END
 	ELSE
 	BEGIN
+		SELECT @recevoir_ID = dbo.GetChefDepartementByDI(@id)--for notif
+		DELETE FROM notification WHERE demande_ID = @id
 		UPDATE demande_relex set demande_V_ID = null WHERE demande_V_ID = @id
 		DELETE FROM demande_vehicule WHERE demande_V_ID = @id;
 		DELETE FROM demande WHERE demande_ID = @id
@@ -130,23 +149,34 @@ ALTER PROCEDURE UpdateDemandeVehicule
 	@nature_marchandise as varchar(50),
 	@utilisateur1 as varchar(50),
 	@utilisateur2 as varchar(50),
-	@utilisateur3 as varchar(50)
-	
+	@utilisateur3 as varchar(50),
+	@NID AS int OUTPUT,--For notif
+	@recevoir_ID as varchar(max) OUTPUT--For notif
 AS
 BEGIN
 	update demande_vehicule
 	set
-	lieu = @lieu,
-	organisme = @organisme,
-	motif_deplacement = @motif_deplacement,
-	date_depart = @date_depart,
-	lieu_ramassage_d = @lieu_remmassage_d,
-	date_retour = @date_retour,
-	lieu_ramassage_r = @lieu_remmassage_r,
-	nature_marchandise = @nature_marchandise,
-	utilisateur1_ID = @utilisateur1,
-	utilisateur2_ID = @utilisateur2,
-	utilisateur3_ID = @utilisateur3
+		lieu = @lieu,
+		organisme = @organisme,
+		motif_deplacement = @motif_deplacement,
+		date_depart = @date_depart,
+		lieu_ramassage_d = @lieu_remmassage_d,
+		date_retour = @date_retour,
+		lieu_ramassage_r = @lieu_remmassage_r,
+		nature_marchandise = @nature_marchandise,
+		utilisateur1_ID = @utilisateur1,
+		utilisateur2_ID = @utilisateur2,
+		utilisateur3_ID = @utilisateur3
 	where demande_V_ID = @demande_v_id
+	--for notif ---
+	DECLARE @describ  varchar(max);
+	SELECT @recevoir_ID = email
+	FROM demande D , utilisateurs U
+	WHERE D.utilisateurs_ID = U.email
+	AND D.demande_ID = @demande_v_id
+	SELECT @recevoir_ID = dbo.GetChefDepartement(@recevoir_ID) --for notif
+	SELECT @NID = dbo.GetNotifID(@demande_v_id);-- for notif
+	SELECT @describ = 'est modifé(e) la demande véhicule numéro '+ CONVERT(Varchar(max) , @demande_v_id)    
+	Execute Update_NOTIFICATION @demande_v_id , @recevoir_ID , @describ
 
 END

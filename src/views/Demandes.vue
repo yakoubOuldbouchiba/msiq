@@ -31,7 +31,7 @@
              </tr>
            </thead>
            <tbody>
-             <tr :class="`pa-2 ${Demande.seen? 'grey lighten-3' : 'grey lighten-3'}`" v-for="Demande in Demandes" :key="Demande.demande_ID" @click="updateItem(Demande)">
+             <tr :class="`pa-2 ${Demande.seen? 'grey lighten-3' : 'grey lighten-3'}`" v-for="Demande in Demandes" :key="Demande.demande_ID" @click='updateItem(Demande)'>
                <td :class="`demande ${Demande.etat}`" ><b>{{Demande.demande_ID}}</b></td>
                <td >{{Demande.type_demande}}</td>
                <td >{{Demande.demande_Date}}</td>
@@ -153,6 +153,11 @@ async created(){
   this.Demandes = (await axios.get("http://localhost:3030/demandesATraiter/"+this.$store.state.user.typeUtilisateur+'/'+this.$store.state.user.departement+'/'+this.$store.state.user.structure)).data.demandes.reverse()
 },
 mounted(){
+  /*** demande on delete */
+       this.$store.state.sokect.on('DeleteNofit'+this.$store.state.user.email, async (id) => {
+         let index = this.Demandes.findIndex(x =>  x.demande_ID == id)
+         this.Demandes.splice(index , 1);
+  })
   if (this.$store.state.user.typeUtilisateur == 'Chef departement') {
     this.$store.state.sokect.on('NewDemandCD', (newDemand) => {
       this.Demandes.unshift(newDemand)
@@ -261,6 +266,7 @@ data(){
    },
    async updateItem(Demande){
      await this.getDemande(Demande);
+     this.demande.uID = await this.$store.state.user.email// i add it for notification
      if(Demande.type_demande=='Demande client'){
        this.openDialogClient = true;
      }else if(Demande.type_demande=='Demande fourniture'){
@@ -273,7 +279,7 @@ data(){
        this.demande.heure_depart = dp.substr(11,5)
        this.demande.heure_retour = dr.substr(11,5)
        this.openDialogVehicule = true
-     }else if(Demande.type_demande== 'Demande relex'){
+     }else if(Demande.type_demande== 'Demande activité relex'){
        let dp = this.demande.date_depart;
        let dr = this.demande.date_retour
        this.demande.date_depart = dp.substr(0,10)
@@ -303,7 +309,7 @@ data(){
           type='/DemandePriseEnCharge/' 
      }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
-     }else if(demande.type_demande== 'Demande relex'){
+     }else if(demande.type_demande== 'Demande activité relex'){
           type='/DemandeRelex/' 
      }else{
        type='/demande/'

@@ -11,15 +11,7 @@
          </v-toolbar-title>
          <v-spacer></v-spacer>
          <!--icons-->
-          <v-btn v-if="$store.state.token" 
-               icon
-               route
-               to="/notifications"
-               >
-               <v-icon class="indigo--text text--darken-4">
-                    notification_important
-               </v-icon>
-         </v-btn>
+          <Notifications />
          <v-btn v-if="$store.state.token" icon route to="/messages">
                <v-icon class="indigo--text text--darken-4">
                     mail
@@ -136,8 +128,10 @@
 </template>
 <script>
 import Axios from 'axios'
+import Notifications from '../components/Notification/Notification'
 export default {
     name:'NavBar',
+    components :{Notifications},
     data(){
          return{
               menu:false,   

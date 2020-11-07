@@ -50,7 +50,7 @@ module.exports=(io)=>{
                     error: 'CNCTDB' 
                 })
             }
-            dbOperationsDemandes.updateDemandeClient(req.body)
+            dbOperationsDemandes.updateDemandeClient(req.body , io)
             .then(result => {
                 if(result ==='DU'){
                     res.status(200).json({
@@ -75,8 +75,9 @@ module.exports=(io)=>{
         dbOperationsDemandes.deleteDemandeClient(req.params.id)
         .then(result => {
             if(result.result ==='DD'){
+                io.emit("DeleteNofit"+result.recevoir_ID, req.params.id)//for notif
                 if(result.typedelete){
-                    io.emit(req.params.struct+"DCD",req.params.id)
+                    io.emit(req.params.struct+"DCD",req.params.id)//for repporting CD
                 }
                 res.status(200).json({
                     title: 'Votre demande client a été supprimée',

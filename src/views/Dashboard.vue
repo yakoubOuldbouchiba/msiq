@@ -33,7 +33,7 @@
              </tr>
            </thead>
            <tbody>
-             <tr class="pa-2" v-for="Demande in Demandes" :key="Demande.demande_ID" @click="updateItem(Demande)">
+             <tr class="pa-2" v-for="Demande in Demandes" :key="Demande.demande_ID" >
                <td :class="`demande ${Demande.etat}`" ><b>{{Demande.demande_ID}}</b></td>
                <td >{{Demande.type_demande}}</td>
                <td >{{Demande.demande_Date}}</td>
@@ -227,7 +227,7 @@ data(){
           type='/DemandePriseEnCharge/' 
      }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
-     }else if(demande.type_demande== 'Demande relex'){
+     }else if(demande.type_demande== 'Demande activité relex'){
           console.log("here")
           type='/DemandeRelex/' 
      }else{
@@ -252,6 +252,8 @@ data(){
    async updateItem(Demande){
      await this.getDemande(Demande);
      console.log(Demande.type_demande)
+     this.demande.uID = await this.$store.state.user.email// i add it for notification
+     console.log(this.demande)
      if(Demande.type_demande=='Demande client'){
        this.openDialogClient = true;
      }else if(Demande.type_demande=='Demande fourniture'){
@@ -294,7 +296,7 @@ data(){
           type='/DemandePriseEnCharge/' 
      }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
-     }else if(demande.type_demande== 'Demande relex'){
+     }else if(demande.type_demande== 'Demande activité relex'){
           type='/DemandeRelex/' 
      }else{
        type='/demande/'

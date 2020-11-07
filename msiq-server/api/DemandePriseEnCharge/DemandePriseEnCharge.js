@@ -49,10 +49,11 @@ module.exports=(io)=>{
         });
     })
         // delete a demande
-    router.delete('/DemandePriseEnCharge/:id/struct',auth.requireLogin,(req , res)=>{ 
+    router.delete('/DemandePriseEnCharge/:id/:struct',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandePriseEnCharge.deleteDemandePriseEnCharge(req.params.id)
         .then(result => {
             if(result.result ==='DD'){
+                io.emit("DeleteNofit"+result.recevoir_ID, req.params.id)//for notif CD
                 if(result.typedelete){
                     io.emit(req.params.struct+"DPD")
                 }
@@ -94,7 +95,7 @@ module.exports=(io)=>{
     
     //Edit the demand
     router.post('/UpdateDemandePriseEnCharge',auth.requireLogin, (req , res)=>{
-        dbOperationsDemandePriseEnCharge.UpdateDemandePriseEnCharge(req.body)
+        dbOperationsDemandePriseEnCharge.UpdateDemandePriseEnCharge(req.body , io)
         .then(result => {
             if(result == 'DE'){
                 res.status(200).json({

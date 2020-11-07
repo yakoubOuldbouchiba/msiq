@@ -3,7 +3,7 @@ const router = express.Router();
 const dbOperationsClient = require('../../objects/users/dboperations.js');
 import * as auth from '../../services/auth-service.js'
 
-module.exports=()=>{
+module.exports=(io)=>{
     //get a list of users
     router.get('/team',auth.requireLogin,(req , res)=>{ 
         dbOperationsClient.getUsers().then(result=>{
@@ -44,6 +44,10 @@ module.exports=()=>{
         let user  = (req.body);
         dbOperationsClient.Login(user).then(result=>{
             res.json(result);
+            if(result.title=='User in'){
+                console.log(req.body.email);
+                io.emit('Login'+req.body.email)
+            }
         })
     })
     //update a user

@@ -60,11 +60,47 @@ END
 ALTER PROCEDURE UpdateDemandState 
 	@Demand_ID	AS int,
 	@motif		AS varchar(max),
-	@State		AS varchar(50)
+	@State		AS varchar(50),
+	@userID AS varchar(max) output,-- add it for notif
+	@NID AS int output, -- add it for notif
+	@desc AS varchar(max) output-- add it for notif
 AS
 BEGIN
 	UPDATE	demande
 	SET		etat = @State, 
 			motif= @motif
 	WHERE	demande_ID = @Demand_ID
+	--for notif--
+	
+	SELECT @NID = dbo.GetNotifID(@Demand_ID)
+	IF (@State = 'Rejetee')
+	BEGIN
+		SELECT @userID = dbo.GetUserByDI(@Demand_ID);
+		SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' est rejetée' 
+		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+	END
+	ELSE IF (@State = 'Acceptee')
+	BEGIN
+		SELECT @userID = dbo.GetUserByDI(@Demand_ID);
+		SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' est acceptée' 
+		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+	END
+	ELSE IF (@State = 'Directeur')
+	BEGIN
+		SELECT @userID =dbo.GetDirecteurByDI(@Demand_ID);
+		SELECT @desc =  'Il y a une '+dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
+		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+	END
+	ELSE IF (@State = 'DAM')
+	BEGIN
+		SELECT @userID =dbo.GetUserByType('Responsable DAM')
+		SELECT @desc =  'Il y a une '+dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
+		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+	END
+	ELSE IF (@State = 'Agent de Tirage')
+	BEGIN
+		SELECT @userID =dbo.GetUserByType('Agent de Tirage')
+		SELECT @desc =  'Il y a une '+dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
+		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+	END
 END
