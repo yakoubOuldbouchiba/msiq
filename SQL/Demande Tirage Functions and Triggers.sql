@@ -9,13 +9,14 @@ ALTER PROCEDURE InsertDemandeTirage
 	@SFN	AS varchar(max),
 	@FF		AS varchar(10),
 	@DID	AS int OUTPUT,
-	@DDATE	AS datetime OUTPUT
+	@DDATE	AS datetime OUTPUT,
+	@etat	AS varchar(50)
 AS
 BEGIN
 	INSERT INTO demande 
 	VALUES (	(SELECT CONVERT (datetime, SYSDATETIME())),
 				@userID,
-				'Chef Departement', 
+				@etat, 
 				null,
 				0)
 	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
@@ -61,7 +62,7 @@ BEGIN
 			U.nomUtilisateur,
 			U.prenomUtilisateur,
 			U.departement,
-			D.demande_Date
+			D.*
 	FROM	demande_tirage DT, document Dc, utilisateurs U, demande D
 	WHERE	DT.demande_T_ID = D.demande_ID
 	AND		DT.document_ID = Dc.document_ID

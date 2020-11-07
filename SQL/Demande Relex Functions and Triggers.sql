@@ -7,13 +7,14 @@ ALTER PROCEDURE InsertDemandeRelex
 	@prise_en_charge as bit ,
 	@demande_V_ID as int,
 	@DID AS int OUTPUT,
-	@DDATE AS datetime OUTPUT
+	@DDATE AS datetime OUTPUT,
+	@etat AS varchar(50)
 AS
 BEGIN
 	INSERT INTO demande 
 	VALUES (	(SELECT CONVERT (datetime, SYSDATETIME())),
 				@userID,
-				'Chef Departement', 
+				@etat, 
 				null,
 				0)
 	SELECT 		@DDATE = CONVERT (datetime, SYSDATETIME())

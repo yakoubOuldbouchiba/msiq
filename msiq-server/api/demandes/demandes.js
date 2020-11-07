@@ -117,6 +117,7 @@ module.exports=(io)=>{
             motif: req.body.Demande.motif,
             seen: 0,
         }
+        console.log(req.body);
         dbOperationsDemandes.UpdateDemandState(req.params.id,req.body.State,req.body.Demande.motif)
         .then(result => {
             if(result==='DU'){
@@ -133,11 +134,11 @@ module.exports=(io)=>{
         })
         io.emit(req.body.Demande.email+'E', Demand )
         if (req.body.State == 'Directeur'){ 
-            io.emit('NewDemandD', Demand )
-            io.emit('RemoveDemandCD', Demand)
+            io.emit('NewDemandD'+req.body.Demande.structure, Demand )
+            io.emit('RemoveDemandCD'+req.body.Demande.structure+req.body.Demande.departement, Demand)
         }else if (req.body.State == 'DAM'){
             io.emit('NewDemandRD', Demand )  
-            io.emit('RemoveDemandD', Demand )       
+            io.emit('RemoveDemandD'+req.body.Demande.structure, Demand )       
         }else if (req.body.State == 'Chef de parc') {
             io.emit('NewDemandCP', Demand )  
             io.emit('RemoveDemandD', Demand ) 

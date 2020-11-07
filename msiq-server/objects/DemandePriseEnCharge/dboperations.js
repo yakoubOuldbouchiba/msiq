@@ -6,39 +6,112 @@ async function  setDemandePriseEnCharge(Data,io){
     try {
         await sql.connect(config)
         try {
-             await new sql.Request()
-            .input('userID', sql.VarChar, Data.UserID)    
-            .input('Col1_ID', sql.VarChar, typeof Data.Collegues[0] == 'undefined' ? null : Data.Collegues[0])
-            .input('Col2_ID', sql.VarChar, typeof Data.Collegues[1] == 'undefined' ? null : Data.Collegues[1])
-            .input('Col3_ID', sql.VarChar, typeof Data.Collegues[2] == 'undefined' ? null : Data.Collegues[2])
-            .input('Col4_ID', sql.VarChar, typeof Data.Collegues[3] == 'undefined' ? null : Data.Collegues[3])
-            .input('Col5_ID', sql.VarChar, typeof Data.Collegues[4] == 'undefined' ? null : Data.Collegues[4])
-            .input('Dest', sql.VarChar, Data.Destination)
-            .input('Objet', sql.VarChar, Data.Objet)
-            .input('SD', sql.DateTimeOffset, Data.StartDate)
-            .input('ED', sql.DateTimeOffset, Data.EndDate)
-            .input('MDT', sql.VarChar, Data.MoyDeTrans)
-            .input('A', sql.VarChar, Data.Aeroport)
-            .input('HV', sql.VarChar, Data.HeureDeVol)
-            .output('DID', sql.Int)
-            .output('DDATE', sql.DateTime)
-            .execute('InsertDemandePriseEnCharge').then((res,err) => {
-                if (err) 
-                    return 'CNID'
-                let Demand = {
-                     demande_ID: res.output.DID,
-                     demande_Date: res.output.DDATE,
-                     type_demande: 'Demande de prise en charge',
-                     etat: 'Chef Departement',
-                     motif: '',
-                     seen: 0,
-                 }
-                 io.emit('NewDemandCD', Demand )
-                 io.emit(Data.UserID , Demand )
-             });
-            console.log('Demande Inserted');
-            sql.close();
-            return  'DI' //Demand inserted
+             if (Data.UT == 'Chef departement') {
+                await new sql.Request()
+                .input('userID', sql.VarChar, Data.D.UserID)    
+                .input('Col1_ID', sql.VarChar, typeof Data.D.Collegues[0] == 'undefined' ? null : Data.D.Collegues[0])
+                .input('Col2_ID', sql.VarChar, typeof Data.D.Collegues[1] == 'undefined' ? null : Data.D.Collegues[1])
+                .input('Col3_ID', sql.VarChar, typeof Data.D.Collegues[2] == 'undefined' ? null : Data.D.Collegues[2])
+                .input('Col4_ID', sql.VarChar, typeof Data.D.Collegues[3] == 'undefined' ? null : Data.D.Collegues[3])
+                .input('Col5_ID', sql.VarChar, typeof Data.D.Collegues[4] == 'undefined' ? null : Data.D.Collegues[4])
+                .input('Dest', sql.VarChar, Data.D.destination)
+                .input('Objet', sql.VarChar, Data.D.objet_mission)
+                .input('SD', sql.DateTimeOffset, Data.D.startDate)
+                .input('ED', sql.DateTimeOffset, Data.D.EndDate)
+                .input('MDT', sql.VarChar, Data.D.moyen_transport)
+                .input('A', sql.VarChar, Data.D.aeroport)
+                .input('HV', sql.VarChar, Data.D.heureDeVol)
+                .output('DID', sql.Int)
+                .output('DDATE', sql.DateTime)
+                .input('etat', sql.VarChar, 'Directeur')
+                .execute('InsertDemandePriseEnCharge').then((res,err) => {
+                    if (err) 
+                        return 'CNID'
+                    let Demand = {
+                         demande_ID: res.output.DID,
+                         demande_Date: res.output.DDATE,
+                         type_demande: 'Demande de prise en charge',
+                         etat: 'Directeur',
+                         motif: '',
+                         seen: 0,
+                     }
+                     io.emit('NewDemandD'+Data.D.structure, Demand )
+                     io.emit(Data.D.UserID , Demand )
+                 });
+                console.log('Demande Inserted');
+                sql.close();
+                return  'DI' //Demand inserted
+             } else if (Data.UT == 'Directeur') {
+                await new sql.Request()
+                .input('userID', sql.VarChar, Data.D.UserID)    
+                .input('Col1_ID', sql.VarChar, typeof Data.D.Collegues[0] == 'undefined' ? null : Data.D.Collegues[0])
+                .input('Col2_ID', sql.VarChar, typeof Data.D.Collegues[1] == 'undefined' ? null : Data.D.Collegues[1])
+                .input('Col3_ID', sql.VarChar, typeof Data.D.Collegues[2] == 'undefined' ? null : Data.D.Collegues[2])
+                .input('Col4_ID', sql.VarChar, typeof Data.D.Collegues[3] == 'undefined' ? null : Data.D.Collegues[3])
+                .input('Col5_ID', sql.VarChar, typeof Data.D.Collegues[4] == 'undefined' ? null : Data.D.Collegues[4])
+                .input('Dest', sql.VarChar, Data.D.destination)
+                .input('Objet', sql.VarChar, Data.D.objet_mission)
+                .input('SD', sql.DateTimeOffset, Data.D.startDate)
+                .input('ED', sql.DateTimeOffset, Data.D.EndDate)
+                .input('MDT', sql.VarChar, Data.D.moyen_transport)
+                .input('A', sql.VarChar, Data.D.aeroport)
+                .input('HV', sql.VarChar, Data.D.heureDeVol)
+                .output('DID', sql.Int)
+                .output('DDATE', sql.DateTime)
+                .input('etat', sql.VarChar, 'Acceptee')
+                .execute('InsertDemandePriseEnCharge').then((res,err) => {
+                    if (err) 
+                        return 'CNID'
+                    let Demand = {
+                         demande_ID: res.output.DID,
+                         demande_Date: res.output.DDATE,
+                         type_demande: 'Demande de prise en charge',
+                         etat: 'Acceptee',
+                         motif: '',
+                         seen: 0,
+                     }
+                     io.emit('NewDemandRPEC', Demand )
+                     io.emit(Data.D.UserID , Demand )
+                 });
+                console.log('Demande Inserted');
+                sql.close();
+                return  'DI' //Demand inserted
+             } else {
+                await new sql.Request()
+                .input('userID', sql.VarChar, Data.D.UserID)    
+                .input('Col1_ID', sql.VarChar, typeof Data.D.Collegues[0] == 'undefined' ? null : Data.D.Collegues[0])
+                .input('Col2_ID', sql.VarChar, typeof Data.D.Collegues[1] == 'undefined' ? null : Data.D.Collegues[1])
+                .input('Col3_ID', sql.VarChar, typeof Data.D.Collegues[2] == 'undefined' ? null : Data.D.Collegues[2])
+                .input('Col4_ID', sql.VarChar, typeof Data.D.Collegues[3] == 'undefined' ? null : Data.D.Collegues[3])
+                .input('Col5_ID', sql.VarChar, typeof Data.D.Collegues[4] == 'undefined' ? null : Data.D.Collegues[4])
+                .input('Dest', sql.VarChar, Data.D.destination)
+                .input('Objet', sql.VarChar, Data.D.objet_mission)
+                .input('SD', sql.DateTimeOffset, Data.D.startDate)
+                .input('ED', sql.DateTimeOffset, Data.D.EndDate)
+                .input('MDT', sql.VarChar, Data.D.moyen_transport)
+                .input('A', sql.VarChar, Data.D.aeroport)
+                .input('HV', sql.VarChar, Data.D.heureDeVol)
+                .output('DID', sql.Int)
+                .output('DDATE', sql.DateTime)
+                .input('etat', sql.VarChar, 'Chef Departement')
+                .execute('InsertDemandePriseEnCharge').then((res,err) => {
+                    if (err) 
+                        return 'CNID'
+                    let Demand = {
+                         demande_ID: res.output.DID,
+                         demande_Date: res.output.DDATE,
+                         type_demande: 'Demande de prise en charge',
+                         etat: 'Chef Departement',
+                         motif: '',
+                         seen: 0,
+                     }
+                     io.emit('NewDemandCD'+Data.D.structure+Data.D.departement, Demand )
+                     io.emit(Data.D.UserID , Demand )
+                 });
+                console.log('Demande Inserted');
+                sql.close();
+                return  'DI' //Demand inserted
+             }
         } catch (error) {
             console.log('can not instert Demande');
             console.log(error);

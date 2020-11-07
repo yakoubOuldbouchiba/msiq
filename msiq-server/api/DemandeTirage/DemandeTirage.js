@@ -10,34 +10,36 @@ var bodyParser = require('body-parser');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-const upload = multer({
-    dest : './FilesTirage/'
-});
+const storage = multer.diskStorage({
+    destination:  function(req, file, cb) {
+        cb(null, './FilesTirage/')
+    },
+    filename: function(req, file, cb) {
+        cb(null, new Date().toISOString().split(':').join('_') +file.originalname)
+    }
+})
+
+const upload = multer({storage: storage});
 module.exports=(io)=>{
    //this part the get the fie 
     router.post('/DemandeTirage', upload.single('FileData'), (req , res)=>{
-        jwt.verify((req.headers.authorization || req.headers['Authorization']),'TMPK3Y',
-        async (err,decoded) => {
-            if (err) {
-                res.status(500).json({
-                    title: 'Quelque chose s\'est mal passé dans le serveur',
-                    error: 'CNCTDB' 
-                })
-            };
-            console.log(req.body);
-            let infoToSend = {
-                userID: decoded.user.email,
+            console.log(req.file);
+           let infoToSend = {
+                userID: req.body.UserID,
                 OriginalFileName: req.file.originalname,
                 StoringName: req.file.filename,
                 TypeOfFile: req.file.mimetype,
-                DocTyp: req.body.DocType.substring(1,req.body.DocType.length-1),
-                AutreDes: req.body.AutreDes.substring(1,req.body.AutreDes.length-1),
+                DocTyp: req.body.DocType,
+                AutreDes: req.body.AutreDes,
                 NombreFeu: req.body.NombreFeuilles.substring(1,req.body.NombreFeuilles.length-1),
                 NombreCop: req.body.NombreCopies.substring(1,req.body.NombreCopies.length-1),
                 NombreTot: req.body.NombreTot,
+                UT: req.body.UT,
+                departement:req.body.departement,
+                structure: req.body.structure,
             };
-            
-            await dbOperationsDemandeTirage.setDemandeTirage(infoToSend,io)
+            console.log(infoToSend);
+            dbOperationsDemandeTirage.setDemandeTirage(infoToSend,io)
             .then(result => {
                 if(result ==='DI'){
                     res.status(200).json({
@@ -56,8 +58,7 @@ module.exports=(io)=>{
                         error: 'CNCTDB' 
                     })
                 }
-            });
-        })
+            })
     })
     // delete a demande
     router.delete('/DemandeTirage/:id',(req , res)=>{
@@ -133,5 +134,8 @@ module.exports=(io)=>{
             })
     });
     
+    router.get('/DownloadFile', async (req , res)=>{
+        //console.log(req);
+    })
     return router;
 }

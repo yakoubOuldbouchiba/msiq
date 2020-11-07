@@ -18,7 +18,8 @@
             <v-card flat>
               <v-card-text>
                   <v-form v-model="valid" ref="form">
-                    <v-row justify="center" v-if="type == 'Triater'"> 
+
+                    <v-row justify="center" v-if="type == 'Traiter'"> 
                       <v-col cols="12" sm="4"> 
                         <v-text-field 
                           :value="DC.nomUtilisateur+' '+DC.prenomUtilisateur"
@@ -34,11 +35,12 @@
                         prepend-icon="mdi-office-building"></v-text-field>
                       </v-col>  
                     </v-row>
+                    <!----- Nature de la demande------------>
                     <v-row justify="space-around"> 
                       <v-radio-group
                         v-model="DC.nature"
                         row
-                        :disabled="type =='Triater'"
+                        :disabled="!Editable"
                         :rules="[v => !!v || 'Ce champs est obligatoire']">
                         <v-radio
                           label="Produit"
@@ -48,11 +50,12 @@
                           value="Prestation de service"></v-radio>
                       </v-radio-group>
                     </v-row>
+                    <!----- Objet et la description de la demande------------>
                     <v-row justify="center"> 
                       <v-col cols="12" sm="8"> 
                         <v-text-field 
                         v-model="DC.objet" 
-                        :disabled="type =='Triater'"
+                        :disabled="!Editable"
                         label="Objet" 
                         prepend-icon="mdi-target" 
                         :rules="[v => !!v || 'Ce champs est obligatoire']"></v-text-field>
@@ -60,79 +63,87 @@
                       <v-col cols="12" sm="8"> 
                           <v-textarea 
                           v-model="DC.demande_C_description" 
-                          :disabled="type =='Triater'"
+                          :disabled="!Editable"
                           label="Description" 
                           prepend-icon="notes"
                           :rules="[v => !!v || 'Ce champs est obligatoire']">Description</v-textarea>
                       </v-col>  
-                    </v-row>  
-                    <v-row  v-if="$store.state.user.typeUtilisateur == 'Agent de magasin' || $store.state.user.typeUtilisateur == 'Responsable DAM'"> 
+                    </v-row> 
+                    <!----- Zone de traitement  de la demande par coté DAM ------------>
+                    <!----- Mise en disposition ------------>
+                    <v-row  v-if="$store.state.user.typeUtilisateur == 'Responsable DAM' || DC.etat =='Acceptee'"> 
                       <v-col cols="12" sm="5" offset-sm="2"> 
                         <v-checkbox
                         v-model="DC.mise_disposition"
                         label="Mise en disposition"
-                        :disabled="$store.state.user.typeUtilisateur == 'Agent de magasin'"
+                        :disabled=" DC.etat =='Acceptee'"
                         prepend-icon="mdi-archive-arrow-down"></v-checkbox>
                       </v-col>  
-                      <v-col cols="12" sm="3" v-if="DC.MED">
+                      <v-col cols="12" sm="3" v-if="DC.mise_disposition">
                         <Date 
+                            :Editable="true && DC.etat !='Acceptee'"
                             v-model="DC.date_mise_dispostion"
                             label="Date"
                             @date ="(date) => DC.date_mise_dispostion = date"
                         />
                       </v-col> 
                     </v-row> 
-                    <v-row  v-if="$store.state.user.typeUtilisateur == 'Agent de magasin' || $store.state.user.typeUtilisateur == 'Responsable DAM'"> 
+                    <!----- Achat ------------>
+                    <v-row  v-if="$store.state.user.typeUtilisateur == 'Responsable DAM' || DC.etat =='Acceptee'"> 
                       <v-col cols="12" sm="2" offset-sm="2"> 
                         <v-checkbox
                         v-model="DC.achat"
                         label="Achats"
-                        :disabled="$store.state.user.typeUtilisateur == 'Agent de magasin'"
+                        :disabled="DC.etat =='Acceptee'"
                         prepend-icon="mdi-cart"></v-checkbox>
                       </v-col> 
                       <v-col cols="12" sm="2" offset-sm="1" v-if="DC.achat">
                         <v-text-field
                         v-model="DC.nAchat"
-                        :disabled="$store.state.user.typeUtilisateur == 'Agent de magasin'"
+                        :disabled="DC.etat =='Acceptee'"
                         label="N°....."></v-text-field>
                       </v-col>  
                       <v-col cols="12" sm="3" v-if="DC.achat">
                         <Date 
                             v-model="DC.date_achat" 
+                            :Editable="true && DC.etat !='Acceptee'"
                             label="Date" 
                             @date ="(date) => DC.date_achat = date"
                         />
                       </v-col> 
                     </v-row> 
-                    <v-row justify="center" v-if="$store.state.user.typeUtilisateur == 'Agent de magasin' || $store.state.user.typeUtilisateur == 'Responsable DAM'"> 
+                    <!----- Orientation d'achat ------------>
+                    <v-row justify="center" v-if="$store.state.user.typeUtilisateur == 'Responsable DAM' || DC.etat =='Acceptee'"> 
                       <v-col cols="12" sm="8"> 
                           <v-textarea
                           v-model="DC.oAchats"
                           label="Orientations d'achats" 
-                          :disabled="$store.state.user.typeUtilisateur == 'Agent de magasin'"
+                          :disabled="DC.etat =='Acceptee'"
                           prepend-icon="mdi-directions-fork"></v-textarea>
                       </v-col>   
                     </v-row> 
-                    <v-row justify="center" v-if="$store.state.user.typeUtilisateur != 'Client' && ($store.state.user.typeUtilisateur != 'Agent de magasin')  && (type != 'new') "> 
+                    <!----- Motife de rejet ------------>
+                    <v-row justify="center" v-if="type == 'Traiter' || DC.etat =='Rejetee'"> 
                       <v-col cols="12" sm="8"> 
                           <v-textarea
                           v-model="DC.motif"
-                          
+                          :disabled="DC.etat =='Acceptee' || DC.etat =='Rejetee'"
                           label="Motif" 
                           prepend-icon="mdi-flag-outline"></v-textarea>
                       </v-col>   
                     </v-row>
+                    <!----- les button ------------>
                     <v-row justify="center"> 
-                      <v-btn v-if="type=='Triater' && ($store.state.user.typeUtilisateur != 'Agent de magasin')" 
+                      <v-btn v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Agent de magasin')" 
                         class="ma-1 red white--text"
                         @click="Reject"
                         :disabled="!valid">Rejeter la demande</v-btn>
 
-                       <v-btn v-if="type=='Triater' && ($store.state.user.typeUtilisateur != 'Agent de magasin')" 
+                       <v-btn v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Agent de magasin')" 
                         class="ma-1 green white--text"
                         @click="Accept">Accepter la demande </v-btn>
 
-                      <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
+                      <v-btn v-if="Editable && type !='new'" class="ma-1 pink white--text" 
                         :disabled="!valid"
                         @click="update">
                         <v-icon left>send</v-icon>
@@ -145,6 +156,7 @@
                         <span  >Envoyer la demande</span> 
                       </v-btn>
                     </v-row>
+
                   </v-form> 
                 </v-card-text>
              </v-card> 
@@ -196,7 +208,7 @@
 import Axios from 'axios';
 import Date from '../Date'
 export default {
-  props : ['value' ,'type' , 'demande'],
+  props : ['value' ,'type' , 'demande', 'Editable'],
   components: {Date},
   computed :{
         dialog : {
@@ -208,7 +220,7 @@ export default {
             }
         },
         DC : function() {
-          if((this.type=="update" || this.type=="Triater" ) && this.dialog==true){
+          if((this.type=="update" || this.type=="Traiter" ) && this.dialog==true){
             return this.demande
           }else{
             return this.DemandeClient
@@ -222,7 +234,10 @@ export default {
           Done: false,
           Errr: false,
           valid:false,
-          DemandeClient :{
+          DemandeClient:{
+            departement: this.$store.state.user.departement,
+            structure: this.$store.state.user.structure,
+            UserID: this.$store.state.user.email,
             demande_C_ID : '',
             demande_C_description:'',
             nature:'',
@@ -234,6 +249,7 @@ export default {
             date_achat: null,
             oAchats: null,
             motif: '',
+            etat: 'Chef Departement',
           },
       }
   },

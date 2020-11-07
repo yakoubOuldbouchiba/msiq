@@ -9,7 +9,8 @@ async function getDemandeClient(id){
             let demande = await pool.request()
             .input("id", sql.VarChar, id)
             .execute('GetDemandeClient')
-            console.log('Demande getted');
+            console.log(demande.recordset[0]);
+            console.log('Demande has been loaded');
             sql.close();
             return {
                  result : 'DG' , //Demand inserted
@@ -29,16 +30,17 @@ async function getDemandeClient(id){
 // set new message
 async function  setDemandeClient(O,io){
     try {
+        console.log(O);
         await sql.connect(config)
         try {
-            console.log(O.rb.D);
-            if (O.rb.UT == 'Chef departement') {
+            console.log(O.D);
+            if (O.UT == 'Chef departement') {
                 await new sql.Request()
-                .input('userID', sql.VarChar, O.uID)    
-                .input('nature', sql.VarChar, O.rb.D.nature)
-                .input('objet', sql.VarChar, O.rb.D.objet)
+                .input('userID', sql.VarChar, O.D.UserID)    
+                .input('nature', sql.VarChar, O.D.nature)
+                .input('objet', sql.VarChar, O.D.objet)
                 .input('etat', sql.VarChar, 'Directeur')
-                .input('description', sql.VarChar, O.rb.D.demande_C_description)
+                .input('description', sql.VarChar, O.D.demande_C_description)
                 .output('DID', sql.Int)
                 .output('DDATE', sql.DateTime)
                 .execute('InsertDemandeClient').then((res,err) => {
@@ -52,16 +54,16 @@ async function  setDemandeClient(O,io){
                         motif: '',
                         seen: 0
                     }
-                    io.emit('NewDemandD', Demand )
-                    io.emit(O.uID , Demand )
+                    io.emit('NewDemandD'+O.D.structure, Demand )
+                    io.emit(O.D.UserID , Demand )
                 })
-            }else if(O.rb.UT == 'Directeur') {
+            }else if(O.UT == 'Directeur') {
                 await new sql.Request()
-                .input('userID', sql.VarChar, O.uID)    
-                .input('nature', sql.VarChar, O.rb.D.nature)
-                .input('objet', sql.VarChar, O.rb.D.objet)
+                .input('userID', sql.VarChar, O.D.UserID)    
+                .input('nature', sql.VarChar, O.D.nature)
+                .input('objet', sql.VarChar, O.D.objet)
                 .input('etat', sql.VarChar, 'DAM')
-                .input('description', sql.VarChar, O.rb.D.demande_C_description)
+                .input('description', sql.VarChar, O.D.demande_C_description)
                 .output('DID', sql.Int)
                 .output('DDATE', sql.DateTime)
                 .execute('InsertDemandeClient').then((res,err) => {
@@ -76,15 +78,15 @@ async function  setDemandeClient(O,io){
                         seen: 0
                     }
                     io.emit('NewDemandRD', Demand )
-                    io.emit(O.uID , Demand )
+                    io.emit(O.D.UserID , Demand )
                 })
             }else{
                 await new sql.Request()
-                .input('userID', sql.VarChar, O.uID)    
-                .input('nature', sql.VarChar, O.rb.D.nature)
-                .input('objet', sql.VarChar, O.rb.D.objet)
-                .input('etat', sql.VarChar, 'Chef departement')
-                .input('description', sql.VarChar, O.rb.D.demande_C_description)
+                .input('userID', sql.VarChar, O.D.UserID)    
+                .input('nature', sql.VarChar, O.D.nature)
+                .input('objet', sql.VarChar, O.D.objet)
+                .input('etat', sql.VarChar, 'Chef Departement')
+                .input('description', sql.VarChar, O.D.demande_C_description)
                 .output('DID', sql.Int)
                 .output('DDATE', sql.DateTime)
                 .execute('InsertDemandeClient').then((res,err) => {
@@ -94,12 +96,12 @@ async function  setDemandeClient(O,io){
                         demande_ID: res.output.DID,
                         demande_Date: res.output.DDATE,
                         type_demande: 'Demande client',
-                        etat: 'Chef departement',
+                        etat: 'Chef Departement',
                         motif: '',
                         seen: 0
                     }
-                    io.emit('NewDemandCD', Demand )
-                    io.emit(O.uID , Demand )
+                    io.emit('NewDemandCD'+O.D.structure+O.D.departement, Demand )
+                    io.emit(O.D.UserID , Demand )
                 })
             }
              

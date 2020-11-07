@@ -15,6 +15,7 @@
                 :label="label"
                 v-bind="attrs"
                 v-on="on"
+                :disabled="!Editable"
                 prepend-icon="alarm"
                 :value="heure_computed"
                 :rules="[v => !!v || 'Cet champs est obligatoire']"
@@ -32,7 +33,7 @@
 <script>
 export default {
     name:'Heure',
-    props :['label' , 'value'],
+    props :['label' , 'value', 'Editable'],
     data(){
         return{
             menu2: false,

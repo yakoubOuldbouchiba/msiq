@@ -55,7 +55,8 @@ BEGIN
 	if(@UserType = 'Chef de parc')
 		SELECT	* 
 		FROM	Demandes_A_Traiter
-		WHERE	etat = 'Chef de parc'
+		WHERE	etat = 'Acceptee'
+		AND		type_demande = 'Demande véhicule'
 
 	if(@UserType = 'Responsable PEC')
 		SELECT	* 
