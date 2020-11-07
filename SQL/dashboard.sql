@@ -43,7 +43,7 @@ BEGIN
 	ELSE if(@is_client_demande = 1)
 		set @demande_type = 'Demande client';
 	ELSE if(@is_relex_demande = 1)
-		set @demande_type = 'Demande relex';
+		set @demande_type = 'Demande activité relex';
 	ELSE if(@is_pec_demande = 1)
 		set @demande_type = 'Demande de prise en charge';
 	ELSE if(@is_tirage_demande = 1)
@@ -52,13 +52,15 @@ return @demande_type
 
 END
 
+
 ALTER VIEW demande_view 
 	AS
 	SELECT	U.email, 
 			dbo.DemandeType(D.demande_ID) as type_demande, 
 			D.*  
 	FROM	demande D , utilisateurs U
-	where	D.utilisateurs_ID = U.email;
+	where	D.utilisateurs_ID = U.email
+	AND D.shown = '1'
 
 
 CREATE PROCEDURE getDemandes 

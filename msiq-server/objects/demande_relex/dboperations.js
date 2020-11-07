@@ -173,13 +173,17 @@ async function  deleteDemandeRelex(id){
     try{
         await sql.connect(config);
         try{
-            console.log(id);
+            let res = console.log(id);
             await new sql.Request()
             .input('id',sql.Int,id)
+            .output('typedelete',sql.Bit)
             .execute('DeleteDemandeRelex');
             sql.close();
             console.log("demande deleted")
-            return "DD"
+            return ({
+                result :"DD" ,
+                typedelete : res.output.typedelete
+            }) 
 
         }catch(error){
             console.log('can not delete Demande');

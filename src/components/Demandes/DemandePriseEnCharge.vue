@@ -243,6 +243,7 @@ export default {
                 structure: this.$store.state.user.structure,
                 UserID: this.$store.state.user.email,
                 demande_P_ID:  '',
+                struct : this.$store.state.user.structure,
                 Collegues: [],
                 destination: '',
                 objet_mission: '',
@@ -303,7 +304,8 @@ export default {
                 {State :'Rejetee', 
                     Demande: this.DPEC, 
                     typeD: 'Demande de prise en charge', 
-                    UT: this.$store.state.user.typeUtilisateur})
+                    UT: this.$store.state.user.typeUtilisateur,
+                    struct : this.$store.state.structure})
             this.dialog = false
             },
         Accept(){
@@ -318,7 +320,8 @@ export default {
                     {State :'Acceptee',
                     Demande: this.DPEC, 
                     typeD: 'Demande de prise en charge', 
-                    UT: this.$store.state.user.typeUtilisateur})    
+                    UT: this.$store.state.user.typeUtilisateur,
+                    struct : this.$store.state.structure})    
             
             this.dialog = false
         }

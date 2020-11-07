@@ -56,13 +56,15 @@ module.exports=(io)=>{
         res.send({method : 'update a demande'});
     });
     // delete a demande
-    router.delete('/DemandeRelex/:id',auth.requireLogin,(req , res)=>{ 
+    router.delete('/DemandeRelex/:id/:struct',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandes.deleteDemandeRelex(req.params.id)
         .then(result => {
-            if(result ==='DD'){
+            if(result.result ==='DD'){
+                if(result.typedelete){
+                    io.emit(req.params.struct+"DRD")
+                }
                 res.status(200).json({
-                    title: 'Votre demande relex a été supprimée',
-                    
+                    title: 'Votre demande relex a été supprimée'
                 })
             }else if (result ==='CNDD') {
                 res.status(401).json({

@@ -10,8 +10,9 @@ const messages = require('./api/messages/messages.js');
 const produits = require('./api/produits/produit.js');
 const users = require('./api/users/user');
 const vehicules = require('./api/vehicules/vehicules.js');
-const DemandeClient = require('./api/DemandeClient/DemandeClient');
-const DemandeTirage = require('./api/DemandeTirage/DemandeTirage');
+const DemandeClient = require('./api/DemandeClient/DemandeClient.js');
+const DemandeTirage = require('./api/DemandeTirage/DemandeTirage.js');
+const reporting = require('./api/reporting/reporting');
 const DemandePriseEnCharge = require('./api/DemandePriseEnCharge/DemandePriseEnCharge')
 
 var Messages =[
@@ -47,6 +48,7 @@ module.exports = (io)=>{
     router.use(messages(Messages , Users,io));
     router.use(produits());
     router.use(users());
+    router.use(reporting());
     router.use(vehicules());
     router.use(DemandeClient(io));
     router.use(DemandeTirage(io));

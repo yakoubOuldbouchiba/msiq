@@ -42,6 +42,7 @@ async function  setDemandeVehicule(Demande,io){
         console.log(Demande);
         await sql.connect(config)
         try {
+
             if (Demande.UT == 'Chef departement'){
                 let result = await new sql.Request()
                 .input('userID',sql.VarChar,Demande.D.UserID)
@@ -144,10 +145,8 @@ async function  setDemandeVehicule(Demande,io){
                 return  ({
                     result : 'DI',
                     demande_v_id : result.output.demande_v_id
-                })//Demand inserted
-                
-            }
-            
+                })//Demand inserted                
+            }        
         } catch (error) {
             console.log(error);
             console.log('can not instert Demande');
@@ -165,12 +164,16 @@ async function  deleteDemandeVehicule(id){
         await sql.connect(config);
         try{
             console.log(id);
-            await new sql.Request()
+            let res = await new sql.Request()
             .input('id',sql.Int,id)
+            .output('typedelete',sql.Bit)
             .execute('DeleteDemandeVehicule');
             sql.close();
             console.log("demande deleted")
-            return "DD"
+            return ({
+                result :"DD",
+                typedelete : res.output.typedelete
+            })
 
         }catch(error){
             console.log('can not delete Demande');

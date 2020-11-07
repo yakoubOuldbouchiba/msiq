@@ -61,6 +61,18 @@
                  <v-btn
                   class="mx-2"
                   outlined
+                  color="blue-grey"
+                  fab
+                  dark
+                  x-small
+                  @click='updateItem(Demande)'>
+                  <v-icon dark>
+                    edit
+                  </v-icon>
+                </v-btn>
+                 <v-btn
+                  class="mx-2"
+                  outlined
                   color="indigo"
                   fab
                   dark
@@ -221,11 +233,12 @@ data(){
      }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
      }else if(demande.type_demande== 'Demande relex'){
+          console.log("here")
           type='/DemandeRelex/' 
      }else{
        type='/demande/'
      }
-     await axios.delete('http://localhost:3030'+type+demande.demande_ID)
+     await axios.delete('http://localhost:3030'+type+demande.demande_ID+"/"+this.$store.state.user.structure)
           .then(
                 res =>{
                     this.msg = res.data.title,
@@ -243,6 +256,7 @@ data(){
    },
    async updateItem(Demande){
        await this.getDemande(Demande);
+     await this.getDemande(Demande);)
      if(Demande.type_demande=='Demande client'){
        this.openDialogClient = true;
      }else if(Demande.type_demande=='Demande fourniture'){
@@ -255,7 +269,7 @@ data(){
        this.demande.heure_depart = dp.substr(11,5)
        this.demande.heure_retour = dr.substr(11,5)
        this.openDialogVehicule = true
-     }else if(Demande.type_demande== 'Demande relex'){
+     }else if(Demande.type_demande== 'Demande activité relex'){
        let dp = this.demande.date_depart;
        let dr = this.demande.date_retour
        this.demande.date_depart = dp.substr(0,10)

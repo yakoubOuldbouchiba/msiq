@@ -27,10 +27,13 @@ module.exports=(io)=>{
         })
     })
         // delete a demande
-    router.delete('/DemandePriseEnCharge/:id',auth.requireLogin,(req , res)=>{ 
+    router.delete('/DemandePriseEnCharge/:id/struct',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandePriseEnCharge.deleteDemandePriseEnCharge(req.params.id)
         .then(result => {
-            if(result ==='DD'){
+            if(result.result ==='DD'){
+                if(result.typedelete){
+                    io.emit(req.params.struct+"DPD")
+                }
                 res.status(200).json({
                     title: 'Votre demande prise en charge a été supprimée',
                 })

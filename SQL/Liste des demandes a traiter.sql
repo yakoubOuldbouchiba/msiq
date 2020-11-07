@@ -20,6 +20,7 @@ ALTER PROCEDURE getDemandeATraiter
 	@UserType AS varchar(50),
 	@Depart   AS varchar(50),
 	@Struct		AS varchar(50)
+
 AS
 BEGIN
 	if(@UserType = 'Chef departement')
@@ -56,7 +57,7 @@ BEGIN
 		SELECT	* 
 		FROM	Demandes_A_Traiter
 		WHERE	etat = 'Acceptee'
-		AND		type_demande = 'Demande véhicule'
+		AND		type_demande = 'Demande vï¿½hicule'
 
 	if(@UserType = 'Responsable PEC')
 		SELECT	* 

@@ -7,7 +7,7 @@ module.exports=(io)=>{
    //add a new demande
     router.post('/DemandeClient',auth.requireLogin , (req , res)=>{
 
-            console.log(req.body);
+           console.log(req.body);
             dbOperationsDemandes.setDemandeClient(req.body,io)
             .then(result => {
                 if(result ==='DI'){
@@ -58,10 +58,13 @@ module.exports=(io)=>{
         });
     })
     // delete a demande
-    router.delete('/DemandeClient/:id',auth.requireLogin,(req , res)=>{ 
+    router.delete('/DemandeClient/:id/:struct',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandes.deleteDemandeClient(req.params.id)
         .then(result => {
-            if(result ==='DD'){
+            if(result.result ==='DD'){
+                if(result.typedelete){
+                    io.emit(req.params.struct+"DCD",req.params.id)
+                }
                 res.status(200).json({
                     title: 'Votre demande client a été supprimée',
                     demande_v_id : result.demande_v_id

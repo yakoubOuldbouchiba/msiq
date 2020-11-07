@@ -269,6 +269,7 @@ export default {
             objetsDemande : [],
             objets :[],
             DemandeFourniture :{
+                struct : this.$store.state.user.structure,
                 userID : this.$store.state.user.email,
                 objetsDemande : []
             }

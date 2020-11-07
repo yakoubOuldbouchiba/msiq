@@ -379,7 +379,8 @@ export default {
       axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
         {State :'Rejetee',
             Demande: this.DR, typeD: 'Demande relex', 
-            UT: this.$store.state.user.typeUtilisateur})
+            UT: this.$store.state.user.typeUtilisateur,
+            struct : this.$store.state.structure})
       this.dialog = false
     },
     Accept(){
@@ -392,7 +393,8 @@ export default {
         axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
             {State :'Acceptee',
             Demande: this.DR, typeD: 'Demande relex',
-            UT: this.$store.state.user.typeUtilisateur})    
+            UT: this.$store.state.user.typeUtilisateur,
+            struct : this.$store.state.structure})    
         this.dialog = false
     },
 
@@ -411,6 +413,7 @@ data(){
             departement: this.$store.state.user.departement,
             structure: this.$store.state.user.structure,
             userID : this.$store.state.user.email,
+            struct : this.$store.state.user.structure,
             destination : null,
             objet_mission : null,
             date_depart : null,

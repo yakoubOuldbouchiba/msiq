@@ -14,7 +14,8 @@ BEGIN
 				@userID,
 				@etat, 
 				null, 
-				0
+				0,
+				1
 	)
 	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 	INSERT INTO demande_client 
@@ -34,14 +35,30 @@ BEGIN
 END
 
 ------------------------------------------------------
+Execute DeleteDemandeClient  86
 
-CREATE PROCEDURE DeleteDemandeClient 
-	@id as int
-
+ALTER PROCEDURE DeleteDemandeClient 
+	@id as int,
+	@typedelete as bit output
 AS
 BEGIN
-	DELETE FROM demande_client WHERE demande_C_ID = @id;
-	DELETE FROM demande WHERE demande_ID = @id
+	Declare @etat  varchar(max)
+	select @etat = D.etat 
+	From demande D
+	where D.demande_ID = @id
+	IF(@etat='Acceptee'or @etat='Rejetee')
+	BEGIN
+		Update demande
+		set shown = 0
+		where demande_ID = @id;
+		set @typedelete = 0;
+	END
+	ELSE
+	BEGIN
+		DELETE FROM demande_client WHERE demande_C_ID = @id;
+		DELETE FROM demande WHERE demande_ID = @id;
+		set @typedelete = 1;
+	END
 END
 
 -------------------------------------------------------------
