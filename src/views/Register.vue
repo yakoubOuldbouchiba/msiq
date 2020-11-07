@@ -194,7 +194,7 @@ export default {
     data() {
         return{
             Users: [],
-            items: ['Administrator', 'Chef de parc', 'Directeur', 'Client','Agent de Tirage','Agent de magasin'],
+            items: ['Administrator', 'Chef de parc', 'Directeur', 'Client','Agent de Tirage','Agent de magasin', 'Responsable PEC', 'Responsable  AR'],
             Departements: ['Informatique'],
             Structures: ['DAM'],
             valid:true,

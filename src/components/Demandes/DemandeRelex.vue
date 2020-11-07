@@ -1,190 +1,199 @@
 <template>
 <div>
     <v-dialog :retain-focus="false"  tile v-model="dialog" width="700" persistent>
-            <v-card >
-                <v-toolbar flat dark :color='color'  >
-                    <v-toolbar-title> 
-                        <v-icon large left class="white--text">{{icon}}</v-icon> 
-                        {{name}}
-                    </v-toolbar-title>
-                    <v-spacer></v-spacer>
-                    <v-btn text @click="close()"> <v-icon> clear </v-icon></v-btn>
-                </v-toolbar>
-                <v-card-text>
-                    <v-form v-model="valid" ref="form">
-                        <v-row justify="center" v-if="type == 'Triater'"> 
-                                <v-col cols="12" sm="6"> 
-                                    <v-text-field 
-                                    :value="DR.nomUtilisateur+' '+DR.prenomUtilisateur"
-                                    disabled
-                                    label="Nom et prenom"
-                                    prepend-icon="mdi-account" 
-                                    ></v-text-field>
-                                </v-col>  
-                                <v-col cols="12" sm="6"> 
-                                    <v-text-field  
-                                    :value="DR.departement"
-                                    disabled
-                                    label="Departement"
-                                    prepend-icon="mdi-office-building"
-                                    ></v-text-field>
-                                </v-col>  
-                            </v-row>
-                        <v-row justify="center">
-                            <v-col cols="12">
-                                <v-text-field
-                                    v-model="DR.destination"
-                                    label="Destination"
-                                    :disabled="type =='Triater'"
-                                    prepend-icon="location_on"
-                                    :rules="[v => !!v || 'Cet champs est obligatoire']"
-                                >
-                                </v-text-field>
-                            </v-col>
-                            <v-col cols="12">
+        <v-card >
+            <v-toolbar flat dark :color='color'  >
+                <v-toolbar-title> 
+                    <v-icon large left class="white--text">{{icon}}</v-icon> 
+                    {{name}}
+                </v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn text @click="close()"> <v-icon> clear </v-icon></v-btn>
+            </v-toolbar>
+            <v-card-text>
+                <v-form v-model="valid" ref="form">
+
+                    <v-row justify="center" v-if="type == 'Traiter'"> 
+                            <v-col cols="12" sm="6"> 
+                                <v-text-field 
+                                :value="DR.nomUtilisateur+' '+DR.prenomUtilisateur"
+                                disabled
+                                label="Nom et prenom"
+                                prepend-icon="mdi-account" 
+                                ></v-text-field>
+                            </v-col>  
+                            <v-col cols="12" sm="6"> 
+                                <v-text-field  
+                                :value="DR.departement"
+                                disabled
+                                label="Departement"
+                                prepend-icon="mdi-office-building"
+                                ></v-text-field>
+                            </v-col>  
+                    </v-row>
+                    <!-------------- Destination & Objet de mission------------>
+                    <v-row justify="center">
+                        <v-col cols="12">
+                            <v-text-field
+                                v-model="DR.destination"
+                                label="Destination"
+                                :disabled="!Editable"
+                                prepend-icon="location_on"
+                                :rules="[v => !!v || 'Cet champs est obligatoire']">
+                            </v-text-field>
+                        </v-col>
+                        <v-col cols="12">
                             <v-text-field
                                 v-model="DR.objet_mission"
                                 label="Objet mission"
-                                :disabled="type =='Triater'"
+                                :disabled="!Editable"
                                 prepend-icon="business_center"
-                                :rules="[v => !!v || 'Cet champs est obligatoire']"
-                            >
+                                :rules="[v => !!v || 'Cet champs est obligatoire']">
                             </v-text-field>
-                            </v-col>
-                        </v-row>
-                        <v-row justify="center">
-                            <v-col cols="12" sm="6">
-                                <Date 
-                                    v-model="DR.date_depart"
-                                    label="Date de départ"
-                                    @date ="dateSortie"
-                                />
-                            </v-col>
-                            <v-col cols="12" sm="6">
-                                <Heure 
-                                    v-model="DR.heure_depart"
-                                    label="Heure souhaitée de départ"
-                                    @heure = "heureSortie"
-                                />
-                            </v-col>
-                        </v-row>
-                        <v-row justify="center">
-                            <v-col cols="12" sm="6">
-                                <Date 
-                                    v-model="DR.date_retour"
-                                    label="Date de retour"
-                                    @date="dateRetour"
-                                />
-                            </v-col>
-                            <v-col cols="12" sm="6">
-                                <Heure 
-                                    v-model="DR.heure_retour"
-                                    label="Heure souhaitée de retour"
-                                    @heure ="heureRetour"
-                                />
-                            </v-col>
-                        </v-row>
-                        <v-row justify="center">
-                            <v-col cols="12">
-                                 <v-checkbox 
-                                    v-model="DR.moyens_transport"
-                                    :value="!DR.moyens_transport" 
-                                    label="Moyens de transport"
-                                    :disabled="disabled || type =='Triater'"
-                                    @click=" openDemandeVehicule"
-                                    >
-                                </v-checkbox>
-                                <b class="red--text" v-if="DeleteDV">Votre demande véhicule</b>
-                                <div v-if="DR.demande_V_ID!=null">
-                                    <b class="green--text" v-show="disabled">Le demande véhicule est bien crée</b>
-                                    <v-btn
-                                        class="mx-2"
-                                        outlined
-                                        color="indigo"
-                                        fab
-                                        dark
-                                        x-small
-                                        @click='deleteDV()'
-                                    >
-                                        <v-icon dark>
-                                            delete
-                                        </v-icon>
-                                    </v-btn>
-                                    <v-btn
-                                        class="mx-2"
-                                        outlined
-                                        color="teal"
-                                        fab
-                                        dark
-                                        x-small
-                                        @click="updateDV()"
-                                    >
-                                        <v-icon dark>
-                                            edit
-                                        </v-icon>
-                                    </v-btn>
-                                </div>
-                            </v-col>
-                            <v-col cols="12">
-                                <h3>Vous voulez prise en charge par la structure de destination ?</h3>
-                                <v-radio-group
-                                    :disabled="type =='Triater'"
-                                    v-model="DR.prise_en_charge"
-                                    row
-                                    :rules="[v => v!=null || 'Cet champs est obligatoire']"
-                                    >
-                                    <v-radio
-                                        label="non"
-                                        :value="false"
-                                    ></v-radio>
-                                    <v-radio
-                                        label="oui"
-                                        :value="true"
-                                    ></v-radio>
-                                </v-radio-group>
-                            </v-col>
-                        </v-row>
-                        <v-row justify="center" v-if="type =='Triater'"> 
-                            <v-col cols="12" sm="12"> 
-                                <v-textarea
-                                v-model="DR.motif"
-                                label="Motif" 
-                                prepend-icon="mdi-flag-outline"></v-textarea>
-                            </v-col>   
-                        </v-row>
-                        <v-row justify="center"> 
-                            <v-btn v-if="type=='Triater'" 
-                            class="ma-1 red white--text"
-                            @click="Reject"
-                            :disabled="!valid">Rejeter la demande </v-btn>
-                            <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
-                                :disabled="!valid"
-                                @click="update">
-                                <v-icon left>send</v-icon>
-                                <span  >Modifier la demande</span> 
-                            </v-btn>
-                            <v-btn v-else-if="type=='Triater'" 
-                                class="ma-1 green white--text"
-                                @click="Accept">Accepter la demande </v-btn>
-                            <v-btn v-else class="ma-1 pink white--text" 
-                                :disabled="!valid"
-                                @click="submit">
-                                <v-icon left>send</v-icon>
-                                <span  >Envoyer la demande</span> 
-                            </v-btn>
-                        </v-row>> 
-                    </v-form>
-                </v-card-text>
-            </v-card>  
+                        </v-col>
+                    </v-row>
+                    <!-------------- Date et heur de depart------------>
+                    <v-row justify="center">
+                        <v-col cols="12" sm="6">
+                            <Date 
+                                v-model="DR.date_depart"
+                                label="Date de départ"
+                                @date ="dateSortie"
+                                :Editable="Editable"
+                            />
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                            <Heure 
+                                v-model="DR.heure_depart"
+                                label="Heure souhaitée de départ"
+                                @heure = "heureSortie"
+                                :Editable="Editable"
+                            />
+                        </v-col>
+                    </v-row>
+                    <!-------------- Date et heur de retour------------>
+                    <v-row justify="center">
+                        <v-col cols="12" sm="6">
+                            <Date 
+                                v-model="DR.date_retour"
+                                label="Date de retour"
+                                @date="dateRetour"
+                                :Editable="Editable"
+                            />
+                        </v-col>
+                        <v-col cols="12" sm="6">
+                            <Heure 
+                                v-model="DR.heure_retour"
+                                label="Heure souhaitée de retour"
+                                @heure ="heureRetour"
+                                :Editable="Editable"
+                            />
+                        </v-col>
+                    </v-row>
+                    <!-------------- Date et heur de retour------------>
+                    <v-row justify="center">
+                        <v-col cols="12">
+                            <v-checkbox 
+                                v-model="DR.moyens_transport"
+                                :value="!DR.moyens_transport" 
+                                label="Moyens de transport"
+                                :disabled="disabled || type =='Traiter'"
+                                @click=" openDemandeVehicule">
+                            </v-checkbox>
+                            <b class="red--text" v-if="DeleteDV">Votre demande véhicule</b>
+                            <div v-if="DR.demande_V_ID!=null">
+                                <b class="green--text" v-show="disabled">Le demande véhicule est bien crée</b>
+                                <v-btn
+                                    class="mx-2"
+                                    outlined
+                                    color="indigo"
+                                    fab
+                                    dark
+                                    x-small
+                                    @click='deleteDV()'>
+                                    <v-icon dark>
+                                        delete
+                                    </v-icon>
+                                </v-btn>
+                                <v-btn
+                                    class="mx-2"
+                                    outlined
+                                    color="teal"
+                                    fab
+                                    dark
+                                    x-small
+                                    @click="updateDV()" >
+                                    <v-icon dark>
+                                        edit
+                                    </v-icon>
+                                </v-btn>
+                            </div>
+                        </v-col>
+                        <v-col cols="12">
+                            <h3>Vous voulez prise en charge par la structure de destination ?</h3>
+                            <v-radio-group
+                                :disabled="!Editable"
+                                v-model="DR.prise_en_charge"
+                                row
+                                :rules="[v => v!=null || 'Cet champs est obligatoire']">
+                                <v-radio
+                                    label="non"
+                                    :value="false"
+                                ></v-radio>
+                                <v-radio
+                                    label="oui"
+                                    :value="true"
+                                ></v-radio>
+                            </v-radio-group>
+                        </v-col>
+                    </v-row>
+
+                    <v-row justify="center" v-if="type =='Traiter' && ($store.state.user.typeUtilisateur != 'Responsable AR')"> 
+                        <v-col cols="12" sm="12"> 
+                            <v-textarea
+                            v-model="DR.motif"
+                            label="Motif" 
+                            prepend-icon="mdi-flag-outline"></v-textarea>
+                        </v-col>   
+                    </v-row>
+                    <!-------------- Buttons ------------>
+                    <v-row justify="center"> 
+                        <v-btn v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Responsable AR')" 
+                        class="ma-1 red white--text"
+                        @click="Reject"
+                        :disabled="!valid">Rejeter la demande </v-btn>
+
+                        <v-btn v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Responsable AR')" 
+                        class="ma-1 green white--text"
+                        @click="Accept">Accepter la demande </v-btn>
+
+                        <v-btn v-if="Editable && type != 'new'" class="ma-1 pink white--text" 
+                            :disabled="!valid"
+                            @click="update">
+                            <v-icon left>send</v-icon>
+                            <span  >Modifier la demande</span> 
+                        </v-btn>
+
+                        <v-btn v-if="type=='new'" class="ma-1 pink white--text" 
+                            :disabled="!valid"
+                            @click="submit">
+                            <v-icon left>send</v-icon>
+                            <span  >Envoyer la demande</span> 
+                        </v-btn>
+                    </v-row>> 
+                </v-form>
+            </v-card-text>
+        </v-card>  
     </v-dialog>
-     <DemandeVehicule 
+    <DemandeVehicule 
         forDemandeRelex=true
         :demande="DV_Computed"
         :type="type_demande_v"
         @sendDemande="getDemande" 
         v-model="open_dialog" 
+        :Editable="true"
     />
-         <v-snackbar
+    <v-snackbar
       v-model="Done"
       :timeout="5000"
       color="green"
@@ -233,7 +242,7 @@ import DemandeVehicule from '../Demandes/DemandeVehicule'
 export default {
     name:"Relex",
     components:{Date,Heure,DemandeVehicule},
-    props:[ 'value','dialogRelex','name','icon','color' , 'type' , 'demande'] ,
+    props:[ 'value','dialogRelex','name','icon','color' , 'type' , 'demande', 'Editable'] ,
     computed :{
         dialog : {
             get : function(){
@@ -243,7 +252,7 @@ export default {
             }
         },
         DR : function() {
-          if((this.type=="update" || this.type=="Triater") && this.dialog==true){
+          if((this.type=="update" || this.type=="Traiter") && this.dialog==true){
             return this.demande
           }else{
             return this.DemandeRelex
@@ -333,7 +342,7 @@ export default {
         })
     },
     async submit(){
-        await axios.post('http://localhost:3030/DemandeRelex', this.DR )
+        await axios.post('http://localhost:3030/DemandeRelex', {D: this.DR ,UT :this.$store.state.user.typeUtilisateur} )
         .then(
                 res =>{
                     this.msg = res.data.title,
@@ -401,6 +410,8 @@ data(){
         DV:null,
         open_dialog : false,
         DemandeRelex:{
+            departement: this.$store.state.user.departement,
+            structure: this.$store.state.user.structure,
             userID : this.$store.state.user.email,
             struct : this.$store.state.user.structure,
             destination : null,

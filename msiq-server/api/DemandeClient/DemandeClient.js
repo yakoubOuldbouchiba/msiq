@@ -6,21 +6,9 @@ import * as auth from '../../services/auth-service.js'
 module.exports=(io)=>{
    //add a new demande
     router.post('/DemandeClient',auth.requireLogin , (req , res)=>{
-        jwt.verify((req.headers.authorization || req.headers['Authorization']),'TMPK3Y',
-        (err,decoded) => {
-            if (err) {
-                res.status(500).json({
-                    title: 'Quelque chose s\'est mal passé dans le serveur',
-                    error: 'CNCTDB' 
-                })
-            }
-            dbOperationsDemandes.setDemandeClient(
-                {
-                    uID: decoded.user.email,
-                    struct :decoded.user.structure ,
-                    rb: req.body
-                },
-                io)
+
+           console.log(req.body);
+            dbOperationsDemandes.setDemandeClient(req.body,io)
             .then(result => {
                 if(result ==='DI'){
                     res.status(200).json({
@@ -38,7 +26,6 @@ module.exports=(io)=>{
                     })
                 }
             })
-        });
     })
     //update a  demande
     router.post('/UpdateDemandeClient',auth.requireLogin , (req , res)=>{

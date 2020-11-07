@@ -13,13 +13,14 @@ ALTER PROCEDURE InsertDemandePriseEnCharge
     @A 			AS varchar(250), 
     @HV 		AS varchar(50),
 	@DID		AS int OUTPUT,
-	@DDATE		AS datetime OUTPUT
+	@DDATE		AS datetime OUTPUT,
+	@etat		AS varchar(50)
 AS
 BEGIN
 	INSERT INTO demande 
 	VALUES (	(SELECT CONVERT (datetime, SYSDATETIME())),
 				@userID,
-				'Chef Departement', 
+				@etat, 
 				null,
 				0,
 				1)

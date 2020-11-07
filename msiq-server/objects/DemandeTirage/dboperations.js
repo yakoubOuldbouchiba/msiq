@@ -6,37 +6,101 @@ async function  setDemandeTirage(Data,io){
     try {
         await sql.connect(config)
         try {
-             await new sql.Request()
-            .input('userID', sql.VarChar, Data.userID)    
-            .input('FN', sql.VarChar, Data.OriginalFileName)
-            .input('NF', sql.Int, Data.NombreFeu)
-            .input('NE', sql.Int, Data.NombreCop)
-            .input('NTF', sql.Int, Data.NombreTot)
-            .input('TF', sql.VarChar, Data.DocTyp)
-            .input('A', sql.VarChar, Data.AutreDes)
-            .input('SFN', sql.VarChar, Data.StoringName)
-            .input('FF', sql.VarChar, Data.TypeOfFile)
-            .output('DID', sql.Int)
-            .output('DDATE', sql.DateTime)
-            .execute('InsertDemandeTirage').then((res,err) => {
-                if (err) 
-                    return 'CNID'
-                let Demand = {
-                     demande_ID: res.output.DID,
-                     demande_Date: res.output.DDATE,
-                     type_demande: 'Demande de tirage',
-                     etat: 'Chef Departement',
-                     motif: '',
-                     seen: 0,
-                 }
-                 io.emit('NewDemandCD', Demand)
-                 io.emit(Data.userID , Demand)
-                 //console.log(Data);
-                 io.emit(Data.struct+"TD" , Demand )
-             });
-            console.log('Demande Inserted');
-            sql.close();
-            return  'DI' //Demand inserted
+            console.log(Data);
+             if (Data.UT == 'Chef departement') {
+                await new sql.Request()
+                .input('userID', sql.VarChar, Data.userID)    
+                .input('FN', sql.VarChar, Data.OriginalFileName)
+                .input('NF', sql.Int, Data.NombreFeu)
+                .input('NE', sql.Int, Data.NombreCop)
+                .input('NTF', sql.Int, Data.NombreTot)
+                .input('TF', sql.VarChar, Data.DocTyp)
+                .input('A', sql.VarChar, Data.AutreDes)
+                .input('SFN', sql.VarChar, Data.StoringName)
+                .input('FF', sql.VarChar, Data.TypeOfFile)
+                .output('DID', sql.Int)
+                .output('DDATE', sql.DateTime)
+                .input('etat', sql.VarChar, 'Directeur')
+                .execute('InsertDemandeTirage').then((res,err) => {
+                    if (err) 
+                        return 'CNID'
+                    let Demand = {
+                         demande_ID: res.output.DID,
+                         demande_Date: res.output.DDATE,
+                         type_demande: 'Demande de tirage',
+                         etat: 'Directeur',
+                         motif: '',
+                         seen: 0,
+                     }
+                     io.emit('NewDemandD'+Data.structure, Demand)
+                     io.emit(Data.userID , Demand)
+                 });
+                console.log('Demande Inserted');
+                sql.close();
+                return  'DI' //Demand inserted
+             } if (Data.UT == 'Directeur') {
+                await new sql.Request()
+                .input('userID', sql.VarChar, Data.userID)    
+                .input('FN', sql.VarChar, Data.OriginalFileName)
+                .input('NF', sql.Int, Data.NombreFeu)
+                .input('NE', sql.Int, Data.NombreCop)
+                .input('NTF', sql.Int, Data.NombreTot)
+                .input('TF', sql.VarChar, Data.DocTyp)
+                .input('A', sql.VarChar, Data.AutreDes)
+                .input('SFN', sql.VarChar, Data.StoringName)
+                .input('FF', sql.VarChar, Data.TypeOfFile)
+                .output('DID', sql.Int)
+                .output('DDATE', sql.DateTime)
+                .input('etat', sql.VarChar, 'Acceptee')
+                .execute('InsertDemandeTirage').then((res,err) => {
+                    if (err) 
+                        return 'CNID'
+                    let Demand = {
+                         demande_ID: res.output.DID,
+                         demande_Date: res.output.DDATE,
+                         type_demande: 'Demande de tirage',
+                         etat: 'Acceptee',
+                         motif: '',
+                         seen: 0,
+                     }
+                     io.emit('NewDemandAT', Demand)
+                     io.emit(Data.userID , Demand)
+                 });
+                console.log('Demande Inserted');
+                sql.close();
+                return  'DI' //Demand inserted
+             } else {
+                await new sql.Request()
+                .input('userID', sql.VarChar, Data.userID)    
+                .input('FN', sql.VarChar, Data.OriginalFileName)
+                .input('NF', sql.Int, Data.NombreFeu)
+                .input('NE', sql.Int, Data.NombreCop)
+                .input('NTF', sql.Int, Data.NombreTot)
+                .input('TF', sql.VarChar, Data.DocTyp)
+                .input('A', sql.VarChar, Data.AutreDes)
+                .input('SFN', sql.VarChar, Data.StoringName)
+                .input('FF', sql.VarChar, Data.TypeOfFile)
+                .output('DID', sql.Int)
+                .output('DDATE', sql.DateTime)
+                .input('etat', sql.VarChar, 'Chef Departement')
+                .execute('InsertDemandeTirage').then((res,err) => {
+                    if (err) 
+                        return 'CNID'
+                    let Demand = {
+                         demande_ID: res.output.DID,
+                         demande_Date: res.output.DDATE,
+                         type_demande: 'Demande de tirage',
+                         etat: 'Chef Departement',
+                         motif: '',
+                         seen: 0,
+                     }
+                     io.emit('NewDemandCD'+Data.structure+Data.departement, Demand)
+                     io.emit(Data.userID , Demand)
+                 });
+                console.log('Demande Inserted');
+                sql.close();
+                return  'DI' //Demand inserted
+             }
         } catch (error) {
             console.log('can not instert Demande');
             console.log(error);
@@ -86,6 +150,7 @@ async function  GetDemandeTirage(id){
             .input('id',sql.Int,id)
             .execute('GetDemandeTirage');
             console.log("demande has been loaded")
+            console.log(demande.recordset[0]);
             return demande.recordset[0]
 
         }catch(error){
@@ -110,15 +175,14 @@ async function  upDemandeTirage(Data){
             .input('NTF', sql.Int, Data.nombre_exemplaire*Data.nombre_feuille)
             .input('TF', sql.VarChar, Data.type_document)
             .input('A', sql.VarChar, Data.autre)
-            .input('NO', sql.Int, Data.NOrdre)
-            .input('DP', sql.Date, Data.DatePres)
+            .input('NO', sql.Int, Data.numero_ordre)
+            .input('DP', sql.Date, Data.date_prestation)
             .execute('UpdatetDemandeTirage');
             console.log('Demande Inserted');
             sql.close();
             return  'DE' //Demand inserted
         } catch (error) {
             console.log('can not Edit Demande');
-            console.log(Data);
             console.log(error);
             sql.close();
             return 'CNED'; // can not insert Demand

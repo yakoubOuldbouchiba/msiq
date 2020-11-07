@@ -38,13 +38,14 @@ ALTER PROCEDURE InsertDemandeVehicule
 	@utilisateur2 as varchar(50),
 	@utilisateur3 as varchar(50),
 	@demande_v_id as int output,
-	@DDATE AS datetime OUTPUT
+	@DDATE AS datetime OUTPUT,
+	@etat AS varchar(50)
 AS
 BEGIN
 	INSERT INTO demande 
 	VALUES (	(SELECT CONVERT (datetime, SYSDATETIME())),
 				@userID,
-				'Chef Departement', 
+				@etat, 
 				null,
 				0,
 				1)
@@ -63,7 +64,8 @@ BEGIN
 	            @utilisateur2,
 	            @utilisateur3,
 	            null,
-	            null);
+	            null,
+				null);
 	SELECT @demande_v_id = IDENT_CURRENT('demande');
 END
 
@@ -110,7 +112,7 @@ BEGIN
 			U.departement,
 			U.structure ,
 			U.posteTelephonique,
-			D.demande_Date
+			D.*
 	FROM	demande_vehicule DV, utilisateurs U, demande D
 	WHERE	DV.demande_V_ID = @id
 	AND		D.demande_ID = DV.demande_V_ID
@@ -130,7 +132,10 @@ ALTER PROCEDURE UpdateDemandeVehicule
 	@nature_marchandise as varchar(50),
 	@utilisateur1 as varchar(50),
 	@utilisateur2 as varchar(50),
-	@utilisateur3 as varchar(50)
+	@utilisateur3 as varchar(50),
+	@matricule AS varchar(20),
+	@CID AS int,
+	@Observ AS varchar(max)
 	
 AS
 BEGIN
@@ -146,7 +151,10 @@ BEGIN
 	nature_marchandise = @nature_marchandise,
 	utilisateur1_ID = @utilisateur1,
 	utilisateur2_ID = @utilisateur2,
-	utilisateur3_ID = @utilisateur3
+	utilisateur3_ID = @utilisateur3,
+	matricule = @matricule,
+	chauffeur_ID = @CID,
+	observation = @Observ
 	where demande_V_ID = @demande_v_id
 
 END

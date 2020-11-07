@@ -6,47 +6,25 @@ const jwt = require('jsonwebtoken');
 module.exports=(io)=>{
    //add a new demande
     router.post('/DemandePriseEnCharge' , (req , res)=>{
-        jwt.verify((req.headers.authorization || req.headers['Authorization']),'TMPK3Y',
-        (err,decoded) => {
-            if (err) {
-                res.status(500).json({
+        
+        dbOperationsDemandePriseEnCharge.setDemandePriseEnCharge(req.body,io)
+        .then(result => {
+            if(result ==='DI'){
+                res.status(200).json({
+                    title: 'Voter demande Prise en charge a été envoyée'
+                })
+            }else if (result ==='CNID') {
+                res.status(401).json({
+                    title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
+                    error: 'CNID'
+                })
+            } else {
+                res.status(401).json({
                     title: 'Quelque chose s\'est mal passé dans le serveur',
-                    error: 'Mauvais token' 
+                    error: 'CNCTDB' 
                 })
             }
-            console.log(req.body);
-            let InfoToSend = {
-                struct : decoded.user.structure,
-                UserID: decoded.user.email,
-                Collegues: req.body.Collegues,
-                Destination: req.body.destination,
-                Objet: req.body.objet_mission,
-                StartDate: req.body.startDate,
-                EndDate: req.body.EndDate,
-                MoyDeTrans: req.body.moyen_transport,
-                HeureDeVol: req.body.heureDeVol,
-                Aeroport: req.body.aeroport,
-            };
-            //console.log(InfoToSend);
-            dbOperationsDemandePriseEnCharge.setDemandePriseEnCharge(InfoToSend,io)
-            .then(result => {
-                if(result ==='DI'){
-                    res.status(200).json({
-                        title: 'Voter demande Prise en charge a été envoyée'
-                    })
-                }else if (result ==='CNID') {
-                    res.status(401).json({
-                        title: 'Quelque chose s\'est mal passé. Veuillez verifier vous données',
-                        error: 'CNID'
-                    })
-                } else {
-                    res.status(401).json({
-                        title: 'Quelque chose s\'est mal passé dans le serveur',
-                        error: 'CNCTDB' 
-                    })
-                }
-            })
-        });
+        })
     })
         // delete a demande
     router.delete('/DemandePriseEnCharge/:id/struct',auth.requireLogin,(req , res)=>{ 
