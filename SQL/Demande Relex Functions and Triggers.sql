@@ -9,13 +9,14 @@ ALTER PROCEDURE InsertDemandeRelex
 	@DID AS int OUTPUT,
 	@FID AS int OUTPUT,--for notif
 	@recevoir_ID as varchar(max) OUTPUT,--for notif
-	@DDATE AS datetime OUTPUT
+	@DDATE AS datetime OUTPUT,
+	@etat AS varchar(50)
 AS
 BEGIN
 	INSERT INTO demande 
 	VALUES (	(SELECT CONVERT (datetime, SYSDATETIME())),
 				@userID,
-				'Chef Departement', 
+				@etat, 
 				null,
 				0,
 				1)
@@ -40,7 +41,7 @@ BEGIN
 	WHERE I.structure = U.structure
 	AND I.departement = U.departement
 	AND U.typeUtilisateur = 'Chef departement'
-	EXECUTE CREE_NOTIFICATION @DID,@email , 'est effecuté(e) une nouvelle demande activité relex' , 'hotel'
+	EXECUTE CREE_NOTIFICATION @DID,@email , 'est effecutï¿½(e) une nouvelle demande activitï¿½ relex' , 'hotel'
 	SELECT @FID = IDENT_CURRENT('notification')
 	set @recevoir_ID = @email
 END
@@ -123,6 +124,6 @@ BEGIN
 	AND D.demande_ID = @demande_R_ID
 	SELECT @recevoir_ID = dbo.GetChefDepartement(@recevoir_ID) --for notif
 	SELECT @NID = dbo.GetNotifID(@demande_R_ID);-- for notif
-	SELECT @describ = 'est modifé(e) la demande activité(e) numéro '+ CONVERT(Varchar(max) , @demande_R_ID)    
+	SELECT @describ = 'est modifï¿½(e) la demande activitï¿½(e) numï¿½ro '+ CONVERT(Varchar(max) , @demande_R_ID)    
 	Execute Update_NOTIFICATION @demande_R_ID , @recevoir_ID , @describ
 END

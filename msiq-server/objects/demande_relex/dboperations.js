@@ -36,50 +36,112 @@ async function getDemandeRelex(id){
 // set new demande
 async function  setDemandeRelex(Demande,io){
     try {
-        let date_depart = Demande.date_depart+" "+Demande.heure_depart;
-        let date_retour = Demande.date_retour+" "+Demande.heure_retour;
+        let date_depart = Demande.D.date_depart+" "+Demande.D.heure_depart;
+        let date_retour = Demande.D.date_retour+" "+Demande.D.heure_retour;
         await sql.connect(config)
-        console.log(Demande)
+        console.log(Demande.D)
         try {
-             await new sql.Request()
-            .input('userID',sql.VarChar,Demande.userID)
-            .input('destination',sql.VarChar,Demande.destination)
-            .input('objet_mission',sql.VarChar,Demande.objet_mission)
-            .input('date_depart',sql.DateTime,date_depart)
-            .input('date_retour',sql.DateTime,date_retour)
-            .input('prise_en_charge',sql.Bit,Demande.prise_en_charge)
-            .input('demande_V_ID',sql.Int,Demande.demande_V_ID)
-            .output('DID', sql.Int)
-            .output('FID', sql.Int)//For notif
-            .output('recevoir_ID', sql.VarChar)//For notif
-            .output('DDATE', sql.DateTime)
-            .execute('InsertDemandeRelex').then((res,err) => {
-                if (err) 
-                    return 'CNID'
-                let Demand = {
-                     demande_ID: res.output.DID,
-                     demande_Date: res.output.DDATE,
-                     type_demande: 'Demande activité relex',
-                     etat: 'Chef Departement',
-                     motif: '',
-                     seen: 0,
-                 }
-                 let Notif = {// notification Info 
-                    userID : Demande.userID,
-                    notification_ID : res.output.FID,
-                    demande_ID: res.output.DID,
-                    seen : 0,
-                    description_notif : 'est effecuté(e) une nouvelle demande activité relex',
-                    icon:'hotel'
-                }
-                 io.emit('NewDemandCD', Demand )
-                 io.emit(Demande.userID , Demand )
+             if (Demande.UT == 'Chef departement') {
+                await new sql.Request()
+                .input('userID',sql.VarChar,Demande.D.userID)
+                .input('destination',sql.VarChar,Demande.D.destination)
+                .input('objet_mission',sql.VarChar,Demande.D.objet_mission)
+                .input('date_depart',sql.DateTime,date_depart)
+                .input('date_retour',sql.DateTime,date_retour)
+                .input('prise_en_charge',sql.Bit,Demande.D.prise_en_charge)
+                .input('demande_V_ID',sql.Int,Demande.D.demande_V_ID)
+                .output('DID', sql.Int)
+                .output('DDATE', sql.DateTime)
+                .output('FID', sql.Int)//For notif
+                .output('recevoir_ID', sql.VarChar)//For notif
+                .input('etat', sql.VarChar, 'Directeur')
+                .execute('InsertDemandeRelex').then((res,err) => {
+                    if (err) 
+                        return 'CNID'
+                    let Demand = {
+                         demande_ID: res.output.DID,
+                         demande_Date: res.output.DDATE,
+                         type_demande: 'Demande relex',
+                         etat: 'Directeur',
+                         motif: '',
+                         seen: 0,
+                     }
+                    // i need check from to
+                    let Notif = {// notification Info 
+                      userID : Demande.userID,
+                      notification_ID : res.output.FID,
+                      demande_ID: res.output.DID,
+                      seen : 0,
+                      description_notif : 'est effecuté(e) une nouvelle demande activité relex',
+                      icon:'hotel'
+                    }
                  io.emit(Demande.struct+"RD" , Demand )//for repporting 
                  io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
-             });
-            console.log('Demande Inserted');
-            sql.close();
-            return 'DI' //Demand inserted
+                     io.emit('NewDemandD'+Demande.D.structure, Demand )
+                     io.emit(Demande.D.userID , Demand )
+                 });
+                console.log('Demande Inserted');
+                sql.close();
+                return 'DI' //Demand inserted
+             } if (Demande.UT == 'Directeur') {
+                await new sql.Request()
+                .input('userID',sql.VarChar,Demande.D.userID)
+                .input('destination',sql.VarChar,Demande.D.destination)
+                .input('objet_mission',sql.VarChar,Demande.D.objet_mission)
+                .input('date_depart',sql.DateTime,date_depart)
+                .input('date_retour',sql.DateTime,date_retour)
+                .input('prise_en_charge',sql.Bit,Demande.D.prise_en_charge)
+                .input('demande_V_ID',sql.Int,Demande.D.demande_V_ID)
+                .output('DID', sql.Int)
+                .output('DDATE', sql.DateTime)
+                .input('etat', sql.VarChar, 'Acceptee')
+                .execute('InsertDemandeRelex').then((res,err) => {
+                    if (err) 
+                        return 'CNID'
+                    let Demand = {
+                         demande_ID: res.output.DID,
+                         demande_Date: res.output.DDATE,
+                         type_demande: 'Demande relex',
+                         etat: 'Acceptee',
+                         motif: '',
+                         seen: 0,
+                     }
+                     io.emit('NewDemandRR', Demand )
+                     io.emit(Demande.D.userID , Demand )
+                 });
+                console.log('Demande Inserted');
+                sql.close();
+                return 'DI' //Demand inserted
+             } else {
+                await new sql.Request()
+                .input('userID',sql.VarChar,Demande.D.userID)
+                .input('destination',sql.VarChar,Demande.D.destination)
+                .input('objet_mission',sql.VarChar,Demande.D.objet_mission)
+                .input('date_depart',sql.DateTime,date_depart)
+                .input('date_retour',sql.DateTime,date_retour)
+                .input('prise_en_charge',sql.Bit,Demande.D.prise_en_charge)
+                .input('demande_V_ID',sql.Int,Demande.D.demande_V_ID)
+                .output('DID', sql.Int)
+                .output('DDATE', sql.DateTime)
+                .input('etat', sql.VarChar, 'Chef Departement')
+                .execute('InsertDemandeRelex').then((res,err) => {
+                    if (err) 
+                        return 'CNID'
+                    let Demand = {
+                         demande_ID: res.output.DID,
+                         demande_Date: res.output.DDATE,
+                         type_demande: 'Demande relex',
+                         etat: 'Chef Departement',
+                         motif: '',
+                         seen: 0,
+                     }
+                     io.emit('NewDemandCD'+Demande.D.structure+Demande.D.departement, Demand )
+                     io.emit(Demande.D.userID , Demand )
+                 });
+                console.log('Demande Inserted');
+                sql.close();
+                return 'DI' //Demand inserted
+             }
         } catch (error) {
             console.log('can not instert Demande');
             sql.close();

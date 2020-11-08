@@ -53,7 +53,7 @@
                 </td>
                <td class="text-center">
                  <span v-if="!Demande.motif">-</span>
-                 {{Demande.motif}}
+                 <span v-else>{{Demande.motif.substr(0,20)}}</span>
               </td>
              </tr>
            </tbody>
@@ -100,13 +100,14 @@
     <DemandeClient 
       v-model="openDialogClient"
       :demande="demande"
-      type= "Triater" 
+      type= "Traiter" 
       @resetDemand="resetDemand"
+      :Editable="false"
     />
     <DemandeFourniture 
       v-model="openDialogFourniture"
       :demande="demande"
-      type= "Triater"
+      type= "Traiter"
       name='demande de fourniture'
       icon='edit'
       color='red'
@@ -115,25 +116,28 @@
     <DemandeVehicule 
       v-model="openDialogVehicule"
       :demande="demande"
-      type= "Triater"
+      type= "Traiter"
       forDemandeRelex="false"
       name ='demande de véhicule'
       icon ='commute'
       color ='deep-purple'
       @resetDemand="resetDemand"
+      :Editable="false"
        />
     <DemandeTirage :demande="demande" 
       v-model="openDialogTirage"
-      type='Triater'/>
-    <DemandePriseEnCharge :demande="demande" v-model="openDialogPEC" type='Triater'/>
+      type='Traiter'
+      :Editable="false" />
+    <DemandePriseEnCharge :demande="demande" v-model="openDialogPEC" type='Traiter' :Editable="false"/>
     <DemandeRelex 
       v-model="openDialogRelex"
       :demande="demande"
       @resetDemand="resetDemand"
-      type= "Triater"
+      type= "Traiter"
       name='demande activité relex' 
       icon='hotel' 
       color='blue'
+      :Editable="false"
      />
   </div>
 </template>
@@ -159,21 +163,21 @@ mounted(){
          this.Demandes.splice(index , 1);
   })
   if (this.$store.state.user.typeUtilisateur == 'Chef departement') {
-    this.$store.state.sokect.on('NewDemandCD', (newDemand) => {
+    this.$store.state.sokect.on('NewDemandCD'+this.$store.state.user.structure+this.$store.state.user.departement, (newDemand) => {
       this.Demandes.unshift(newDemand)
     })
-    this.$store.state.sokect.on('RemoveDemandCD', (Demand) => {
+    this.$store.state.sokect.on('RemoveDemandCD'+this.$store.state.user.structure+this.$store.state.user.departement, (Demand) => {
       let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
       this.Demandes.splice(index , 1)
     })
   }else if (this.$store.state.user.typeUtilisateur == 'Directeur') {
-    this.$store.state.sokect.on('NewDemandD', (newDemand) => {
+    this.$store.state.sokect.on('NewDemandD'+this.$store.state.user.structure, (newDemand) => {
       this.Demandes.unshift(newDemand)
-    })
-    this.$store.state.sokect.on('RemoveDemandD', (Demand) => {
+    })  
+    this.$store.state.sokect.on('RemoveDemandD'+this.$store.state.user.structure, (Demand) => {
       let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
       this.Demandes.splice(index , 1)
-    })   
+    })
   }else if (this.$store.state.user.typeUtilisateur == 'Responsable DAM') {
     this.$store.state.sokect.on('NewDemandRD', (newDemand) => {
       this.Demandes.unshift(newDemand)
@@ -198,7 +202,23 @@ mounted(){
       let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
       this.Demandes.splice(index , 1)
     })
-  }else{
+  }else if (this.$store.state.user.typeUtilisateur == 'Responsable PEC') {
+    this.$store.state.sokect.on('NewDemandRPEC', (newDemand) => {
+      this.Demandes.unshift(newDemand)
+    })
+    this.$store.state.sokect.on('RemoveDemandRPEC', (Demand) => {
+      let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
+      this.Demandes.splice(index , 1)
+    })
+  } else if (this.$store.state.user.typeUtilisateur == 'Responsable AR') {
+    this.$store.state.sokect.on('NewDemandRR', (newDemand) => {
+      this.Demandes.unshift(newDemand)
+    })
+    this.$store.state.sokect.on('RemoveDemandRR', (Demand) => {
+      let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
+      this.Demandes.splice(index , 1)
+    })
+  } else {
     this.$store.state.sokect.on('NewDemandAM', (newDemand) => {
         this.Demandes.unshift(newDemand)
     })

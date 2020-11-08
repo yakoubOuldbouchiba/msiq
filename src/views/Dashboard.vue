@@ -34,11 +34,11 @@
            </thead>
            <tbody>
              <tr class="pa-2" v-for="Demande in Demandes" :key="Demande.demande_ID" >
-               <td :class="`demande ${Demande.etat}`" ><b>{{Demande.demande_ID}}</b></td>
-               <td >{{Demande.type_demande}}</td>
-               <td >{{Demande.demande_Date}}</td>
-               <td class="text-center">
-                 <v-chip
+               <td @click="checkEditability(Demande)" :class="`demande ${Demande.etat}`" ><b>{{Demande.demande_ID}}</b></td>
+               <td @click="checkEditability(Demande)">{{Demande.type_demande}}</td>
+               <td @click="checkEditability(Demande)" >{{Demande.demande_Date}}</td>
+               <td @click="checkEditability(Demande)" class="text-center">
+                 <v-chip 
                   v-if="Demande.etat == 'Acceptee'"
                   class="success"
                  >
@@ -53,9 +53,9 @@
                  </v-chip>
                  
                 </td>
-               <td class="text-center">
+               <td @click="checkEditability(Demande)" class="text-center">
                  <span v-if="!Demande.motif">-</span>
-                 {{Demande.motif}}
+                 <span v-else>{{Demande.motif.substr(0,20)}}...</span>
               </td>
                <td class="text-center">
                  <v-btn
@@ -131,6 +131,7 @@
       :demande="demande"
       type= "update" 
       @resetDemand="resetDemand"
+      :Editable="Editable"
     />
     <DemandeFourniture 
       v-model="openDialogFourniture"
@@ -150,11 +151,13 @@
       icon ='commute'
       color ='deep-purple'
       @resetDemand="resetDemand"
+      :Editable="Editable"
        />
     <DemandeTirage :demande="demande" 
     v-model="openDialogTirage"
-    type='update'/>
-    <DemandePriseEnCharge :demande="demande" v-model="openDialogPEC" type='update'/>
+    type='update'
+    :Editable="Editable"/>
+    <DemandePriseEnCharge :demande="demande" v-model="openDialogPEC" type='update' :Editable="Editable"/>
     <DemandeRelex 
       v-model="openDialogRelex"
       :demande="demande"
@@ -163,6 +166,7 @@
       name='demande activité relex' 
       icon='hotel' 
       color='blue'
+      :Editable="Editable"
      />
   </div>
 </template>
@@ -199,6 +203,7 @@ data(){
         msg :'',
         Done: false,
         Errr: false,
+        Editable: false,
         openDialogVehicule : false,
         openDialogClient : false,
         openDialogFourniture : false,
@@ -251,9 +256,7 @@ data(){
    },
    async updateItem(Demande){
      await this.getDemande(Demande);
-     console.log(Demande.type_demande)
      this.demande.uID = await this.$store.state.user.email// i add it for notification
-     console.log(this.demande)
      if(Demande.type_demande=='Demande client'){
        this.openDialogClient = true;
      }else if(Demande.type_demande=='Demande fourniture'){
@@ -282,6 +285,18 @@ data(){
        this.demande.EndDate = this.demande.EndDate.substr(0,10)
        this.demande.heureDeVol = this.demande.heureDeVol.substr(11,5)
        this.openDialogPEC = true
+     }     
+   },
+   checkEditability(Demande){
+     if (this.$store.state.user.typeUtilisateur == 'Client' && Demande.etat != 'Chef Departement'  ){ 
+        this.Editable = false
+        this.updateItem(Demande)
+     } else if (this.$store.state.user.typeUtilisateur == 'Chef departement' && Demande.etat != 'Directeur' ) {
+        this.Editable = false
+        this.updateItem(Demande)
+     } else{
+        this.Editable = true
+        this.updateItem(Demande)
      }
    },
    async getDemande(demande){

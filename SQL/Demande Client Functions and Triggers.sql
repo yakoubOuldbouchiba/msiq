@@ -2,6 +2,7 @@ ALTER PROCEDURE InsertDemandeClient
 	@userID AS varchar(50),
 	@nature AS varchar(50),
 	@objet AS varchar(50),
+	@etat AS varchar(50),
 	@description AS varchar(max),
 	@DID AS int OUTPUT,
 	@FID AS int OUTPUT,--For notif
@@ -13,7 +14,7 @@ BEGIN
 	INSERT INTO	demande 
 	VALUES(		(SELECT CONVERT (datetime, SYSDATETIME())),
 				@userID,
-				'Chef Departement', 
+				@etat, 
 				null, 
 				0,
 				1
@@ -93,12 +94,13 @@ BEGIN
 			U.departement,
 			U.posteTelephonique,
 			U.structure,                      
-      D.*
+			D.*
 	FROM	demande_client DC,utilisateurs U,demande D
 	WHERE	DC.demande_C_ID = @id 
 	AND		D.demande_ID = DC.demande_C_ID
 	AND		U.email = D.utilisateurs_ID
 END
+
 
 ----------------------------------------------------------------
 

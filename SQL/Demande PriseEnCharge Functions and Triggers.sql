@@ -15,13 +15,14 @@ ALTER PROCEDURE InsertDemandePriseEnCharge
 	@DID		AS int OUTPUT,
 	@FID AS int OUTPUT,--for notif
 	@recevoir_ID as varchar(max) OUTPUT,--for notif
-	@DDATE		AS datetime OUTPUT
+	@DDATE		AS datetime OUTPUT,
+	@etat		AS varchar(50)
 AS
 BEGIN
 	INSERT INTO demande 
 	VALUES (	(SELECT CONVERT (datetime, SYSDATETIME())),
 				@userID,
-				'Chef Departement', 
+				@etat, 
 				null,
 				0,
 				1)
@@ -51,7 +52,7 @@ BEGIN
 	WHERE I.structure = U.structure
 	AND I.departement = U.departement
 	AND U.typeUtilisateur = 'Chef departement'
-	EXECUTE CREE_NOTIFICATION @DID,@email ,'est effecuté(e) une nouvelle demande de prise en charge', 'flight'
+	EXECUTE CREE_NOTIFICATION @DID,@email ,'est effecutï¿½(e) une nouvelle demande de prise en charge', 'flight'
 		--for Notif--
 	SELECT @FID = IDENT_CURRENT('notification')
 	set @recevoir_ID = @email
@@ -155,6 +156,6 @@ BEGIN
 	AND D.demande_ID = @id
 	SELECT @recevoir_ID = dbo.GetChefDepartement(@recevoir_ID) --for notif
 	SELECT @NID = dbo.GetNotifID(@id);-- for notif
-	SELECT @describ = 'est modifé(e) la demande de prise en charge numéro '+ CONVERT(Varchar(max) , @id)    
+	SELECT @describ = 'est modifï¿½(e) la demande de prise en charge numï¿½ro '+ CONVERT(Varchar(max) , @id)    
 	Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 END

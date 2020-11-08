@@ -11,13 +11,14 @@ ALTER PROCEDURE InsertDemandeTirage
 	@DID	AS int OUTPUT,
 	@FID AS int OUTPUT,--for notif
 	@recevoir_ID as varchar(max) OUTPUT,--for notif
-	@DDATE	AS datetime OUTPUT
+	@DDATE	AS datetime OUTPUT,
+	@etat	AS varchar(50)
 AS
 BEGIN
 	INSERT INTO demande 
 	VALUES (	(SELECT CONVERT (datetime, SYSDATETIME())),
 				@userID,
-				'Chef Departement', 
+				@etat, 
 				null,
 				0,
 				1)
@@ -48,7 +49,7 @@ BEGIN
 	WHERE I.structure = U.structure
 	AND I.departement = U.departement
 	AND U.typeUtilisateur = 'Chef departement'
-	EXECUTE CREE_NOTIFICATION @DID,@email ,'est effecuté(e) une nouvelle demande de tirage', 'print'
+	EXECUTE CREE_NOTIFICATION @DID,@email ,'est effecutï¿½(e) une nouvelle demande de tirage', 'print'
 	SELECT @FID = IDENT_CURRENT('notification')
 	set @recevoir_ID = @email
 END
@@ -97,15 +98,15 @@ BEGIN
 			U.nomUtilisateur,
 			U.prenomUtilisateur,
 			U.departement,
+			D.*
 			U.structure,
-			D.demande_Date
 	FROM	demande_tirage DT, document Dc, utilisateurs U, demande D
 	WHERE	DT.demande_T_ID = D.demande_ID
 	AND		DT.document_ID = Dc.document_ID
 	AND		D.utilisateurs_ID = U.email
 	AND		DT.demande_T_ID = @id
 END
-
+GetDemandeTirage 1
 ALTER PROCEDURE UpdatetDemandeTirage
 	@id AS int,
 	@NF AS int,
@@ -115,6 +116,8 @@ ALTER PROCEDURE UpdatetDemandeTirage
 	@A AS varchar(max),
 	@NID AS int OUTPUT,--For notif
 	@recevoir_ID as varchar(max) OUTPUT--For notif
+	@NO AS int,
+	@DP AS Date
 AS
 BEGIN
 	UPDATE 	document
@@ -126,6 +129,10 @@ BEGIN
 	WHERE 	document_ID 		= (SELECT document_ID 
 									FROM demande_tirage 
 									WHERE demande_T_ID = @id)
+  UPDATE	demande_tirage
+	SET		numero_ordre = @NO,
+			date_prestation = @DP
+	WHERE	demande_T_ID = @id
 	--for notif
 	DECLARE @describ  varchar(max);
 	SELECT @recevoir_ID = email
@@ -134,6 +141,6 @@ BEGIN
 	AND D.demande_ID = @id
 	SELECT @recevoir_ID = dbo.GetChefDepartement(@recevoir_ID) --for notif
 	SELECT @NID = dbo.GetNotifID(@id);-- for notif
-	SELECT @describ = 'est modifé(e) la demande de tirage numéro '+ CONVERT(Varchar(max) , @id)    
+	SELECT @describ = 'est modifï¿½(e) la demande de tirage numï¿½ro '+ CONVERT(Varchar(max) , @id)    
 	Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 END

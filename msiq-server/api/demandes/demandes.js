@@ -117,8 +117,8 @@ module.exports=(io)=>{
             motif: req.body.Demande.motif,
             seen: 0,
         }
-        // io and UT added for notif
-        dbOperationsDemandes.UpdateDemandState(req.params.id ,req.body.State,req.body.Demande.motif,req.body.Demande.uID ,io)
+        console.log(req.body);
+        dbOperationsDemandes.UpdateDemandState(req.params.id,req.body.State,req.body.Demande.motif,req.body.Demande.uID ,io)
         .then(result => {
             console.log(req.body.Demande.uID);
             if(result==='DU'){
@@ -152,11 +152,11 @@ module.exports=(io)=>{
         }
 
         if (req.body.State == 'Directeur'){ 
-            io.emit('NewDemandD', Demand )
-            io.emit('RemoveDemandCD', Demand)
+            io.emit('NewDemandD'+req.body.Demande.structure, Demand )
+            io.emit('RemoveDemandCD'+req.body.Demande.structure+req.body.Demande.departement, Demand)
         }else if (req.body.State == 'DAM'){
             io.emit('NewDemandRD', Demand )  
-            io.emit('RemoveDemandD', Demand )       
+            io.emit('RemoveDemandD'+req.body.Demande.structure, Demand )       
         }else if (req.body.State == 'Chef de parc') {
             io.emit('NewDemandCP', Demand )  
             io.emit('RemoveDemandD', Demand ) 
@@ -182,16 +182,15 @@ module.exports=(io)=>{
                 io.emit('RemoveDemandRD', Demand ) 
                 //io.emit(req.body.Demande.structure+'EFD', Demand )
             }  
-            else if (req.body.typeD == 'Demande de prise en charge'){
-                io.emit('RemoveDemandD', Demand ) 
-                //io.emit(req.body.Demande.structure+'EPD', Demand )
-            } 
-            else if (req.body.typeD == 'Demande de tirage') {
+            else if (req.body.typeD == 'Demande de prise en charge') {
+                io.emit('NewDemandRPEC', Demand )   
+                io.emit('RemoveDemandD', Demand ) }
+            else if (req.body.typeD == 'Demande de tirage') 
                 io.emit('RemoveDemandAT', Demand ) 
-                //io.emit(req.body.Demande.structure+'ETD', Demand )
-            }
-            else 
+            else {
+                io.emit('NewDemandRR', Demand)
                 io.emit('RemoveDemandD', Demand ) 
+            }               
         }else{
             if (req.body.UT == 'Chef departement')
                 io.emit('RemoveDemandCD', Demand)

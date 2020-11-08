@@ -8,6 +8,7 @@
                 v-bind="attrs"
                 prepend-icon="date_range"
                 :label="label"
+                :disabled="!Editable"
                 :rules="[v => !!v || 'Cet champs est obligatoire']"
                 v-on="on"
                 :value="date_computed"
@@ -26,7 +27,7 @@
 </template>
 <script>
 export default {
-    props: ['label' , 'value'],
+    props: ['label' , 'value', 'Editable'],
     data(){
         return {
             date :null

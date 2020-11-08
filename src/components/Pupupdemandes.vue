@@ -33,7 +33,7 @@
                     </v-container>
                 </v-card>
     </v-dialog> 
-    <DemandeClient v-model="openDialogClient"/>
+    <DemandeClient v-model="openDialogClient" type="new" :Editable="true"/>
 
     <DemandeFourniture
             v-model="openDialogFourniture"
@@ -42,11 +42,13 @@
             :icon='demandes[1].icon' 
              />
 
-    <DemandeTirage v-model="openDialogTirage" type='new'/>
+    <DemandeTirage v-model="openDialogTirage" type='new' :Editable="true"/>
 
     <DemandeVehicule 
         v-model="openDialogVehicule"
         forDemandeRelex="false"
+        type='new'
+        :Editable="true"
     />
 
     <DemandeRelex 
@@ -54,8 +56,9 @@
             :name='demandes[5].name'
             :color='demandes[5].color'
             :icon='demandes[5].icon' 
-            />
-    <DemandePriseEnCharge v-model="openDialogPEC"  type='new'/>
+            type ='new'
+            :Editable="true"/>
+    <DemandePriseEnCharge v-model="openDialogPEC"  type='new' :Editable="true"/>
 
 </div>
 </template>

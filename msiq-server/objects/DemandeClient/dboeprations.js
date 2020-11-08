@@ -9,7 +9,8 @@ async function getDemandeClient(id){
             let demande = await pool.request()
             .input("id", sql.VarChar, id)
             .execute('GetDemandeClient')
-            console.log('Demande getted');
+            console.log(demande.recordset[0]);
+            console.log('Demande has been loaded');
             sql.close();
             return {
                  result : 'DG' , //Demand inserted
@@ -27,44 +28,95 @@ async function getDemandeClient(id){
 }
 
 // set new message
-async function  setDemandeClient(Demande,io){
+async function  setDemandeClient(O,io){
     try {
+        console.log(O);
         await sql.connect(config)
         try {
-            console.log(Demande);
-             await new sql.Request()
-            .input('userID', sql.VarChar, Demande.uID)    
-            .input('nature', sql.VarChar, Demande.rb.nature)
-            .input('objet', sql.VarChar, Demande.rb.objet)
-            .input('description', sql.VarChar, Demande.rb.demande_C_description)
-            .output('DID', sql.Int)
-            .output('FID', sql.Int)
-            .output('recevoir_ID', sql.VarChar)
-            .output('DDATE', sql.DateTime)
-            .execute('InsertDemandeClient').then((res,err) => {
-               if (err) 
-                   return 'CNID'
-                let Demand = {
-                    demande_ID: res.output.DID,
-                    demande_Date: res.output.DDATE,
-                    type_demande: 'Demande client',
-                    etat: 'Chef Departement',
-                    motif: '',
-                    seen: 0
-                }
-                let Notif = {// notification Info 
+            console.log(O.D);
+            if (O.UT == 'Chef departement') {
+                await new sql.Request()
+                .input('userID', sql.VarChar, O.D.UserID)    
+                .input('nature', sql.VarChar, O.D.nature)
+                .input('objet', sql.VarChar, O.D.objet)
+                .input('etat', sql.VarChar, 'Directeur')
+                .input('description', sql.VarChar, O.D.demande_C_description)
+                .output('DID', sql.Int)
+                .output('DDATE', sql.DateTime)
+                .execute('InsertDemandeClient').then((res,err) => {
+                if (err) 
+                    return 'CNID'
+                    let Demand = {
+                        demande_ID: res.output.DID,
+                        demande_Date: res.output.DDATE,
+                        type_demande: 'Demande client',
+                        etat: 'Directeur',
+                        motif: '',
+                        seen: 0
+                    }
+                    io.emit('NewDemandD'+O.D.structure, Demand )
+                    io.emit(O.D.UserID , Demand )
+                })
+            }else if(O.UT == 'Directeur') {
+                await new sql.Request()
+                .input('userID', sql.VarChar, O.D.UserID)    
+                .input('nature', sql.VarChar, O.D.nature)
+                .input('objet', sql.VarChar, O.D.objet)
+                .input('etat', sql.VarChar, 'DAM')
+                .input('description', sql.VarChar, O.D.demande_C_description)
+                .output('DID', sql.Int)
+                .output('FID', sql.Int)
+                .output('recevoir_ID', sql.VarChar)
+                .output('DDATE', sql.DateTime)
+                .execute('InsertDemandeClient').then((res,err) => {
+                if (err) 
+                    return 'CNID'
+                    let Demand = {
+                        demande_ID: res.output.DID,
+                        demande_Date: res.output.DDATE,
+                        type_demande: 'Demande client',
+                        etat: 'DAM',
+                        motif: '',
+                        seen: 0
+                    }
+                    io.emit('NewDemandRD', Demand )
+                    io.emit(O.D.UserID , Demand )
+                })
+            }else{
+                await new sql.Request()
+                .input('userID', sql.VarChar, O.D.UserID)    
+                .input('nature', sql.VarChar, O.D.nature)
+                .input('objet', sql.VarChar, O.D.objet)
+                .input('etat', sql.VarChar, 'Chef Departement')
+                .input('description', sql.VarChar, O.D.demande_C_description)
+                .output('DID', sql.Int)
+                .output('DDATE', sql.DateTime)
+                .execute('InsertDemandeClient').then((res,err) => {
+                if (err) 
+                    return 'CNID'
+                    let Demand = {
+                        demande_ID: res.output.DID,
+                        demande_Date: res.output.DDATE,
+                        type_demande: 'Demande client',
+                        etat: 'Chef Departement',
+                        motif: '',
+                        seen: 0
+                    }
+                    io.emit('NewDemandCD'+O.D.structure+O.D.departement, Demand )
+                    io.emit(O.D.UserID , Demand )
+                })
+            }
+          //check from to 
+           let Notif = {// notification Info 
                     userID : Demande.uID,
                     notification_ID : res.output.FID,
                     demande_ID: res.output.DID,
                     seen : 0,
                     description_notif : 'est effecuté(e) une nouvelle demande client',
                     icon:'devices'
-                }
-                io.emit('NewDemandCD', Demand )
-                io.emit(Demande.uID , Demand )
-                io.emit(Demande.struct+"CD", Demand )//for reporting
-                io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
-            })
+           }
+           io.emit(Demande.struct+"CD", Demand )//for reporting
+           io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             console.log('Demande Inserted');
             sql.close();
             return  'DI' //Demand inserted
@@ -122,12 +174,12 @@ async function  updateDemandeClient(Demande , io){
             .input('nature', sql.VarChar, Demande.nature)
             .input('objet', sql.VarChar, Demande.objet)
             .input('des', sql.VarChar, Demande.demande_C_description)
-            .input('MED', sql.Bit, Demande.MED)
-            .input('DMED', sql.Date, Demande.DateMED)
-            .input('achat', sql.Bit, Demande.Achats)
-            .input('nAchat', sql.Int, Demande.NAchats)
-            .input('Dachat', sql.Date, Demande.DateAchats)
-            .input('oAchat', sql.VarChar, Demande.OAchats)
+            .input('MED', sql.Bit, Demande.mise_disposition)
+            .input('DMED', sql.Date, Demande.date_mise_dispostion)
+            .input('achat', sql.Bit, Demande.achat)
+            .input('nAchat', sql.Int, Demande.nAchat)
+            .input('Dachat', sql.Date, Demande.date_achat)
+            .input('oAchat', sql.VarChar, Demande.oAchats)
             .input('etat', sql.VarChar,Demande.etat)
             .output('NID',sql.Int)//for notif
             .output('recevoir_ID',sql.VarChar)// for notif
@@ -142,7 +194,8 @@ async function  updateDemandeClient(Demande , io){
                     icon:'devices'
                 }
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
-            })
+            });
+>
             console.log('Demande Updated');
             sql.close();
             return  'DU' //Demand updated

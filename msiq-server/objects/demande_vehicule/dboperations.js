@@ -37,39 +37,77 @@ async function getDemandeVehicule(id){
 // set new message
 async function  setDemandeVehicule(Demande,io){
     try {
-        let date_depart = Demande.date_depart+" "+Demande.heure_depart;
-        let date_retour = Demande.date_retour+" "+Demande.heure_retour;
+        let date_depart = Demande.D.date_depart+" "+Demande.D.heure_depart;
+        let date_retour = Demande.D.date_retour+" "+Demande.D.heure_retour;
+        console.log(Demande);
         await sql.connect(config)
         try {
-            console.log(date_depart);
-            console.log(date_retour);
-            let result = await new sql.Request()
-             .input('userID',sql.VarChar,Demande.UserID)
-             .input('lieu',sql.VarChar,Demande.lieu)
-             .input('organisme',sql.VarChar,Demande.organisme)
-             .input('motif_deplacement',sql.VarChar,Demande.motif_deplacement)
-             .input('date_depart',sql.DateTime,date_depart)
-             .input('lieu_remmassage_d',sql.VarChar,Demande.lieu_ramassage_d)
-             .input('date_retour',sql.DateTime,date_retour)
-             .input('lieu_remmassage_r',sql.VarChar,Demande.lieu_ramassage_r)
-             .input('nature_marchandise',sql.VarChar,Demande.nature_marchandise)
-             .input('utilisateur1',sql.VarChar,Demande.utilisateur1_ID)
-             .input('utilisateur2',sql.VarChar,Demande.utilisateur2_ID)
-             .input('utilisateur3',sql.VarChar,Demande.utilisateur3_ID)
-             .output('demande_v_id',sql.Int)
-             .output('FID', sql.Int)//for notification
-             .output('recevoir_ID', sql.VarChar)//for notification
-             .output('DDATE', sql.DateTime)
-            .execute('InsertDemandeVehicule')
-            let Demand = {
-                    demande_ID: result.output.demande_v_id,
-                    demande_Date: result.output.DDATE,
-                    type_demande: 'Demande véhicule',
-                    etat: 'Chef Departement',
-                    motif: '',
-                    seen: 0,
-                }
-            let Notif = {// notification Info 
+
+            if (Demande.UT == 'Chef departement'){
+                let result = await new sql.Request()
+                .input('userID',sql.VarChar,Demande.D.UserID)
+                .input('lieu',sql.VarChar,Demande.D.lieu)
+                .input('organisme',sql.VarChar,Demande.D.organisme)
+                .input('motif_deplacement',sql.VarChar,Demande.D.motif_deplacement)
+                .input('date_depart',sql.DateTime,date_depart)
+                .input('lieu_remmassage_d',sql.VarChar,Demande.D.lieu_ramassage_d)
+                .input('date_retour',sql.DateTime,date_retour)
+                .input('lieu_remmassage_r',sql.VarChar,Demande.D.lieu_ramassage_r)
+                .input('nature_marchandise',sql.VarChar,Demande.D.nature_marchandise)
+                .input('utilisateur1',sql.VarChar,Demande.D.utilisateur1_ID)
+                .input('utilisateur2',sql.VarChar,Demande.D.utilisateur2_ID)
+                .input('utilisateur3',sql.VarChar,Demande.D.utilisateur3_ID)
+                .output('demande_v_id',sql.Int)
+                .output('FID', sql.Int)//for notification
+                .output('recevoir_ID', sql.VarChar)//for notification
+                .output('DDATE', sql.DateTime)
+                .input('etat', sql.VarChar, 'Directeur')
+                .execute('InsertDemandeVehicule')
+                let Demand = {
+                        demande_ID: result.output.demande_v_id,
+                        demande_Date: result.output.DDATE,
+                        type_demande: 'Demande véhicule',
+                        etat: 'Directeur',
+                        motif: '',
+                        seen: 0,
+                    }
+                io.emit('NewDemandD'+Demande.D.structure, Demand )
+                io.emit(Demande.D.UserID , Demand )
+                console.log('Demande Inserted');
+                sql.close();
+                return  ({
+                    result : 'DI',
+                    demande_v_id : result.output.demande_v_id
+                })//Demand inserted
+            }
+            if (Demande.UT == 'Directeur') {
+                let result = await new sql.Request()
+                .input('userID',sql.VarChar,Demande.D.UserID)
+                .input('lieu',sql.VarChar,Demande.D.lieu)
+                .input('organisme',sql.VarChar,Demande.D.organisme)
+                .input('motif_deplacement',sql.VarChar,Demande.D.motif_deplacement)
+                .input('date_depart',sql.DateTime,date_depart)
+                .input('lieu_remmassage_d',sql.VarChar,Demande.D.lieu_ramassage_d)
+                .input('date_retour',sql.DateTime,date_retour)
+                .input('lieu_remmassage_r',sql.VarChar,Demande.D.lieu_ramassage_r)
+                .input('nature_marchandise',sql.VarChar,Demande.D.nature_marchandise)
+                .input('utilisateur1',sql.VarChar,Demande.D.utilisateur1_ID)
+                .input('utilisateur2',sql.VarChar,Demande.D.utilisateur2_ID)
+                .input('utilisateur3',sql.VarChar,Demande.D.utilisateur3_ID)
+                .output('demande_v_id',sql.Int)
+                .output('DDATE', sql.DateTime)
+                .input('etat', sql.VarChar,'Chef de parc')
+                .execute('InsertDemandeVehicule')
+                let Demand = {
+                        demande_ID: result.output.demande_v_id,
+                        demande_Date: result.output.DDATE,
+                        type_demande: 'Demande véhicule',
+                        etat: 'Chef de parc',
+                        motif: '',
+                        seen: 0,
+                    }
+                // check from to
+           let Notif = {// notification Info 
                 userID : Demande.UserID,
                 notification_ID : result.output.FID,
                 demande_ID: result.output.demande_v_id,
@@ -77,16 +115,52 @@ async function  setDemandeVehicule(Demande,io){
                 description_notif : 'est effecuté(e) une nouvelle demande véhicule',
                 icon:'commute'
             }
-            io.emit('NewDemandCD', Demand )
-            io.emit(Demande.UserID , Demand )
-            io.emit(Demande.struct+"VD" , Demand )//notifier reporting
+                        io.emit(Demande.struct+"VD" , Demand )//notifier reporting
             io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
-            console.log('Demande Inserted');
-            sql.close();
-            return  ({
-                result : 'DI',
-                demande_v_id : result.output.demande_v_id
-            } )//Demand inserted
+            io.emit('NewDemandCD', Demand )
+                io.emit('NewDemandCP', Demand )
+                io.emit(Demande.D.UserID , Demand )
+                console.log('Demande Inserted');
+                sql.close();
+                return  ({
+                    result : 'DI',
+                    demande_v_id : result.output.demande_v_id
+                })//Demand inserted
+            }else {
+                let result = await new sql.Request()
+                .input('userID',sql.VarChar,Demande.D.UserID)
+                .input('lieu',sql.VarChar,Demande.D.lieu)
+                .input('organisme',sql.VarChar,Demande.D.organisme)
+                .input('motif_deplacement',sql.VarChar,Demande.D.motif_deplacement)
+                .input('date_depart',sql.DateTime,date_depart)
+                .input('lieu_remmassage_d',sql.VarChar,Demande.D.lieu_ramassage_d)
+                .input('date_retour',sql.DateTime,date_retour)
+                .input('lieu_remmassage_r',sql.VarChar,Demande.D.lieu_ramassage_r)
+                .input('nature_marchandise',sql.VarChar,Demande.D.nature_marchandise)
+                .input('utilisateur1',sql.VarChar,Demande.D.utilisateur1_ID)
+                .input('utilisateur2',sql.VarChar,Demande.D.utilisateur2_ID)
+                .input('utilisateur3',sql.VarChar,Demande.D.utilisateur3_ID)
+                .output('demande_v_id',sql.Int)
+                .output('DDATE', sql.DateTime)
+                .input('etat', sql.VarChar, 'Chef Departement')
+                .execute('InsertDemandeVehicule')
+                let Demand = {
+                        demande_ID: result.output.demande_v_id,
+                        demande_Date: result.output.DDATE,
+                        type_demande: 'Demande véhicule',
+                        etat: 'Chef Departement',
+                        motif: '',
+                        seen: 0,
+                    }
+                io.emit('NewDemandCD'+Demande.D.structure+Demande.D.departement, Demand )
+                io.emit(Demande.D.UserID , Demand )
+                console.log('Demande Inserted');
+                sql.close();
+                return  ({
+                    result : 'DI',
+                    demande_v_id : result.output.demande_v_id
+                })//Demand inserted                
+            }        
         } catch (error) {
             console.log(error);
             console.log('can not instert Demande');
@@ -151,6 +225,9 @@ async function  editDemandeVehicule(Demande ,io){
              .input('utilisateur1',sql.VarChar,Demande.utilisateur1_ID)
              .input('utilisateur2',sql.VarChar,Demande.utilisateur2_ID)
              .input('utilisateur3',sql.VarChar,Demande.utilisateur3_ID)
+             .input('matricule', sql.VarChar, Demande.matricule)
+             .input('CID', sql.Int, Demande.chauffeur_ID)
+             .input('Observ', sql.VarChar, Demande.observation)
              .output('NID',sql.Int)//for notif
              .output('recevoir_ID',sql.VarChar)// for notif
             .execute('UpdateDemandeVehicule')
@@ -170,6 +247,7 @@ async function  editDemandeVehicule(Demande ,io){
             sql.close();
             return  'DU' //Demand inserted
         } catch (error) {
+            console.log(error);
             console.log('can not instert Demande');
             sql.close();
             return 'CNUD'; // can not insert Demand

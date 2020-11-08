@@ -12,7 +12,7 @@ CREATE TABLE utilisateurs (
 	posteTelephonique varchar(15) NOT NULL,
 	departement varchar(50) NULL,
 	CONSTRAINT CHK_typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Responsable DAM' , 'Chef departement'
-	, 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
+	, 'Chef de parc', 'Agent de magasin', 'Agent de Tirage',  'Responsable PEC', 'Responsable AR'))
 ) ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -31,7 +31,7 @@ CREATE TABLE demande_compte(
 	posteTelephonique varchar(15) NOT NULL,
 	departement varchar(50) NULL,
 	CONSTRAINT CHK__typeUtilisateur CHECK(typeUtilisateur IN ('Client', 'Directeur', 'Responsable DAM' , 'Chef departement'
-	, 'Chef de parc', 'Agent de magasin', 'Agent de Tirage'))
+	, 'Chef de parc', 'Agent de magasin', 'Agent de Tirage',  'Responsable PEC', 'Responsable AR'))
 ) ON [PRIMARY]
 
 /*------------------------------------------------------------------------------------------------------------------------*/
@@ -93,6 +93,7 @@ CREATE TABLE demande_vehicule (
 	utilisateur3_ID varchar(50) ,
 	matricule varchar(20),
 	chauffeur_ID int ,
+	observation varchar(max),
 	CONSTRAINT FK_demande_vehicule_demande FOREIGN KEY (demande_V_ID) REFERENCES demande(demande_ID),
 	CONSTRAINT FK_utilisateur1_demande FOREIGN KEY (utilisateur1_ID) REFERENCES utilisateurs(email),
 	CONSTRAINT FK_utilisateur2_demande FOREIGN KEY (utilisateur2_ID) REFERENCES utilisateurs(email),
@@ -138,8 +139,9 @@ CREATE TABLE  demande_fourniture(
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
+DROP TABLE objet
 CREATE TABLE objet (
-    code_objet varchar(6) PRIMARY KEY,
+    code_object varchar(6) PRIMARY KEY,
 	designation varchar (255) NOT NULL,
 	quantite int NOT NULL
 )ON [PRIMARY];
@@ -213,18 +215,19 @@ CREATE TABLE vehicule(
 	nom varchar(20),
 	annee integer,
 	type_vehicule varchar(20),
+	dispo bit,
 	PRIMARY KEY (Matricule)
 );
 
 /*------------------------------------------------------------------------------------------------------------------------*/
 
 CREATE TABLE chauffeur(
-	
 	chauffeur_id int IDENTITY(1, 1),
 	nom varchar(Max),
 	prenom varchar(Max),
 	type_permis varchar(Max),
 	telephone varchar(Max),
 	email varchar(MAX),
+	dispoC bit,
 	PRIMARY KEY (chauffeur_id)
 )

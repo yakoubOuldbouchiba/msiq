@@ -29,7 +29,7 @@ async function  getDemandeFourniture(id){
 // set new demande
 async function  setDemandeFourniture(Demande , io){
     try {
-        console.log(Demande)
+        
         await sql.connect(config)
         try {
             let objets = await new sql.Request()
@@ -44,7 +44,7 @@ async function  setDemandeFourniture(Demande , io){
             let demande_id=objets.output.demande_id;//id of demande insert it 
             for(let i = 0 ; i <Demande.objetsDemande.length ; i++){
                 let objet = Demande.objetsDemande[i]
-                console.log(demande_id);
+                
                 await new sql.Request()
                 .input('demande_id',sql.Int,demande_id)
                 .input('code_objet',sql.VarChar,objet.code_object)
@@ -65,6 +65,7 @@ async function  setDemandeFourniture(Demande , io){
             sql.close();
             return  'DI' //Demand inserted
         } catch (error) {
+            console.log(error);
             console.log('can not instert Demande');
             sql.close();
             return 'CNID'; // can not insert Demand
