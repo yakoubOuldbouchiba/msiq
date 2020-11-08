@@ -73,6 +73,7 @@ module.exports=(io)=>{
                 dbOperationsDemandeTirage.deleteDemandeTirage(req.params.id)
                     .then(result => {
                         if(result.result ==='DD'){
+                            io.emit("DeleteNofit"+result.recevoir_ID, req.params.id)//for notif CD
                             if(result.typedelete){
                                 io.emit(req.params.struct+"DTD")
                             }
@@ -115,7 +116,7 @@ module.exports=(io)=>{
     //update demand
     
     router.post('/UpdateDemandeTirage', async (req , res)=>{
-        await dbOperationsDemandeTirage.upDemandeTirage(req.body)
+        await dbOperationsDemandeTirage.upDemandeTirage(req.body ,io)
             .then(result => {
                 if(result ==='DE'){
                     res.status(200).json({

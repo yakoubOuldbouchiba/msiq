@@ -20,6 +20,8 @@ async function  setDemandeTirage(Data,io){
                 .input('FF', sql.VarChar, Data.TypeOfFile)
                 .output('DID', sql.Int)
                 .output('DDATE', sql.DateTime)
+                .output('FID', sql.Int)
+                .output('recevoir_ID', sql.VarChar)
                 .input('etat', sql.VarChar, 'Directeur')
                 .execute('InsertDemandeTirage').then((res,err) => {
                     if (err) 
@@ -32,8 +34,19 @@ async function  setDemandeTirage(Data,io){
                          motif: '',
                          seen: 0,
                      }
+                    // need to check from to
+                    let Notif = {// notification Info 
+                      userID :Data.userID,
+                      notification_ID : res.output.FID,
+                      demande_ID: res.output.DID,
+                      seen : 0,
+                      description_notif : 'est effecuté(e) une nouvelle demande de tirage',
+                      icon:'print'
+                    }
                      io.emit('NewDemandD'+Data.structure, Demand)
                      io.emit(Data.userID , Demand)
+                     io.emit(Data.struct+"TD" , Demand )// for notification
+                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                  });
                 console.log('Demande Inserted');
                 sql.close();
@@ -120,13 +133,15 @@ async function  deleteDemandeTirage(id){
             let res = await new sql.Request()
             .input('id',sql.Int,id)
             .output('typedelete',sql.Bit)
+            .output('recevoir_ID',sql.VarChar)//for notif
             .execute('DeleteDemandeTirage');
             sql.close();
             console.log("demande deleted")
             return (
                 {
                     result : "DD",
-                    typedelete :res.output.typedelete
+                    typedelete :res.output.typedelete,
+                    recevoir_ID :res.output.recevoir_ID// for notif
                 }
             )
 
@@ -164,7 +179,7 @@ async function  GetDemandeTirage(id){
 }
 
 // Edit a demand
-async function  upDemandeTirage(Data){
+async function  upDemandeTirage(Data , io){
     try {
         await sql.connect(config)
         try {
@@ -175,9 +190,23 @@ async function  upDemandeTirage(Data){
             .input('NTF', sql.Int, Data.nombre_exemplaire*Data.nombre_feuille)
             .input('TF', sql.VarChar, Data.type_document)
             .input('A', sql.VarChar, Data.autre)
+            .output('NID',sql.Int)//for notif
+            .output('recevoir_ID',sql.VarChar)// for notif
             .input('NO', sql.Int, Data.numero_ordre)
             .input('DP', sql.Date, Data.date_prestation)
-            .execute('UpdatetDemandeTirage');
+            .execute('UpdatetDemandeTirage')
+            .then((res , err)=>{
+                if(err)return 'CNUD';
+                let Notif = {// notification Info 
+                    userID : Data.uID,
+                    notification_ID : res.output.NID,
+                    demande_ID: Data.demande_T_ID,
+                    seen : 0,
+                    description_notif : 'est modifé(e) la demande de tirage numéro '+Data.demande_T_ID,
+                    icon:'print'
+                }
+                io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+            })
             console.log('Demande Inserted');
             sql.close();
             return  'DE' //Demand inserted

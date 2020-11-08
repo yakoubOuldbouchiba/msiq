@@ -9,6 +9,8 @@ ALTER PROCEDURE InsertDemandeTirage
 	@SFN	AS varchar(max),
 	@FF		AS varchar(10),
 	@DID	AS int OUTPUT,
+	@FID AS int OUTPUT,--for notif
+	@recevoir_ID as varchar(max) OUTPUT,--for notif
 	@DDATE	AS datetime OUTPUT,
 	@etat	AS varchar(50)
 AS
@@ -36,11 +38,26 @@ BEGIN
 				null, 
 				(SELECT IDENT_CURRENT('document')))
 	SELECT @DID = IDENT_CURRENT('demande')
+	--for notif--
+	DECLARE @email as varchar(max) 
+	SELECT @email = U.email
+	FROM utilisateurs U , (
+		SELECT U.structure , U.departement
+		FROM utilisateurs U
+		WHERE U.email = @userID	
+	)as I
+	WHERE I.structure = U.structure
+	AND I.departement = U.departement
+	AND U.typeUtilisateur = 'Chef departement'
+	EXECUTE CREE_NOTIFICATION @DID,@email ,'est effecut�(e) une nouvelle demande de tirage', 'print'
+	SELECT @FID = IDENT_CURRENT('notification')
+	set @recevoir_ID = @email
 END
 
 ALTER PROCEDURE DeleteDemandeTirage
 	@id as int,
-	@typedelete as bit output
+	@typedelete as bit output,
+	@recevoir_ID as varchar(max) OUTPUT--For notif
 AS
 BEGIN
 	Declare @etat  varchar(max)
@@ -56,6 +73,8 @@ BEGIN
 	END
 	ELSE
 	BEGIN
+		SELECT @recevoir_ID = dbo.GetChefDepartementByDI(@id)--for notif
+		DELETE FROM notification WHERE demande_ID = @id
 		DELETE FROM demande_tirage WHERE demande_T_ID = @id;
 		DELETE FROM document WHERE document_ID = (select document_ID from demande_tirage where demande_T_ID = @id) ;
 		DELETE FROM demande WHERE demande_ID = @id
@@ -95,6 +114,8 @@ ALTER PROCEDURE UpdatetDemandeTirage
 	@NTF AS int,
 	@TF AS varchar(max),
 	@A AS varchar(max),
+	@NID AS int OUTPUT,--For notif
+	@recevoir_ID as varchar(max) OUTPUT--For notif
 	@NO AS int,
 	@DP AS Date
 AS
@@ -108,9 +129,18 @@ BEGIN
 	WHERE 	document_ID 		= (SELECT document_ID 
 									FROM demande_tirage 
 									WHERE demande_T_ID = @id)
-	UPDATE	demande_tirage
+  UPDATE	demande_tirage
 	SET		numero_ordre = @NO,
 			date_prestation = @DP
 	WHERE	demande_T_ID = @id
-
+	--for notif
+	DECLARE @describ  varchar(max);
+	SELECT @recevoir_ID = email
+	FROM demande D , utilisateurs U
+	WHERE D.utilisateurs_ID = U.email
+	AND D.demande_ID = @id
+	SELECT @recevoir_ID = dbo.GetChefDepartement(@recevoir_ID) --for notif
+	SELECT @NID = dbo.GetNotifID(@id);-- for notif
+	SELECT @describ = 'est modif�(e) la demande de tirage num�ro '+ CONVERT(Varchar(max) , @id)    
+	Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 END

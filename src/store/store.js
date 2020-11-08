@@ -31,7 +31,7 @@ export default new Vuex.Store({
         token:!!localStorage.getItem('token')|| '',
         reciever_ID : null,
         dialogNewMessage:false,
-        dialog:false,
+        dialog:false
     },
     mutations:{
         

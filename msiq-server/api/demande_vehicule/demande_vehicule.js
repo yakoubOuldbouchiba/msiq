@@ -51,7 +51,7 @@ module.exports=(io)=>{
     });
     //update a demande
     router.post('/UpdateDemandeVehicule',auth.requireLogin,(req , res)=>{ 
-        dbOperationsDemandes.editDemandeVehicule(req.body)
+        dbOperationsDemandes.editDemandeVehicule(req.body ,io)
             .then(result => {
                 if(result ==='DU'){
                     res.status(200).json({
@@ -75,6 +75,7 @@ module.exports=(io)=>{
         dbOperationsDemandes.deleteDemandeVehicule(req.params.id)
         .then(result => {
             if(result.result ==='DD'){
+                io.emit("DeleteNofit"+result.recevoir_ID, req.params.id)//for notif CD
                 if(result.typedelete){
                     io.emit(req.params.struct+"DVD")
                 }

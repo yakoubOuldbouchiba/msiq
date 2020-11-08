@@ -118,8 +118,9 @@ module.exports=(io)=>{
             seen: 0,
         }
         console.log(req.body);
-        dbOperationsDemandes.UpdateDemandState(req.params.id,req.body.State,req.body.Demande.motif)
+        dbOperationsDemandes.UpdateDemandState(req.params.id,req.body.State,req.body.Demande.motif,req.body.Demande.uID ,io)
         .then(result => {
+            console.log(req.body.Demande.uID);
             if(result==='DU'){
                 res.status(200).json({
                     demandes : result.demandes,
@@ -133,7 +134,7 @@ module.exports=(io)=>{
             }
         })
         io.emit(req.body.Demande.email+'E', Demand )
-        //io.emit(req.body.Demande.structure+'E', Demand )
+        //for repporting 
         if (req.body.typeD == 'Demande client'){ 
             io.emit(req.body.Demande.structure+'ECD', Demand )
         }              
