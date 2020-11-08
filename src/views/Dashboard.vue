@@ -256,7 +256,7 @@ data(){
    },
    async updateItem(Demande){
        await this.getDemande(Demande);
-     await this.getDemande(Demande);)
+     await this.getDemande(Demande);
      if(Demande.type_demande=='Demande client'){
        this.openDialogClient = true;
      }else if(Demande.type_demande=='Demande fourniture'){

@@ -63,7 +63,7 @@ ALTER VIEW demande_view
 	AND D.shown = '1'
 
 
-CREATE PROCEDURE getDemandes 
+ALTER PROCEDURE getDemandes 
 @email as varchar(max)
 AS
 BEGIN

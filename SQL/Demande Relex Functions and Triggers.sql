@@ -79,7 +79,7 @@ END
 
 -- update relex demande  --
 
-CREATE PROCEDURE UpdateDemandeRelex
+ALTER PROCEDURE UpdateDemandeRelex
 	@destination AS varchar(max),
 	@objet_mission as varchar(max),
 	@date_depart as datetime,

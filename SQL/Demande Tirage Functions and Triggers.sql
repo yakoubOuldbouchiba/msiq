@@ -79,8 +79,8 @@ BEGIN
 			U.nomUtilisateur,
 			U.prenomUtilisateur,
 			U.departement,
-			D.*
-			U.structure,
+			D.*,
+			U.structure
 	FROM	demande_tirage DT, document Dc, utilisateurs U, demande D
 	WHERE	DT.demande_T_ID = D.demande_ID
 	AND		DT.document_ID = Dc.document_ID
