@@ -58,6 +58,8 @@ async function  setDemandeVehicule(Demande,io){
                 .input('utilisateur2',sql.VarChar,Demande.D.utilisateur2_ID)
                 .input('utilisateur3',sql.VarChar,Demande.D.utilisateur3_ID)
                 .output('demande_v_id',sql.Int)
+                .output('FID', sql.Int)//for notification
+                .output('recevoir_ID', sql.VarChar)//for notification
                 .output('DDATE', sql.DateTime)
                 .input('etat', sql.VarChar, 'Directeur')
                 .execute('InsertDemandeVehicule')
@@ -104,6 +106,18 @@ async function  setDemandeVehicule(Demande,io){
                         motif: '',
                         seen: 0,
                     }
+                // check from to
+           let Notif = {// notification Info 
+                userID : Demande.UserID,
+                notification_ID : result.output.FID,
+                demande_ID: result.output.demande_v_id,
+                seen : 0,
+                description_notif : 'est effecuté(e) une nouvelle demande véhicule',
+                icon:'commute'
+            }
+                        io.emit(Demande.struct+"VD" , Demand )//notifier reporting
+            io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
+            io.emit('NewDemandCD', Demand )
                 io.emit('NewDemandCP', Demand )
                 io.emit(Demande.D.UserID , Demand )
                 console.log('Demande Inserted');
@@ -167,12 +181,14 @@ async function  deleteDemandeVehicule(id){
             let res = await new sql.Request()
             .input('id',sql.Int,id)
             .output('typedelete',sql.Bit)
+            .output('recevoir_ID',sql.VarChar)//for notif
             .execute('DeleteDemandeVehicule');
             sql.close();
             console.log("demande deleted")
             return ({
                 result :"DD",
-                typedelete : res.output.typedelete
+                typedelete : res.output.typedelete,
+                recevoir_ID :res.output.recevoir_ID// for notif
             })
 
         }catch(error){
@@ -186,7 +202,7 @@ async function  deleteDemandeVehicule(id){
     }
 }
 // edit demande
-async function  editDemandeVehicule(Demande){
+async function  editDemandeVehicule(Demande ,io){
     try {
         let date_depart = Demande.date_depart+" "+Demande.heure_depart;
         let date_retour = Demande.date_retour+" "+Demande.heure_retour;
@@ -212,7 +228,21 @@ async function  editDemandeVehicule(Demande){
              .input('matricule', sql.VarChar, Demande.matricule)
              .input('CID', sql.Int, Demande.chauffeur_ID)
              .input('Observ', sql.VarChar, Demande.observation)
-            .execute('UpdateDemandeVehicule');
+             .output('NID',sql.Int)//for notif
+             .output('recevoir_ID',sql.VarChar)// for notif
+            .execute('UpdateDemandeVehicule')
+            .then((res , err)=>{
+                if(err)return 'CNUD';
+                let Notif = {// notification Info 
+                    userID : Demande.uID,
+                    notification_ID : res.output.NID,
+                    demande_ID: Demande.demande_V_ID,
+                    seen : 0,
+                    description_notif : 'est modifé(e) la demande véhicule numéro '+Demande.demande_V_ID,
+                    icon:'commute'
+                }
+                io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+            })
             console.log('Demande Inserted');
             sql.close();
             return  'DU' //Demand inserted

@@ -34,7 +34,7 @@ ALTER PROCEDURE SetUsers
 AS
 BEGIN 
 	INSERT INTO utilisateurs
-	Values(@email, @pw, @ln, @fn, @tu, @bd, @tel, @job, @struc, @pt, @depart)
+	Values(@email, @pw, @ln, @fn, @tu, @bd, @tel, @job, @struc, @pt, @depart ,1)
 END
 
 /*----------------------------------------------------------------------------------*/
@@ -78,9 +78,9 @@ ALTER PROCEDURE setAccountDemand
 	AS
 BEGIN 
 	INSERT INTO demande_compte
-	VALUES(@email, @pw, @ln, @fn, @tu, @bd, @tel, @job, @struc, @pt, @depart);
+	VALUES(@email, @pw, @ln, @fn, @tu, @bd, @tel, @job, @struc, @pt, @depart );
 	INSERT INTO utilisateurs 
-	VALUES (@email, @pw, @ln, @fn, 'Client', @bd, @tel, @job, @struc, @pt, @depart);
+	VALUES (@email, @pw, @ln, @fn, 'Client', @bd, @tel, @job, @struc, @pt, @depart , 1);
 END
 
 /*----------------------------------------------------------------------------------*/

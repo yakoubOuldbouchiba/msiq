@@ -38,6 +38,8 @@ ALTER PROCEDURE InsertDemandeVehicule
 	@utilisateur2 as varchar(50),
 	@utilisateur3 as varchar(50),
 	@demande_v_id as int output,
+	@FID AS int OUTPUT,--for notification
+	@recevoir_ID as varchar(max) OUTPUT,--for notification
 	@DDATE AS datetime OUTPUT,
 	@etat AS varchar(50)
 AS
@@ -67,6 +69,20 @@ BEGIN
 	            null,
 				null);
 	SELECT @demande_v_id = IDENT_CURRENT('demande');
+	/*Notification part */
+	DECLARE @email as varchar(max) 
+	SELECT @email = U.email
+	FROM utilisateurs U , (
+		SELECT U.structure , U.departement
+		FROM utilisateurs U
+		WHERE U.email = @userID	
+	)as I
+	WHERE I.structure = U.structure
+	AND I.departement = U.departement
+	AND U.typeUtilisateur = 'Chef departement'
+	EXECUTE CREE_NOTIFICATION  @demande_v_id,@email , 'est effecut�(e) une nouvelle demande v�hicule','commute'
+	SELECT @FID = IDENT_CURRENT('notification')
+	set @recevoir_ID = @email
 END
 
 
@@ -76,7 +92,8 @@ END
 
 ALTER PROCEDURE DeleteDemandeVehicule
 	@id as int,
-	@typedelete as bit output
+	@typedelete as bit output,
+	@recevoir_ID as varchar(max) OUTPUT--For notif
 AS
 	BEGIN
 	Declare @etat  varchar(max)
@@ -92,6 +109,8 @@ AS
 	END
 	ELSE
 	BEGIN
+		SELECT @recevoir_ID = dbo.GetChefDepartementByDI(@id)--for notif
+		DELETE FROM notification WHERE demande_ID = @id
 		UPDATE demande_relex set demande_V_ID = null WHERE demande_V_ID = @id
 		DELETE FROM demande_vehicule WHERE demande_V_ID = @id;
 		DELETE FROM demande WHERE demande_ID = @id
@@ -133,10 +152,11 @@ ALTER PROCEDURE UpdateDemandeVehicule
 	@utilisateur1 as varchar(50),
 	@utilisateur2 as varchar(50),
 	@utilisateur3 as varchar(50),
+	@NID AS int OUTPUT,--For notif
+	@recevoir_ID as varchar(max) OUTPUT--For notif
 	@matricule AS varchar(20),
 	@CID AS int,
 	@Observ AS varchar(max)
-	
 AS
 BEGIN
 	update demande_vehicule
@@ -156,5 +176,15 @@ BEGIN
 	chauffeur_ID = @CID,
 	observation = @Observ
 	where demande_V_ID = @demande_v_id
+	--for notif ---
+	DECLARE @describ  varchar(max);
+	SELECT @recevoir_ID = email
+	FROM demande D , utilisateurs U
+	WHERE D.utilisateurs_ID = U.email
+	AND D.demande_ID = @demande_v_id
+	SELECT @recevoir_ID = dbo.GetChefDepartement(@recevoir_ID) --for notif
+	SELECT @NID = dbo.GetNotifID(@demande_v_id);-- for notif
+	SELECT @describ = 'est modif�(e) la demande v�hicule num�ro '+ CONVERT(Varchar(max) , @demande_v_id)    
+	Execute Update_NOTIFICATION @demande_v_id , @recevoir_ID , @describ
 
 END

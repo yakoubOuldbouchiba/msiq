@@ -232,7 +232,7 @@ data(){
           type='/DemandePriseEnCharge/' 
      }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
-     }else if(demande.type_demande== 'Demande relex'){
+     }else if(demande.type_demande== 'Demande activité relex'){
           console.log("here")
           type='/DemandeRelex/' 
      }else{
@@ -255,8 +255,8 @@ data(){
     }
    },
    async updateItem(Demande){
-       await this.getDemande(Demande);
-     await this.getDemande(Demande);)
+     await this.getDemande(Demande);
+     this.demande.uID = await this.$store.state.user.email// i add it for notification
      if(Demande.type_demande=='Demande client'){
        this.openDialogClient = true;
      }else if(Demande.type_demande=='Demande fourniture'){
@@ -311,7 +311,7 @@ data(){
           type='/DemandePriseEnCharge/' 
      }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
-     }else if(demande.type_demande== 'Demande relex'){
+     }else if(demande.type_demande== 'Demande activité relex'){
           type='/DemandeRelex/' 
      }else{
        type='/demande/'

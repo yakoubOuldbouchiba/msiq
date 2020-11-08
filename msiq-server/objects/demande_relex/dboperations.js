@@ -52,6 +52,8 @@ async function  setDemandeRelex(Demande,io){
                 .input('demande_V_ID',sql.Int,Demande.D.demande_V_ID)
                 .output('DID', sql.Int)
                 .output('DDATE', sql.DateTime)
+                .output('FID', sql.Int)//For notif
+                .output('recevoir_ID', sql.VarChar)//For notif
                 .input('etat', sql.VarChar, 'Directeur')
                 .execute('InsertDemandeRelex').then((res,err) => {
                     if (err) 
@@ -64,6 +66,17 @@ async function  setDemandeRelex(Demande,io){
                          motif: '',
                          seen: 0,
                      }
+                    // i need check from to
+                    let Notif = {// notification Info 
+                      userID : Demande.userID,
+                      notification_ID : res.output.FID,
+                      demande_ID: res.output.DID,
+                      seen : 0,
+                      description_notif : 'est effecuté(e) une nouvelle demande activité relex',
+                      icon:'hotel'
+                    }
+                 io.emit(Demande.struct+"RD" , Demand )//for repporting 
+                 io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                      io.emit('NewDemandD'+Demande.D.structure, Demand )
                      io.emit(Demande.D.userID , Demand )
                  });
@@ -140,21 +153,35 @@ async function  setDemandeRelex(Demande,io){
     }
 }
 // edit new demande
-async function  editDemandeRelex(Demande){
+async function  editDemandeRelex(Demande ,io){
     try {
         let date_depart = Demande.date_depart+" "+Demande.heure_depart;
         let date_retour = Demande.date_retour+" "+Demande.heure_retour;
         await sql.connect(config)
         console.log(Demande)
         try {
-            let objets = await new sql.Request()
+            await new sql.Request()
             .input('destination',sql.VarChar,Demande.destination)
             .input('objet_mission',sql.VarChar,Demande.objet_mission)
             .input('date_depart',sql.DateTime,date_depart)
             .input('date_retour',sql.DateTime,date_retour)
             .input('prise_en_charge',sql.Bit,Demande.prise_en_charge)
             .input('demande_R_ID',sql.Int,Demande.demande_R_ID)
+            .output('NID',sql.Int)//for notif
+            .output('recevoir_ID',sql.VarChar)// for notif
             .execute('UpdateDemandeRelex')
+            .then((res , err)=>{
+                if(err)return 'CNUD';
+                let Notif = {// notification Info 
+                    userID : Demande.uID,
+                    notification_ID : res.output.NID,
+                    demande_ID: Demande.demande_R_ID,
+                    seen : 0,
+                    description_notif : 'est modifé(e) la demande activité relex numéro '+Demande.demande_R_ID,
+                    icon:'hotel'
+                }
+                io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+            })
             console.log('Demande updated');
             sql.close();
             return 'DU' //Demand inserted
@@ -173,16 +200,19 @@ async function  deleteDemandeRelex(id){
     try{
         await sql.connect(config);
         try{
-            let res = console.log(id);
-            await new sql.Request()
+             console.log(id);
+             let res =await new sql.Request()
             .input('id',sql.Int,id)
             .output('typedelete',sql.Bit)
+            .output('recevoir_ID',sql.VarChar)//for notif
             .execute('DeleteDemandeRelex');
             sql.close();
+            console.log(res)
             console.log("demande deleted")
             return ({
                 result :"DD" ,
-                typedelete : res.output.typedelete
+                typedelete : res.output.typedelete,
+                recevoir_ID :res.output.recevoir_ID// for notif
             }) 
 
         }catch(error){

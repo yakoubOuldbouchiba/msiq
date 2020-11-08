@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const dbOperationsDemandes = require('../../objects/demande_fourniture/dboperations.js');
 import * as auth from '../../services/auth-service.js'
-module.exports=()=>{
+module.exports=(io)=>{
         // get a single demande
         router.get('/DemandeFourniture/:id',auth.requireLogin,(req , res)=>{ 
             dbOperationsDemandes.getDemandeFourniture(req.params.id)
@@ -28,7 +28,7 @@ module.exports=()=>{
     //add a new demande
     router.post('/DemandeFourniture',auth.requireLogin , (req , res)=>{
         
-        dbOperationsDemandes.setDemandeFourniture( req.body)
+        dbOperationsDemandes.setDemandeFourniture( req.body ,io)
             .then(result => {
                 if(result ==='DI'){
                     res.status(200).json({
@@ -52,10 +52,14 @@ module.exports=()=>{
         res.send({method : 'update a demande'});
     });
     // delete a demande
-    router.delete('/DemandeFourniture/:id',auth.requireLogin,(req , res)=>{ 
+    router.delete('/DemandeFourniture/:id/:struct',auth.requireLogin,(req , res)=>{ 
         dbOperationsDemandes.deleteDemandeFourniture(req.params.id)
         .then(result => {
-            if(result ==='DD'){
+            if(result.result ==='DD'){
+                io.emit("DeleteNofit"+result.recevoir_ID, req.params.id)//for notif CD
+                if(result.typedelete){
+                    io.emit(req.params.struct+"DFD")//notif for reporting.
+                }
                 res.status(200).json({
                     title: 'Votre demande fourniture a été supprimée',
                     
@@ -75,7 +79,7 @@ module.exports=()=>{
     });
     //update a  demande
     router.post('/UpdateDemandeFourniture',auth.requireLogin , (req , res)=>{
-        dbOperationsDemandes.editDemandeFourniture(req.body)
+        dbOperationsDemandes.editDemandeFourniture(req.body , io)
         .then(result => {
             if(result ==='DU'){
                 res.status(200).json({

@@ -3,7 +3,7 @@
       <DemandeClient v-if="type =='Demande client'" :ID='ID' />
       <DemandeFourniture v-if="type == 'Demande fourniture'" :ID='ID' />
       <DemandePriseEnCharge v-if="type =='Demande de prise en charge'" :ID='ID' />
-      <DemandeRelex v-if="type == 'Demande relex'" :ID='ID' />
+      <DemandeRelex v-if="type == 'Demande activité relex'" :ID='ID' />
       <DemandeVehicule v-if="type == 'Demande véhicule'" :ID='ID' />
       <DemandeTirage v-if="type =='Demande de tirage'" :ID='ID' />
   </span>

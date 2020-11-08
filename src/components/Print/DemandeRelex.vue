@@ -40,7 +40,7 @@ export default {
             /** header */
             doc.addImage(image, 'JPEG', 10, 15, 20, 15)
             doc.setFontSize(16)
-            doc.text(80, 25, 'Demande relex')
+            doc.text(80, 25, 'Demande activité relex')
             doc.setFontSize(12)
             let DA = this.demande.demande_Date;
             var date_app = DA.substr(0,10)

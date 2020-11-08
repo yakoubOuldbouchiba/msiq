@@ -203,7 +203,8 @@ export default {
             Axios.post('http://localhost:3030/UpdateDemandeFourniture', 
                             {
                                 demande_id : this.objetsDF[0].demande_F_ID,
-                                objetsDemande : this.objetsDF
+                                objetsDemande : this.objetsDF,
+                                uID : this.$store.state.user.email
                             })
             .then(
             res =>{
