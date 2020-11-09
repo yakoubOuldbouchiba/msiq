@@ -1,9 +1,9 @@
 const config = {
     user : 'sa',
-    password :'Dr4gonc1ty-',
+    password :'MEFTAHPASSE1*',
     server :'127.0.0.1',
     database :'Msiq_db',
-    port: 1433
+    port: 49674
 }
 
 module.exports = config

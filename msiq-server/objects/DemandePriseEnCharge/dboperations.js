@@ -36,20 +36,20 @@ async function  setDemandePriseEnCharge(Data,io){
                          etat: 'Directeur',
                          motif: '',
                          seen: 0,
-                     }
-                    // i have to check from to
+                     }// i have to check from to
                      let Notif = {// notification Info 
-                          userID : Data.UserID,
-                          notification_ID : res.output.FID,
-                          demande_ID: res.output.DID,
-                          seen : 0,
-                          description_notif : 'est effecuté(e) une nouvelle demande activité relex',
-                          icon:'hotel'
-                     }
+                        userID : Data.D.UserID,
+                        notification_ID : res.output.FID,
+                        demande_ID: res.output.DID,
+                        seen : 0,
+                        description_notif : 'est effecuté(e) une nouvelle demande de prise en charge',
+                        icon:'flight'
+                   }
+                   io.emit(Data.D.structure+"PD" , Demand )//for reporting 
+                   io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                      io.emit('NewDemandD'+Data.D.structure, Demand )
                      io.emit(Data.D.UserID , Demand )
-                     io.emit(Data.struct+"PD" , Demand )//for reporting 
-                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                     
                  });
                 console.log('Demande Inserted');
                 sql.close();
@@ -70,6 +70,8 @@ async function  setDemandePriseEnCharge(Data,io){
                 .input('A', sql.VarChar, Data.D.aeroport)
                 .input('HV', sql.VarChar, Data.D.heureDeVol)
                 .output('DID', sql.Int)
+                .output('FID', sql.Int)//For notif
+                .output('recevoir_ID', sql.VarChar)//For notif
                 .output('DDATE', sql.DateTime)
                 .input('etat', sql.VarChar, 'Acceptee')
                 .execute('InsertDemandePriseEnCharge').then((res,err) => {
@@ -83,6 +85,17 @@ async function  setDemandePriseEnCharge(Data,io){
                          motif: '',
                          seen: 0,
                      }
+                     // i have to check from to
+                     let Notif = {// notification Info 
+                        userID : Data.D.UserID,
+                        notification_ID : res.output.FID,
+                        demande_ID: res.output.DID,
+                        seen : 0,
+                        description_notif : 'est effecuté(e) une nouvelle demande de prise en charge',
+                        icon:'flight'
+                   }
+                   io.emit(Data.structure+"PD" , Demand )//for reporting 
+                   io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                      io.emit('NewDemandRPEC', Demand )
                      io.emit(Data.D.UserID , Demand )
                  });
@@ -105,6 +118,8 @@ async function  setDemandePriseEnCharge(Data,io){
                 .input('A', sql.VarChar, Data.D.aeroport)
                 .input('HV', sql.VarChar, Data.D.heureDeVol)
                 .output('DID', sql.Int)
+                .output('FID', sql.Int)//For notif
+                .output('recevoir_ID', sql.VarChar)//For notif
                 .output('DDATE', sql.DateTime)
                 .input('etat', sql.VarChar, 'Chef Departement')
                 .execute('InsertDemandePriseEnCharge').then((res,err) => {
@@ -118,6 +133,17 @@ async function  setDemandePriseEnCharge(Data,io){
                          motif: '',
                          seen: 0,
                      }
+                     // i have to check from to
+                     let Notif = {// notification Info 
+                        userID : Data.D.UserID,
+                        notification_ID : res.output.FID,
+                        demande_ID: res.output.DID,
+                        seen : 0,
+                        description_notif : 'est effecuté(e) une nouvelle demande de prise en charge',
+                        icon:'flight'
+                   }
+                   io.emit(Data.structure+"PD" , Demand )//for reporting 
+                   io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                      io.emit('NewDemandCD'+Data.D.structure+Data.D.departement, Demand )
                      io.emit(Data.D.UserID , Demand )
                  });
@@ -206,6 +232,7 @@ async function  UpdateDemandePriseEnCharge(Data , io){
             .input('HV', sql.VarChar, Data.heureDeVol)
             .output('NID',sql.Int)//for notif
             .output('recevoir_ID',sql.VarChar)// for notif
+            .input('etat',sql.VarChar , Data.etat)// for notif
             .execute('UpdateDemandePEC').then((res , err)=>{
                 if(err)return 'CNUD';
                 let Notif = {// notification Info 

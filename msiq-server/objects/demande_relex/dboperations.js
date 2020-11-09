@@ -61,22 +61,22 @@ async function  setDemandeRelex(Demande,io){
                     let Demand = {
                          demande_ID: res.output.DID,
                          demande_Date: res.output.DDATE,
-                         type_demande: 'Demande relex',
+                         type_demande: 'Demande activité relex',
                          etat: 'Directeur',
                          motif: '',
                          seen: 0,
                      }
                     // i need check from to
                     let Notif = {// notification Info 
-                      userID : Demande.userID,
+                      userID : Demande.D.userID,
                       notification_ID : res.output.FID,
                       demande_ID: res.output.DID,
                       seen : 0,
                       description_notif : 'est effecuté(e) une nouvelle demande activité relex',
                       icon:'hotel'
                     }
-                 io.emit(Demande.struct+"RD" , Demand )//for repporting 
-                 io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                    io.emit(Demande.structure+"RD" , Demand )//for repporting 
+                    io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                      io.emit('NewDemandD'+Demande.D.structure, Demand )
                      io.emit(Demande.D.userID , Demand )
                  });
@@ -93,6 +93,8 @@ async function  setDemandeRelex(Demande,io){
                 .input('prise_en_charge',sql.Bit,Demande.D.prise_en_charge)
                 .input('demande_V_ID',sql.Int,Demande.D.demande_V_ID)
                 .output('DID', sql.Int)
+                .output('FID', sql.Int)//For notif
+                .output('recevoir_ID', sql.VarChar)//For notif
                 .output('DDATE', sql.DateTime)
                 .input('etat', sql.VarChar, 'Acceptee')
                 .execute('InsertDemandeRelex').then((res,err) => {
@@ -101,11 +103,22 @@ async function  setDemandeRelex(Demande,io){
                     let Demand = {
                          demande_ID: res.output.DID,
                          demande_Date: res.output.DDATE,
-                         type_demande: 'Demande relex',
+                         type_demande: 'Demande activité relex',
                          etat: 'Acceptee',
                          motif: '',
                          seen: 0,
                      }
+                     // i need check from to
+                    let Notif = {// notification Info 
+                        userID : Demande.D.userID,
+                        notification_ID : res.output.FID,
+                        demande_ID: res.output.DID,
+                        seen : 0,
+                        description_notif : 'est effecuté(e) une nouvelle demande activité relex',
+                        icon:'hotel'
+                      }
+                      io.emit(Demande.structure+"RD" , Demand )//for repporting 
+                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                      io.emit('NewDemandRR', Demand )
                      io.emit(Demande.D.userID , Demand )
                  });
@@ -122,6 +135,8 @@ async function  setDemandeRelex(Demande,io){
                 .input('prise_en_charge',sql.Bit,Demande.D.prise_en_charge)
                 .input('demande_V_ID',sql.Int,Demande.D.demande_V_ID)
                 .output('DID', sql.Int)
+                .output('FID', sql.Int)//For notif
+                .output('recevoir_ID', sql.VarChar)//For notif
                 .output('DDATE', sql.DateTime)
                 .input('etat', sql.VarChar, 'Chef Departement')
                 .execute('InsertDemandeRelex').then((res,err) => {
@@ -130,11 +145,22 @@ async function  setDemandeRelex(Demande,io){
                     let Demand = {
                          demande_ID: res.output.DID,
                          demande_Date: res.output.DDATE,
-                         type_demande: 'Demande relex',
+                         type_demande: 'Demande activité relex',
                          etat: 'Chef Departement',
                          motif: '',
                          seen: 0,
                      }
+                     // i need check from to
+                    let Notif = {// notification Info 
+                        userID : Demande.D.userID,
+                        notification_ID : res.output.FID,
+                        demande_ID: res.output.DID,
+                        seen : 0,
+                        description_notif : 'est effecuté(e) une nouvelle demande activité relex',
+                        icon:'hotel'
+                      }
+                      io.emit(Demande.structure+"RD" , Demand )//for repporting 
+                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                      io.emit('NewDemandCD'+Demande.D.structure+Demande.D.departement, Demand )
                      io.emit(Demande.D.userID , Demand )
                  });
@@ -143,6 +169,7 @@ async function  setDemandeRelex(Demande,io){
                 return 'DI' //Demand inserted
              }
         } catch (error) {
+            console.log(error)
             console.log('can not instert Demande');
             sql.close();
             return 'CNID'; // can not insert Demand
@@ -169,6 +196,7 @@ async function  editDemandeRelex(Demande ,io){
             .input('demande_R_ID',sql.Int,Demande.demande_R_ID)
             .output('NID',sql.Int)//for notif
             .output('recevoir_ID',sql.VarChar)// for notif
+            .input('etat',Demande.etat)
             .execute('UpdateDemandeRelex')
             .then((res , err)=>{
                 if(err)return 'CNUD';
