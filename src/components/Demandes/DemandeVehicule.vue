@@ -354,7 +354,7 @@ export default {
             )
         },
         closeDemande :function(){
-            this.$emit("sendDemande",this.DV.demande_V_ID);
+            this.$emit("sendDemande",null);
             this.$refs.form.reset();
             this.dialog=false;
         },
