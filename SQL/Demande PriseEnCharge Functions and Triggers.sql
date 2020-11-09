@@ -43,16 +43,19 @@ BEGIN
 				@HV)
 	SELECT @DID = IDENT_CURRENT('demande')
 	DECLARE @email as varchar(max) 
-	SELECT @email = U.email
-	FROM utilisateurs U , (
-		SELECT U.structure , U.departement
-		FROM utilisateurs U
-		WHERE U.email = @userID	
-	)as I
-	WHERE I.structure = U.structure
-	AND I.departement = U.departement
-	AND U.typeUtilisateur = 'Chef departement'
-	EXECUTE CREE_NOTIFICATION @DID,@email ,'est effecut�(e) une nouvelle demande de prise en charge', 'flight'
+	IF (@etat = 'Directeur')
+	BEGIN
+		select	@email = dbo.GetDirecteurByDI(@DID);
+	END
+	ELSE IF (@etat = 'Acceptee')
+	BEGIN
+		select	@email = dbo.GetUserByType('Responsable PEC');
+	END
+	ELSE IF (@etat = 'Chef Departement')
+	BEGIN
+		select	@email = dbo.GetChefDepartementByDI(@DID);
+	END
+	EXECUTE CREE_NOTIFICATION @DID,@email ,'est effecuté(e) une nouvelle demande de prise en charge', 'flight'
 		--for Notif--
 	SELECT @FID = IDENT_CURRENT('notification')
 	set @recevoir_ID = @email
@@ -77,7 +80,7 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		SELECT @recevoir_ID = dbo.GetChefDepartementByDI(@id)--for notif
+		SELECT @recevoir_ID = dbo.GetRecevoirByDI(@id)--for notif
 		DELETE FROM notification WHERE demande_ID = @id
 		DELETE FROM demande_priseEnCharge WHERE demande_P_ID = @id;
 		DELETE FROM demande WHERE demande_ID = @id
@@ -132,7 +135,8 @@ ALTER PROCEDURE UpdateDemandePEC
     @A AS varchar(250), 
     @HV AS varchar(50),
 	@NID AS int OUTPUT,--For notif
-	@recevoir_ID as varchar(max) OUTPUT--For notif
+	@recevoir_ID as varchar(max) OUTPUT,--For notif
+	@etat AS varchar(max)-- for notif
 AS
 BEGIN
 	UPDATE demande_priseEnCharge
@@ -150,12 +154,19 @@ BEGIN
 		heureDeVol = @HV	
 	WHERE demande_P_ID= @id
 	DECLARE @describ  varchar(max);
-	SELECT @recevoir_ID = email
-	FROM demande D , utilisateurs U
-	WHERE D.utilisateurs_ID = U.email
-	AND D.demande_ID = @id
-	SELECT @recevoir_ID = dbo.GetChefDepartement(@recevoir_ID) --for notif
+	IF (@etat = 'Directeur')
+	BEGIN
+		select	@recevoir_ID = dbo.GetDirecteurByDI(@id);
+	END
+	ELSE IF (@etat = 'Acceptee')
+	BEGIN
+		select	@recevoir_ID = dbo.GetUserByType('Responsable PEC');
+	END
+	ELSE IF (@etat = 'Chef Departement')
+	BEGIN
+		select	@recevoir_ID = dbo.GetChefDepartementByDI(@id);
+	END
 	SELECT @NID = dbo.GetNotifID(@id);-- for notif
-	SELECT @describ = 'est modif�(e) la demande de prise en charge num�ro '+ CONVERT(Varchar(max) , @id)    
+	SELECT @describ = 'est modifé(e) la demande de prise en charge numéro '+ CONVERT(Varchar(max) , @id)    
 	Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 END

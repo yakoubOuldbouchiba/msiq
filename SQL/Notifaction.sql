@@ -110,6 +110,19 @@ BEGIN
 	AND D.demande_ID = @id
 	return @email
 END
+
+CREATE FUNCTION GetRecevoirByDI (@id	as int)
+RETURNS varchar(Max)
+AS
+BEGIN
+	DECLARE @email as varchar(max) 
+	SELECT @email = N.recevoir_ID
+	FROM notification N
+	WHERE N.demande_ID = @id
+	return @email
+END
+Select dbo.GetRecevoirByDI(358)
+
 SELECT dbo.GetUserByDI(2)
 CREATE FUNCTION GetChefDepartementByDI (@demande_ID	as int)
 RETURNS varchar(Max)

@@ -21,7 +21,6 @@ BEGIN
 END
  
 /*Create type objet*/
-select	dbo.GetChefDepartementByDI(359);
 ALTER PROCEDURE InsertDemandeFourniture
 	@userID AS varchar(50),
 	@demande_id AS int output,
@@ -57,7 +56,7 @@ BEGIN
 	BEGIN
 		select	@email = dbo.GetChefDepartementByDI(@demande_id);
 	END
-	EXECUTE CREE_NOTIFICATION @demande_id, @email ,'est effecuté(e) une nouvelle demande fourniture', 'edit'
+	EXECUTE CREE_NOTIFICATION @demande_id, @email ,'est effecutï¿½(e) une nouvelle demande fourniture', 'edit'
 	--for Notif--
 	SELECT @FID = IDENT_CURRENT('notification')
 	set @recevoir_ID = @email
@@ -114,7 +113,7 @@ BEGIN
 		select	@recevoir_ID = dbo.GetChefDepartementByDI(@demande_id);
 	END
 	SELECT @NID = dbo.GetNotifID(@demande_id);-- for notif
-	SELECT @describ = 'est modifé(e) la demande fourniture numéro '+ CONVERT(Varchar(max) , @demande_id)    
+	SELECT @describ = 'est modifï¿½(e) la demande fourniture numï¿½ro '+ CONVERT(Varchar(max) , @demande_id)    
 	Execute Update_NOTIFICATION @demande_id , @recevoir_ID , @describ
 END
 ALTER PROCEDURE deleteDemandeFourniture

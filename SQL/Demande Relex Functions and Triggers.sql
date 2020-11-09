@@ -32,16 +32,19 @@ BEGIN
 	SELECT 		@DID= IDENT_CURRENT('demande')
 	--For notification--
 	DECLARE @email as varchar(max) 
-	SELECT @email = U.email
-	FROM utilisateurs U , (
-		SELECT U.structure , U.departement
-		FROM utilisateurs U
-		WHERE U.email = @userID	
-	)as I
-	WHERE I.structure = U.structure
-	AND I.departement = U.departement
-	AND U.typeUtilisateur = 'Chef departement'
-	EXECUTE CREE_NOTIFICATION @DID,@email , 'est effecut�(e) une nouvelle demande activit� relex' , 'hotel'
+	IF (@etat = 'Directeur')
+	BEGIN
+		select	@email = dbo.GetDirecteurByDI(@DID);
+	END
+	ELSE IF (@etat = 'Acceptee')
+	BEGIN
+		select	@email = dbo.GetUserByType('Responsable AR');
+	END
+	ELSE IF (@etat = 'Chef Departement')
+	BEGIN
+		select	@email = dbo.GetChefDepartementByDI(@DID);
+	END
+	EXECUTE CREE_NOTIFICATION @DID,@email , 'est effecuté(e) une nouvelle demande activité relex' , 'hotel'
 	SELECT @FID = IDENT_CURRENT('notification')
 	set @recevoir_ID = @email
 END
@@ -68,7 +71,7 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		SELECT @recevoir_ID = dbo.GetChefDepartementByDI(@id)--for notif
+		SELECT @recevoir_ID = dbo.GetRecevoirByDI(@id)--for notif
 		DELETE FROM notification WHERE demande_ID = @id
 		DELETE FROM demande_relex WHERE demande_R_ID = @id;
 		DELETE FROM demande_vehicule WHERE demande_V_ID = (select demande_V_ID from demande_relex where demande_R_ID = @id );
@@ -106,7 +109,8 @@ ALTER PROCEDURE UpdateDemandeRelex
 	@prise_en_charge as bit ,
 	@demande_R_ID as int,
 	@NID AS int OUTPUT,--For notif
-	@recevoir_ID as varchar(max) OUTPUT--For notif
+	@recevoir_ID as varchar(max) OUTPUT,--For notif
+	@etat AS varchar(max)-- for notif
 AS
 BEGIN
 	UPDATE demande_relex
@@ -118,12 +122,20 @@ BEGIN
 	WHERE demande_R_ID = @demande_R_ID
 	--Notif--
 	DECLARE @describ  varchar(max);
-	SELECT @recevoir_ID = email
-	FROM demande D , utilisateurs U
-	WHERE D.utilisateurs_ID = U.email
-	AND D.demande_ID = @demande_R_ID
+	IF (@etat = 'Directeur')
+	BEGIN
+		select	@recevoir_ID = dbo.GetDirecteurByDI(@demande_R_ID);
+	END
+	ELSE IF (@etat = 'Acceptee')
+	BEGIN
+		select	@recevoir_ID = dbo.GetUserByType('Responsable AR');
+	END
+	ELSE IF (@etat = 'Chef Departement')
+	BEGIN
+		select	@recevoir_ID = dbo.GetChefDepartementByDI(@demande_R_ID);
+	END
 	SELECT @recevoir_ID = dbo.GetChefDepartement(@recevoir_ID) --for notif
 	SELECT @NID = dbo.GetNotifID(@demande_R_ID);-- for notif
-	SELECT @describ = 'est modif�(e) la demande activit�(e) num�ro '+ CONVERT(Varchar(max) , @demande_R_ID)    
+	SELECT @describ = 'est modifé(e) la demande activité(e) numéro '+ CONVERT(Varchar(max) , @demande_R_ID)    
 	Execute Update_NOTIFICATION @demande_R_ID , @recevoir_ID , @describ
 END

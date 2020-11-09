@@ -42,6 +42,8 @@ async function  setDemandeClient(O,io){
                 .input('etat', sql.VarChar, 'Directeur')
                 .input('description', sql.VarChar, O.D.demande_C_description)
                 .output('DID', sql.Int)
+                .output('FID', sql.Int)
+                .output('recevoir_ID', sql.VarChar)
                 .output('DDATE', sql.DateTime)
                 .execute('InsertDemandeClient').then((res,err) => {
                 if (err) 
@@ -54,6 +56,17 @@ async function  setDemandeClient(O,io){
                         motif: '',
                         seen: 0
                     }
+                    //check from to 
+                    let Notif = {// notification Info 
+                        userID : O.D.UserID,
+                        notification_ID : res.output.FID,
+                        demande_ID: res.output.DID,
+                        seen : 0,
+                        description_notif : 'est effecuté(e) une nouvelle demande client',
+                        icon:'devices'
+                    }
+                    io.emit(O.D.structure+"CD", Demand )//for reporting
+                    io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                     io.emit('NewDemandD'+O.D.structure, Demand )
                     io.emit(O.D.UserID , Demand )
                 })
@@ -79,6 +92,17 @@ async function  setDemandeClient(O,io){
                         motif: '',
                         seen: 0
                     }
+                    //check from to 
+                    let Notif = {// notification Info 
+                        userID : O.D.UserID,
+                        notification_ID : res.output.FID,
+                        demande_ID: res.output.DID,
+                        seen : 0,
+                        description_notif : 'est effecuté(e) une nouvelle demande client',
+                        icon:'devices'
+                    }
+                    io.emit(O.D.structure+"CD", Demand )//for reporting
+                    io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                     io.emit('NewDemandRD', Demand )
                     io.emit(O.D.UserID , Demand )
                 })
@@ -91,6 +115,8 @@ async function  setDemandeClient(O,io){
                 .input('description', sql.VarChar, O.D.demande_C_description)
                 .output('DID', sql.Int)
                 .output('DDATE', sql.DateTime)
+                .output('FID', sql.Int)
+                .output('recevoir_ID', sql.VarChar)
                 .execute('InsertDemandeClient').then((res,err) => {
                 if (err) 
                     return 'CNID'
@@ -102,21 +128,21 @@ async function  setDemandeClient(O,io){
                         motif: '',
                         seen: 0
                     }
+                    //check from to 
+                    let Notif = {// notification Info 
+                        userID : O.D.UserID,
+                        notification_ID : res.output.FID,
+                        demande_ID: res.output.DID,
+                        seen : 0,
+                        description_notif : 'est effecuté(e) une nouvelle demande client',
+                        icon:'devices'
+                    }
+                    io.emit(O.D.structure+"CD", Demand )//for reporting
+                    io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                     io.emit('NewDemandCD'+O.D.structure+O.D.departement, Demand )
                     io.emit(O.D.UserID , Demand )
                 })
             }
-          //check from to 
-           let Notif = {// notification Info 
-                    userID : Demande.uID,
-                    notification_ID : res.output.FID,
-                    demande_ID: res.output.DID,
-                    seen : 0,
-                    description_notif : 'est effecuté(e) une nouvelle demande client',
-                    icon:'devices'
-           }
-           io.emit(Demande.struct+"CD", Demand )//for reporting
-           io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             console.log('Demande Inserted');
             sql.close();
             return  'DI' //Demand inserted
@@ -186,7 +212,7 @@ async function  updateDemandeClient(Demande , io){
             .execute('updateDemandeClient').then((res , err)=>{
                 if(err)return 'CNUD';
                 let Notif = {// notification Info 
-                    userID : Demande.uID,
+                    userID : Demande.utilisateurs_ID,
                     notification_ID : res.output.NID,
                     demande_ID: Demande.demande_C_ID,
                     seen : 0,
@@ -195,7 +221,7 @@ async function  updateDemandeClient(Demande , io){
                 }
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             });
->
+
             console.log('Demande Updated');
             sql.close();
             return  'DU' //Demand updated

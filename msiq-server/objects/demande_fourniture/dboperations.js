@@ -38,9 +38,8 @@ async function  setDemandeFourniture(Demande , io){
             .output('FID', sql.Int)
             .output('recevoir_ID', sql.VarChar)
             .output('DDATE',sql.DateTime)
-            .input('etat' , 'Chef Departement')
+            .input('etat', sql.VarChar,'Chef Departement')
             .execute('InsertDemandeFourniture');
-            
             let notification_ID = objets.output.FID;
             let demande_id=objets.output.demande_id;//id of demande insert it 
             for(let i = 0 ; i <Demande.objetsDemande.length ; i++){
@@ -60,6 +59,7 @@ async function  setDemandeFourniture(Demande , io){
                 description_notif : 'est effecuté(e) une nouvelle demande fourniture',
                 icon:'edit'
             }
+            console.log(Notif)
             //io.emit(Demande.struct+"FD" , Demand )//for repporting 
             io.emit("NewNotif"+objets.output.recevoir_ID , Notif)//notifier le CD.
             console.log('Demande Inserted');
@@ -81,10 +81,12 @@ async function  editDemandeFourniture(Demande ,io){
     try {
         await sql.connect(config)
         try {
+            console.log(Demande)
             let res = await new sql.Request()
             .input('demande_id',sql.Int ,Demande.demande_id)//notifier le CD.)
             .output('NID',sql.Int)//for notif
             .output('recevoir_ID',sql.VarChar)// for notif
+            .input(etat ,sql.VarChar ,Demande[0].etat)
             .execute('deleteObjetOftDemandeFourniture'); //id of demande insert it 
             let Notif = {// notification Info 
                 userID : Demande.uID,
@@ -107,6 +109,7 @@ async function  editDemandeFourniture(Demande ,io){
             sql.close();
             return  'DU' //Demand updated
         } catch (error) {
+            console.log(error)
             console.log('can not update Demande');
             sql.close();
             return 'CNUD'; // can not update Demand

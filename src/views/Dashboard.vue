@@ -255,7 +255,7 @@ data(){
     }
    },
    async updateItem(Demande){
-     await this.getDemande(Demande);
+    await this.getDemande(Demande);
      this.demande.uID = await this.$store.state.user.email// i add it for notification
      if(Demande.type_demande=='Demande client'){
        this.openDialogClient = true;
