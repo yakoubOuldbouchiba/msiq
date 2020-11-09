@@ -11,12 +11,7 @@
          </v-toolbar-title>
          <v-spacer></v-spacer>
          <!--icons-->
-          <Notifications />
-         <v-btn v-if="$store.state.token" icon route to="/messages">
-               <v-icon class="indigo--text text--darken-4">
-                    mail
-               </v-icon>
-         </v-btn>
+          <Notifications v-if="$store.state.token"   />
          <v-btn 
           v-if="$store.state.token" 
           icon
@@ -57,18 +52,6 @@
                               <v-icon class="amber--text text--darken-1">account_circle</v-icon>
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">Profile</v-list-item-content>
-              </v-list-item>
-              <v-list-item route to='/notifications'>   
-                         <v-list-item-icon>
-                              <v-icon class="amber--text text--darken-1">notification_important</v-icon>
-                         </v-list-item-icon>
-                         <v-list-item-content  class="indigo--text text--darken-4">Notifications</v-list-item-content>
-              </v-list-item>
-              <v-list-item route :to="'/messages'">   
-                         <v-list-item-icon  >
-                              <v-icon class="amber--text text--darken-1">mail</v-icon>
-                         </v-list-item-icon>
-                         <v-list-item-content  class="indigo--text text--darken-4">messages</v-list-item-content>
               </v-list-item>
               <v-list-item 
                               v-if="$store.state.user.typeUtilisateur!=='Client'"

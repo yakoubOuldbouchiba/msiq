@@ -43,10 +43,11 @@ async function  setDemandeTirage(Data,io){
                       description_notif : 'est effecuté(e) une nouvelle demande de tirage',
                       icon:'print'
                     }
+                    io.emit(Data.structure+"TD" , Demand )// for notification
+                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                      io.emit('NewDemandD'+Data.structure, Demand)
                      io.emit(Data.userID , Demand)
-                     io.emit(Data.struct+"TD" , Demand )// for notification
-                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                     
                  });
                 console.log('Demande Inserted');
                 sql.close();
@@ -63,6 +64,8 @@ async function  setDemandeTirage(Data,io){
                 .input('SFN', sql.VarChar, Data.StoringName)
                 .input('FF', sql.VarChar, Data.TypeOfFile)
                 .output('DID', sql.Int)
+                .output('FID', sql.Int)
+                .output('recevoir_ID', sql.VarChar)
                 .output('DDATE', sql.DateTime)
                 .input('etat', sql.VarChar, 'Acceptee')
                 .execute('InsertDemandeTirage').then((res,err) => {
@@ -76,6 +79,16 @@ async function  setDemandeTirage(Data,io){
                          motif: '',
                          seen: 0,
                      }
+                     let Notif = {// notification Info 
+                        userID :Data.userID,
+                        notification_ID : res.output.FID,
+                        demande_ID: res.output.DID,
+                        seen : 0,
+                        description_notif : 'est effecuté(e) une nouvelle demande de tirage',
+                        icon:'print'
+                      }
+                      io.emit(Data.structure+"TD" , Demand )// for notification
+                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                      io.emit('NewDemandAT', Demand)
                      io.emit(Data.userID , Demand)
                  });
@@ -94,6 +107,8 @@ async function  setDemandeTirage(Data,io){
                 .input('SFN', sql.VarChar, Data.StoringName)
                 .input('FF', sql.VarChar, Data.TypeOfFile)
                 .output('DID', sql.Int)
+                .output('FID', sql.Int)
+                .output('recevoir_ID', sql.VarChar)
                 .output('DDATE', sql.DateTime)
                 .input('etat', sql.VarChar, 'Chef Departement')
                 .execute('InsertDemandeTirage').then((res,err) => {
@@ -107,6 +122,16 @@ async function  setDemandeTirage(Data,io){
                          motif: '',
                          seen: 0,
                      }
+                     let Notif = {// notification Info 
+                        userID :Data.userID,
+                        notification_ID : res.output.FID,
+                        demande_ID: res.output.DID,
+                        seen : 0,
+                        description_notif : 'est effecuté(e) une nouvelle demande de tirage',
+                        icon:'print'
+                      }
+                      io.emit(Data.structure+"TD" , Demand )// for notification
+                     io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
                      io.emit('NewDemandCD'+Data.structure+Data.departement, Demand)
                      io.emit(Data.userID , Demand)
                  });
@@ -194,6 +219,7 @@ async function  upDemandeTirage(Data , io){
             .output('recevoir_ID',sql.VarChar)// for notif
             .input('NO', sql.Int, Data.numero_ordre)
             .input('DP', sql.Date, Data.date_prestation)
+            .input('etat',sql.VarChar, Data.etat)
             .execute('UpdatetDemandeTirage')
             .then((res , err)=>{
                 if(err)return 'CNUD';
@@ -205,6 +231,7 @@ async function  upDemandeTirage(Data , io){
                     description_notif : 'est modifé(e) la demande de tirage numéro '+Data.demande_T_ID,
                     icon:'print'
                 }
+                console.log(res)
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             })
             console.log('Demande Inserted');

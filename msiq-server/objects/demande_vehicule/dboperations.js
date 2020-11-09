@@ -71,6 +71,17 @@ async function  setDemandeVehicule(Demande,io){
                         motif: '',
                         seen: 0,
                     }
+                 // check from to
+                 let Notif = {// notification Info 
+                    userID : Demande.D.UserID,
+                    notification_ID : result.output.FID,
+                    demande_ID: result.output.demande_v_id,
+                    seen : 0,
+                    description_notif : 'est effecuté(e) une nouvelle demande véhicule',
+                    icon:'commute'
+                }
+                io.emit(Demande.structure+"VD" , Demand )//notifier reporting
+                io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
                 io.emit('NewDemandD'+Demande.D.structure, Demand )
                 io.emit(Demande.D.UserID , Demand )
                 console.log('Demande Inserted');
@@ -96,6 +107,8 @@ async function  setDemandeVehicule(Demande,io){
                 .input('utilisateur3',sql.VarChar,Demande.D.utilisateur3_ID)
                 .output('demande_v_id',sql.Int)
                 .output('DDATE', sql.DateTime)
+                .output('FID', sql.Int)//for notification
+                .output('recevoir_ID', sql.VarChar)//for notification
                 .input('etat', sql.VarChar,'Chef de parc')
                 .execute('InsertDemandeVehicule')
                 let Demand = {
@@ -107,17 +120,17 @@ async function  setDemandeVehicule(Demande,io){
                         seen: 0,
                     }
                 // check from to
-           let Notif = {// notification Info 
-                userID : Demande.UserID,
-                notification_ID : result.output.FID,
-                demande_ID: result.output.demande_v_id,
-                seen : 0,
-                description_notif : 'est effecuté(e) une nouvelle demande véhicule',
-                icon:'commute'
-            }
-                        io.emit(Demande.struct+"VD" , Demand )//notifier reporting
-            io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
-            io.emit('NewDemandCD', Demand )
+                let Notif = {// notification Info 
+                        userID : Demande.D.UserID,
+                        notification_ID : result.output.FID,
+                        demande_ID: result.output.demande_v_id,
+                        seen : 0,
+                        description_notif : 'est effecuté(e) une nouvelle demande véhicule',
+                        icon:'commute'
+                    }
+                io.emit(Demande.structure+"VD" , Demand )//notifier reporting
+                io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
+                io.emit('NewDemandCD', Demand )
                 io.emit('NewDemandCP', Demand )
                 io.emit(Demande.D.UserID , Demand )
                 console.log('Demande Inserted');
@@ -142,6 +155,8 @@ async function  setDemandeVehicule(Demande,io){
                 .input('utilisateur3',sql.VarChar,Demande.D.utilisateur3_ID)
                 .output('demande_v_id',sql.Int)
                 .output('DDATE', sql.DateTime)
+                .output('FID', sql.Int)//for notification
+                .output('recevoir_ID', sql.VarChar)//for notification
                 .input('etat', sql.VarChar, 'Chef Departement')
                 .execute('InsertDemandeVehicule')
                 let Demand = {
@@ -152,6 +167,17 @@ async function  setDemandeVehicule(Demande,io){
                         motif: '',
                         seen: 0,
                     }
+                 // check from to
+                 let Notif = {// notification Info 
+                    userID : Demande.D.UserID,
+                    notification_ID : result.output.FID,
+                    demande_ID: result.output.demande_v_id,
+                    seen : 0,
+                    description_notif : 'est effecuté(e) une nouvelle demande véhicule',
+                    icon:'commute'
+                }
+                io.emit(Demande.structure+"VD" , Demand )//notifier reporting
+                io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
                 io.emit('NewDemandCD'+Demande.D.structure+Demande.D.departement, Demand )
                 io.emit(Demande.D.UserID , Demand )
                 console.log('Demande Inserted');
@@ -230,6 +256,7 @@ async function  editDemandeVehicule(Demande ,io){
              .input('Observ', sql.VarChar, Demande.observation)
              .output('NID',sql.Int)//for notif
              .output('recevoir_ID',sql.VarChar)// for notif
+             .input('etat',sql.VarChar , Demande.etat)
             .execute('UpdateDemandeVehicule')
             .then((res , err)=>{
                 if(err)return 'CNUD';

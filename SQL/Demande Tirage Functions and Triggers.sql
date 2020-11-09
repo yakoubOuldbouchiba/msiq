@@ -39,17 +39,20 @@ BEGIN
 				(SELECT IDENT_CURRENT('document')))
 	SELECT @DID = IDENT_CURRENT('demande')
 	--for notif--
-	DECLARE @email as varchar(max) 
-	SELECT @email = U.email
-	FROM utilisateurs U , (
-		SELECT U.structure , U.departement
-		FROM utilisateurs U
-		WHERE U.email = @userID	
-	)as I
-	WHERE I.structure = U.structure
-	AND I.departement = U.departement
-	AND U.typeUtilisateur = 'Chef departement'
-	EXECUTE CREE_NOTIFICATION @DID,@email ,'est effecut�(e) une nouvelle demande de tirage', 'print'
+	DECLARE @email as varchar(max)  
+	IF (@etat = 'Directeur')
+	BEGIN
+		select	@email = dbo.GetDirecteurByDI(@DID);
+	END
+	ELSE IF (@etat ='Acceptee')
+	BEGIN
+		select	@email = dbo.GetUserByType('Agent de tirage');
+	END
+	ELSE IF (@etat = 'Chef Departement')
+	BEGIN
+		select	@email = dbo.GetChefDepartementByDI(@DID);
+	END
+	EXECUTE CREE_NOTIFICATION @DID,@email ,'est effecuté(e) une nouvelle demande de tirage', 'print'
 	SELECT @FID = IDENT_CURRENT('notification')
 	set @recevoir_ID = @email
 END
@@ -115,9 +118,10 @@ ALTER PROCEDURE UpdatetDemandeTirage
 	@TF AS varchar(max),
 	@A AS varchar(max),
 	@NID AS int OUTPUT,--For notif
-	@recevoir_ID as varchar(max) OUTPUT--For notif
+	@recevoir_ID as varchar(max) OUTPUT,--For notif
 	@NO AS int,
-	@DP AS Date
+	@DP AS Date,
+	@etat as varchar(max)
 AS
 BEGIN
 	UPDATE 	document
@@ -135,12 +139,19 @@ BEGIN
 	WHERE	demande_T_ID = @id
 	--for notif
 	DECLARE @describ  varchar(max);
-	SELECT @recevoir_ID = email
-	FROM demande D , utilisateurs U
-	WHERE D.utilisateurs_ID = U.email
-	AND D.demande_ID = @id
-	SELECT @recevoir_ID = dbo.GetChefDepartement(@recevoir_ID) --for notif
+	IF (@etat = 'Directeur')
+	BEGIN
+		select	@recevoir_ID = dbo.GetDirecteurByDI(@id);
+	END
+	ELSE IF (@etat ='Acceptee')
+	BEGIN
+		select	@recevoir_ID = dbo.GetUserByType('Agent de tirage');
+	END
+	ELSE IF (@etat = 'Chef Departement')
+	BEGIN
+		select	@recevoir_ID = dbo.GetChefDepartementByDI(@id);
+	END
 	SELECT @NID = dbo.GetNotifID(@id);-- for notif
-	SELECT @describ = 'est modif�(e) la demande de tirage num�ro '+ CONVERT(Varchar(max) , @id)    
+	SELECT @describ = 'est modifé(e) la demande de tirage numéro '+ CONVERT(Varchar(max) , @id)    
 	Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 END
