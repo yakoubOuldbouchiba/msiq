@@ -21,13 +21,14 @@ BEGIN
 END
  
 /*Create type objet*/
-
+select	dbo.GetChefDepartementByDI(359);
 ALTER PROCEDURE InsertDemandeFourniture
 	@userID AS varchar(50),
 	@demande_id AS int output,
 	@FID AS int OUTPUT,--for notif
 	@recevoir_ID as varchar(max) OUTPUT,--for notif
-    @DDATE AS DateTime OUTPUT
+    @DDATE AS DateTime OUTPUT,--for notif
+	@etat As varchar(Max)
 AS
 BEGIN 
 	INSERT INTO demande 
@@ -44,15 +45,18 @@ BEGIN
 	SELECT @demande_id = IDENT_CURRENT('demande')
 		
 	DECLARE @email as varchar(max) 
-	SELECT @email = U.email
-	FROM utilisateurs U , (
-		SELECT U.structure , U.departement
-		FROM utilisateurs U
-		WHERE U.email = @userID	
-	)as I
-	WHERE I.structure = U.structure
-	AND I.departement = U.departement
-	AND U.typeUtilisateur = 'Chef departement'
+	IF (@etat = 'Directeur')
+	BEGIN
+		select	@email = dbo.GetDirecteurByDI(@demande_id);
+	END
+	ELSE IF (@etat = 'DAM')
+	BEGIN
+		select	@email = dbo.GetUserByType('Responsable DAM');
+	END
+	ELSE IF (@etat = 'Chef Departement')
+	BEGIN
+		select	@email = dbo.GetChefDepartementByDI(@demande_id);
+	END
 	EXECUTE CREE_NOTIFICATION @demande_id, @email ,'est effecuté(e) une nouvelle demande fourniture', 'edit'
 	--for Notif--
 	SELECT @FID = IDENT_CURRENT('notification')
@@ -76,10 +80,11 @@ ALTER PROCEDURE GetObjetOftDemandeFourniture
 AS
 BEGIN
 	SELECT 
-		DFC.demande_F_ID ,DFC.code_object ,  O.designation , DFC.qty_demande
-	FROM demande_fourniture_object  DFC , objet O
+		DFC.demande_F_ID ,DFC.code_object ,  O.designation , DFC.qty_demande , D.etat
+	FROM demande_fourniture_object  DFC , objet O , demande D
 	WHERE DFC.demande_F_ID = @demande_f_id
 	AND O.code_object = DFC.code_object
+	AND D.demande_ID = DFC.demande_F_ID
 END
 
 Execute GetObjetOftDemandeFourniture 1133
@@ -90,16 +95,24 @@ Execute GetObjetOftDemandeFourniture 1130
 ALTER PROCEDURE deleteObjetOftDemandeFourniture
     @demande_id as int,
 	@NID AS int OUTPUT,--For notif
-	@recevoir_ID as varchar(max) OUTPUT--For notif
+	@recevoir_ID as varchar(max) OUTPUT,--For notif
+	@etat as varchar(max)
 AS
 BEGIN
 	DELETE  FROM demande_fourniture_object where demande_F_ID = @demande_id
 	DECLARE @describ  varchar(max);
-	SELECT @recevoir_ID = email
-	FROM demande D , utilisateurs U
-	WHERE D.utilisateurs_ID = U.email
-	AND D.demande_ID = @demande_id
-	SELECT @recevoir_ID = dbo.GetChefDepartement(@recevoir_ID) --for notif
+	IF (@recevoir_ID = 'Directeur')
+	BEGIN
+		select	@recevoir_ID = dbo.GetDirecteurByDI(@demande_id);
+	END
+	ELSE IF (@etat = 'DAM')
+	BEGIN
+		select	@recevoir_ID = dbo.GetUserByType('Responsable DAM');
+	END
+	ELSE IF (@etat = 'Chef Departement')
+	BEGIN
+		select	@recevoir_ID = dbo.GetChefDepartementByDI(@demande_id);
+	END
 	SELECT @NID = dbo.GetNotifID(@demande_id);-- for notif
 	SELECT @describ = 'est modifé(e) la demande fourniture numéro '+ CONVERT(Varchar(max) , @demande_id)    
 	Execute Update_NOTIFICATION @demande_id , @recevoir_ID , @describ
@@ -123,7 +136,7 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		SELECT @recevoir_ID = dbo.GetChefDepartementByDI(@id)--for notif
+		SELECT @recevoir_ID = dbo.GetRecevoirByDI(@id)--for notif
 		DELETE FROM notification WHERE demande_ID = @id
 		DELETE  FROM demande_fourniture_object where demande_F_ID = @id;
 		DELETE  FROM demande_fourniture where demande_F_ID = @id;

@@ -34,16 +34,18 @@ BEGIN
 	)	
 	SELECT @DID = IDENT_CURRENT('demande')
 	DECLARE @email as varchar(max) 
-	SELECT @email = U.email
-	FROM utilisateurs U , (
-		SELECT U.structure , U.departement
-		FROM utilisateurs U
-		WHERE U.email = @userID	
-	)as I
-	WHERE I.structure = U.structure
-	AND I.departement = U.departement
-	AND U.typeUtilisateur = 'Chef departement'
-
+	IF (@etat = 'Directeur')
+	BEGIN
+		select	@email = dbo.GetDirecteurByDI(@DID);
+	END
+	ELSE IF (@etat = 'DAM')
+	BEGIN
+		select	@email = dbo.GetUserByType('Responsable DAM');
+	END
+	ELSE IF (@etat = 'Chef Departement')
+	BEGIN
+		select	@email = dbo.GetChefDepartementByDI(@DID);
+	END
 	EXECUTE CREE_NOTIFICATION @DID, @email ,'est effecuté(e) une nouvelle demande client' , 'devices'
 	SELECT @FID = IDENT_CURRENT('notification')
 	set @recevoir_ID = @email
@@ -72,7 +74,7 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		SELECT @recevoir_ID = dbo.GetChefDepartementByDI(@id)--for notif
+		SELECT @recevoir_ID =dbo.GetRecevoirByDI(@id)--for notif
 		DELETE FROM notification WHERE demande_ID = @id
 		DELETE FROM demande_client WHERE demande_C_ID = @id;
 		DELETE FROM demande WHERE demande_ID = @id;
@@ -133,17 +135,22 @@ BEGIN
 			oAchats	= @oAchat
 	WHERE 	demande_C_ID = @demande_C_ID
 	--for notif
-	IF(@etat = 'Chef departement' )
-	BEGIN
 		DECLARE @describ  varchar(max);
-		SELECT @recevoir_ID = email
-		FROM demande D , utilisateurs U
-		WHERE D.utilisateurs_ID = U.email
-		AND D.demande_ID = @demande_C_ID
-		SELECT @recevoir_ID = dbo.GetChefDepartement(@recevoir_ID) --for notif
+		IF (@etat = 'Directeur')
+		BEGIN
+			select	@recevoir_ID = dbo.GetDirecteurByDI(@demande_C_ID);
+		END
+		ELSE IF (@etat = 'DAM')
+		BEGIN
+			select	@recevoir_ID = dbo.GetUserByType('Responsable DAM');
+		END
+		ELSE IF (@etat = 'Chef Departement')
+		BEGIN
+			select	@recevoir_ID = dbo.GetChefDepartementByDI(@demande_C_ID);
+		END
 		SELECT @NID = dbo.GetNotifID(@demande_C_ID);-- for notif
 		SELECT @describ = 'est modifé(e) la demande client numéro '+ CONVERT(Varchar(max) , @demande_C_ID)    
 		Execute Update_NOTIFICATION @demande_C_ID , @recevoir_ID , @describ
-	END
+	
 
 END
