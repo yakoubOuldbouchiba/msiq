@@ -38,6 +38,7 @@ async function  setDemandeFourniture(Demande , io){
             .output('FID', sql.Int)
             .output('recevoir_ID', sql.VarChar)
             .output('DDATE',sql.DateTime)
+            .input('etat' , 'Chef Departement')
             .execute('InsertDemandeFourniture');
             
             let notification_ID = objets.output.FID;

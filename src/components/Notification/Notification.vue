@@ -4,8 +4,8 @@
         width="350">
       <template v-slot:activator="{ on, attrs }">
         <v-icon 
-            v-if="show" 
-            v-show="UnSeen <= 0"
+            
+            v-show="UnSeen<= 0"
             class="indigo--text text--darken-4 mx-4"
             v-bind="attrs"
             v-on="on"
@@ -15,8 +15,7 @@
         <v-badge
           class="mx-4"
           color="error"
-          v-if="show" 
-          v-show="UnSeen > 0"
+          v-show="UnSeen> 0"
           :content = "UnSeen"
         >
           <v-icon 
@@ -72,15 +71,11 @@ export default {
         }
       )
     },
-    computed :{
-      show : function(){
-        return this.$store.state.token
-      }
-    },
     async created(){
-      this.Notifications =(await Axios.get('http://localhost:3030/Notification/'+this.$store.state.user.email)).data.notifications;
-      this.UnSeen =(await Axios.get('http://localhost:3030/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
-    },
+        this.Notifications =(await Axios.get('http://localhost:3030/Notification/'+this.$store.state.user.email)).data.notifications;
+        this.UnSeen =(await Axios.get('http://localhost:3030/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
+      
+   },
     async mounted(){
      
       this.$store.state.sokect.on('seen'+this.$store.state.user.email, (id) => {

@@ -255,13 +255,8 @@ data(){
     }
    },
    async updateItem(Demande){
-<<<<<<< HEAD
-       await this.getDemande(Demande);
-     await this.getDemande(Demande);
-=======
      await this.getDemande(Demande);
      this.demande.uID = await this.$store.state.user.email// i add it for notification
->>>>>>> 1c1b3f2cd78fa8dc0f18ce7e1e44cfe9911e0e66
      if(Demande.type_demande=='Demande client'){
        this.openDialogClient = true;
      }else if(Demande.type_demande=='Demande fourniture'){

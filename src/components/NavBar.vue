@@ -11,12 +11,7 @@
          </v-toolbar-title>
          <v-spacer></v-spacer>
          <!--icons-->
-          <Notifications />
-         <v-btn v-if="$store.state.token" icon route to="/messages">
-               <v-icon class="indigo--text text--darken-4">
-                    mail
-               </v-icon>
-         </v-btn>
+          <Notifications v-if="$store.state.token"/>
          <v-btn 
           v-if="$store.state.token" 
           icon
