@@ -111,7 +111,7 @@ async function  getDemandesATraiter(Params){
 }
 
 // Update demand State.
-async function  UpdateDemandState(DemandeID, state, motif , valider , io){
+async function  UpdateDemandState(DemandeID, state, motif , valider , typeD , UT , io){
     try{
         await sql.connect(config);
         try{
@@ -122,6 +122,8 @@ async function  UpdateDemandState(DemandeID, state, motif , valider , io){
             .output('userID',sql.VarChar)// for notif
             .output('NID', sql.Int) // for notif
             .output('desc',sql.VarChar) //for notif
+            .input('DT',sql.VarChar , typeD)
+            .input('UT',sql.VarChar , UT)
             .execute('UpdateDemandState').then((res , err)=>{
                 if(err) console.log(err)
                 let Notif = {// notification Info 

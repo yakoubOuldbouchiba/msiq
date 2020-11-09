@@ -11,11 +11,9 @@
          </v-toolbar-title>
          <v-spacer></v-spacer>
          <!--icons-->
-<<<<<<< HEAD
-          <Notifications v-if="$store.state.token"/>
-=======
+
           <Notifications v-if="$store.state.token"   />
->>>>>>> 0e3371efa58e6114e2807a14416e6694a3d4c82c
+     
          <v-btn 
           v-if="$store.state.token" 
           icon

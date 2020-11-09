@@ -83,7 +83,7 @@ BEGIN
 	BEGIN
 		select	@email = dbo.GetChefDepartementByDI(@demande_v_id);
 	END
-	EXECUTE CREE_NOTIFICATION  @demande_v_id , @email , 'est effecuté(e) une nouvelle demande v�hicule','commute'
+	EXECUTE CREE_NOTIFICATION  @demande_v_id , @email , 'est effecuté(e) une nouvelle demande véhicule','commute'
 	SELECT @FID = IDENT_CURRENT('notification')
 	set @recevoir_ID = @email
 END

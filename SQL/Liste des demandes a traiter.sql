@@ -57,7 +57,7 @@ BEGIN
 		SELECT	* 
 		FROM	Demandes_A_Traiter
 		WHERE	etat = 'Acceptee'
-		AND		type_demande = 'Demande vï¿½hicule'
+		AND		type_demande = 'Demande véhicule'
 
 	if(@UserType = 'Responsable PEC')
 		SELECT	* 
@@ -69,7 +69,7 @@ BEGIN
 		SELECT	* 
 		FROM	Demandes_A_Traiter
 		WHERE	etat = 'Acceptee'
-		AND		type_demande = 'Demande relex'
+		AND		type_demande = 'Demande activité relex'
 END
 
 
@@ -79,7 +79,9 @@ ALTER PROCEDURE UpdateDemandState
 	@State		AS varchar(50),
 	@userID AS varchar(max) output,-- add it for notif
 	@NID AS int output, -- add it for notif
-	@desc AS varchar(max) output-- add it for notif
+	@desc AS varchar(max) output,-- add it for notif
+	@DT AS varchar(max),
+	@UT AS varchar(max)
 AS
 BEGIN
 	UPDATE	demande
@@ -97,9 +99,30 @@ BEGIN
 	END
 	ELSE IF (@State = 'Acceptee')
 	BEGIN
-		SELECT @userID = dbo.GetUserByDI(@Demand_ID);
-		SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' est acceptée' 
-		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+		IF (@DT = 'Demande activité relex')
+		BEGIN
+			SELECT @userID =dbo.GetUserByType('Responsable AR')
+			SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' est rejetée' 
+			Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+		END 
+		ELSE IF (@DT = 'Demande de tirage' and @UT !='Agent de Tirage')
+		BEGIN
+			SELECT @userID =dbo.GetUserByType('Agent de Tirage')
+			SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' est rejetée' 
+			Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+		END
+		ELSE IF (@DT = 'Demande de prise en charge')
+		BEGIN
+			SELECT @userID =dbo.GetUserByType('Responsable PEC')
+			SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' est rejetée' 
+			Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+		END
+		ELSE
+		BEGIN
+			SELECT @userID = dbo.GetUserByDI(@Demand_ID);
+			SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' est acceptée' 
+			Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+		END
 	END
 	ELSE IF (@State = 'Directeur')
 	BEGIN
@@ -110,6 +133,12 @@ BEGIN
 	ELSE IF (@State = 'DAM')
 	BEGIN
 		SELECT @userID =dbo.GetUserByType('Responsable DAM')
+		SELECT @desc =  'Il y a une '+dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
+		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+	END
+	ELSE IF (@State = 'Chef de parc')
+	BEGIN
+		SELECT @userID =dbo.GetUserByType('Chef de parc')
 		SELECT @desc =  'Il y a une '+dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
 		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
 	END
