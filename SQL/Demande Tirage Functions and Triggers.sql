@@ -76,7 +76,7 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		SELECT @recevoir_ID = dbo.GetChefDepartementByDI(@id)--for notif
+		SELECT @recevoir_ID = dbo.GetRecevoirByDI(@id)--for notif
 		DELETE FROM notification WHERE demande_ID = @id
 		DELETE FROM demande_tirage WHERE demande_T_ID = @id;
 		DELETE FROM document WHERE document_ID = (select document_ID from demande_tirage where demande_T_ID = @id) ;
@@ -121,7 +121,8 @@ ALTER PROCEDURE UpdatetDemandeTirage
 	@recevoir_ID as varchar(max) OUTPUT,--For notif
 	@NO AS int,
 	@DP AS Date,
-	@etat as varchar(max)
+	@etat as varchar(max),
+	@describ as varchar(max) output
 AS
 BEGIN
 	UPDATE 	document
@@ -133,25 +134,30 @@ BEGIN
 	WHERE 	document_ID 		= (SELECT document_ID 
 									FROM demande_tirage 
 									WHERE demande_T_ID = @id)
-  UPDATE	demande_tirage
+	UPDATE	demande_tirage
 	SET		numero_ordre = @NO,
 			date_prestation = @DP
 	WHERE	demande_T_ID = @id
 	--for notif
-	DECLARE @describ  varchar(max);
 	IF (@etat = 'Directeur')
 	BEGIN
 		select	@recevoir_ID = dbo.GetDirecteurByDI(@id);
+		SELECT @NID = dbo.GetNotifID(@id);-- for notif
+		SELECT @describ = 'est modifé(e) la demande de tirage numéro '+ CONVERT(Varchar(max) , @id)    
+		Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 	END
 	ELSE IF (@etat ='Acceptee')
 	BEGIN
-		select	@recevoir_ID = dbo.GetUserByType('Agent de tirage');
+		SELECT @recevoir_ID = dbo.GetUserByDI(@id);
+		SELECT @NID = dbo.GetNotifID(@id);-- for notif
+		SELECT @describ = 'La demande de tirage numéro '+ CONVERT(Varchar(max) , @id)+ ' est fait'    
+		Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 	END
 	ELSE IF (@etat = 'Chef Departement')
 	BEGIN
 		select	@recevoir_ID = dbo.GetChefDepartementByDI(@id);
+		SELECT @NID = dbo.GetNotifID(@id);-- for notif
+		SELECT @describ = 'est modifé(e) la demande de tirage numéro '+ CONVERT(Varchar(max) , @id)    
+		Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 	END
-	SELECT @NID = dbo.GetNotifID(@id);-- for notif
-	SELECT @describ = 'est modifé(e) la demande de tirage numéro '+ CONVERT(Varchar(max) , @id)    
-	Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 END

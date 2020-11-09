@@ -118,7 +118,7 @@ module.exports=(io)=>{
             seen: 0,
         }
         console.log(req.body);
-        dbOperationsDemandes.UpdateDemandState(req.params.id,req.body.State,req.body.Demande.motif,req.body.Demande.uID ,io)
+        dbOperationsDemandes.UpdateDemandState(req.params.id,req.body.State,req.body.Demande.motif,req.body.Demande.uID ,req.body.typeD , req.body.UT ,io)
         .then(result => {
             console.log(req.body.Demande.uID);
             if(result==='DU'){
@@ -171,16 +171,14 @@ module.exports=(io)=>{
             if (req.body.typeD == 'Demande client'){
                 io.emit('NewDemandAM', Demand )
                 io.emit('RemoveDemandRD', Demand ) 
-              //io.emit(req.body.Demande.structure+'ECD', Demand )
             }              
             else if (req.body.typeD == 'Demande véhicule'){
                 io.emit('RemoveDemandCP', Demand ) 
-                //io.emit(req.body.Demande.structure+'ETD', Demand )
+                
             } 
             else if (req.body.typeD == 'Demande fourniture'){
                 io.emit('NewDemandAM', Demand )
                 io.emit('RemoveDemandRD', Demand ) 
-                //io.emit(req.body.Demande.structure+'EFD', Demand )
             }  
             else if (req.body.typeD == 'Demande de prise en charge') {
                 io.emit('NewDemandRPEC', Demand )   

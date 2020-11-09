@@ -11,7 +11,9 @@
          </v-toolbar-title>
          <v-spacer></v-spacer>
          <!--icons-->
+
           <Notifications v-if="$store.state.token"   />
+     
          <v-btn 
           v-if="$store.state.token" 
           icon

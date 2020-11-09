@@ -74,7 +74,7 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		SELECT @recevoir_ID = dbo.GetChefDepartementByDI(@id)--for notif
+		SELECT @recevoir_ID =dbo.GetRecevoirByDI(@id)--for notif
 		DELETE FROM notification WHERE demande_ID = @id
 		DELETE FROM demande_client WHERE demande_C_ID = @id;
 		DELETE FROM demande WHERE demande_ID = @id;

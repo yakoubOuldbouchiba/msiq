@@ -220,6 +220,7 @@ async function  upDemandeTirage(Data , io){
             .input('NO', sql.Int, Data.numero_ordre)
             .input('DP', sql.Date, Data.date_prestation)
             .input('etat',sql.VarChar, Data.etat)
+            .output('describ',sql.VarChar)// for notif
             .execute('UpdatetDemandeTirage')
             .then((res , err)=>{
                 if(err)return 'CNUD';
@@ -228,7 +229,7 @@ async function  upDemandeTirage(Data , io){
                     notification_ID : res.output.NID,
                     demande_ID: Data.demande_T_ID,
                     seen : 0,
-                    description_notif : 'est modifé(e) la demande de tirage numéro '+Data.demande_T_ID,
+                    description_notif : res.output.describ,
                     icon:'print'
                 }
                 console.log(res)
