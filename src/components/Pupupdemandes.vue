@@ -6,7 +6,7 @@
                 v-bind="attrs"
                 v-on="on"
                 xs1 text>
-                <span class="blue--text">nouveau demande</span>
+                <span class="blue--text">nouvelle demande</span>
                 <v-icon small class="blue--text" right> note_add </v-icon>
             </v-btn>
         </template>
