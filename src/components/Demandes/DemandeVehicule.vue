@@ -354,7 +354,8 @@ export default {
             )
         },
         closeDemande :function(){
-            this.$emit("sendDemande",this.DV.demande_V_ID);
+            if(this.type=="new")
+            this.$emit("sendDemande",null);
             this.$refs.form.reset();
             this.dialog=false;
         },
@@ -420,14 +421,18 @@ export default {
         this.chauffeurs = Chauf.data;
     },
     beforeUpdate(){
-        if (this.DV.matricule != '') {
-            let index = this.vehicules.findIndex(x => x.matricule == this.DV.matricule)
-            this.Vehicule = this.vehicules[index].matricule+' '+this.vehicules[index].nom;
-        }    
-        if (this.DV.chauffeur_ID != '') {
-            let index = this.chauffeurs.findIndex(x => x.chauffeur_id == this.DV.chauffeur_ID)
-            this.Chaffeur = this.chauffeurs[index].chauffeur_id+' '+this.chauffeurs[index].nom+' '+this.chauffeurs[index].prenom;
-        }   
+        if (this.DV.matricule) {
+            if (this.DV.matricule != '' ) {
+                let index = this.vehicules.findIndex(x => x.matricule == this.DV.matricule)
+                this.Vehicule = this.vehicules[index].matricule+' '+this.vehicules[index].nom;
+            } 
+        } 
+        if (this.DV.chauffeur_ID) {  
+            if (this.DV.chauffeur_ID != '') {
+                let index = this.chauffeurs.findIndex(x => x.chauffeur_id == this.DV.chauffeur_ID)
+                this.Chaffeur = this.chauffeurs[index].chauffeur_id+' '+this.chauffeurs[index].nom+' '+this.chauffeurs[index].prenom;
+            } 
+        }  
     },
     data(){
         return{
