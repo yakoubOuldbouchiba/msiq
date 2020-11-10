@@ -123,7 +123,7 @@ export default {
           {
             text: 'Code objet',
             align: 'start',
-            value: 'code_objet',
+            value: 'code_object',
           },
           { text: 'Designation', value: 'designation' },
           { text: 'Quantite', value: 'quantite' },

@@ -100,33 +100,8 @@
                                 :disabled="disabled || type =='Traiter'"
                                 @click=" openDemandeVehicule">
                             </v-checkbox>
-                            <b class="red--text" v-if="DeleteDV">Votre demande véhicule</b>
                             <div v-if="DR.demande_V_ID!=null">
                                 <b class="green--text" v-show="disabled">Le demande véhicule est bien crée</b>
-                                <v-btn
-                                    class="mx-2"
-                                    outlined
-                                    color="indigo"
-                                    fab
-                                    dark
-                                    x-small
-                                    @click='deleteDV()'>
-                                    <v-icon dark>
-                                        delete
-                                    </v-icon>
-                                </v-btn>
-                                <v-btn
-                                    class="mx-2"
-                                    outlined
-                                    color="teal"
-                                    fab
-                                    dark
-                                    x-small
-                                    @click="updateDV()" >
-                                    <v-icon dark>
-                                        edit
-                                    </v-icon>
-                                </v-btn>
                             </div>
                         </v-col>
                         <v-col cols="12">
@@ -269,7 +244,7 @@ export default {
             if(this.type_demande!=null){
                 return "update"
             }else{
-                return null
+                return "new"
             }
         },
         DV_Computed(){
@@ -278,6 +253,7 @@ export default {
     },
     methods : {
         openDemandeVehicule(){
+            //this.type_demande_v="new"
             this.open_dialog=true
         },
         async updateDV(){
@@ -303,7 +279,7 @@ export default {
             
         },
         async deleteDV(){
-            await axios.delete('http://localhost:3030/DemandeVehicule/'+this.DR.demande_V_ID)
+            await axios.delete('http://localhost:3030/DemandeVehicule/'+this.DR.demande_V_ID+'/'+this.$store.state.user.structure)
             .then(
                     res =>{
                         this.msg = res.data.title,
@@ -350,6 +326,7 @@ export default {
                     this.Done = true,
                     this.dialog = false
                     this.DeleteDV = false
+                    this.type_demande = null
                     this.DemandeRelex.demande_v_id=null
     
                 },
@@ -361,7 +338,9 @@ export default {
     },
     async close (){
         this.$emit('resetDemand')
-        this.$refs.form.reset(),
+        this.$refs.form.reset()
+        this.deleteDV = false
+        this.type_demande = null
         this.dialog=false
     },
     // the date & the hour actions which means getting its values 
@@ -378,7 +357,7 @@ export default {
       this.$refs.form.validate();
       axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
         {State :'Rejetee',
-            Demande: this.DR, typeD: 'Demande relex', 
+            Demande: this.DR, typeD: 'Demande activité relex', 
             UT: this.$store.state.user.typeUtilisateur,
             struct : this.$store.state.structure})
       this.dialog = false
@@ -387,12 +366,12 @@ export default {
       if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
         axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
             {State :'Directeur',
-                Demande: this.DR, typeD: 'Demande relex', 
+                Demande: this.DR, typeD: 'Demande activité relex', 
                 UT: this.$store.state.user.typeUtilisateur})
       else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
         axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
             {State :'Acceptee',
-            Demande: this.DR, typeD: 'Demande relex',
+            Demande: this.DR, typeD: 'Demande activité relex',
             UT: this.$store.state.user.typeUtilisateur,
             struct : this.$store.state.structure})    
         this.dialog = false

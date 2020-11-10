@@ -95,12 +95,6 @@
                          </v-list-item-icon>
                          <v-list-item-content  class="indigo--text text--darken-4">List des fournitures</v-list-item-content>
               </v-list-item>
-               <v-list-item v-if="$store.state.user.typeUtilisateur=='Agent de magasin'"  route :to="'/produit'" >   
-                         <v-list-item-icon  >
-                              <v-icon class="amber--text text--darken-1">devices</v-icon>
-                         </v-list-item-icon>
-                         <v-list-item-content  class="indigo--text text--darken-4">Listes des produits</v-list-item-content>
-              </v-list-item>
                         <v-list-item @click="logout" >   
                          <v-list-item-icon  >
                               <v-icon class="amber--text text--darken-1">exit_to_app</v-icon>
