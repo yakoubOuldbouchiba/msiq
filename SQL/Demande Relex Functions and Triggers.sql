@@ -110,7 +110,8 @@ ALTER PROCEDURE UpdateDemandeRelex
 	@demande_R_ID as int,
 	@NID AS int OUTPUT,--For notif
 	@recevoir_ID as varchar(max) OUTPUT,--For notif
-	@etat AS varchar(max)-- for notif
+	@etat AS varchar(max),--For notif
+	@DDATE AS datetime OUTPUT
 AS
 BEGIN
 	UPDATE demande_relex
@@ -138,4 +139,5 @@ BEGIN
 	SELECT @NID = dbo.GetNotifID(@demande_R_ID);-- for notif
 	SELECT @describ = 'est modifé(e) la demande activité(e) numéro '+ CONVERT(Varchar(max) , @demande_R_ID)    
 	Execute Update_NOTIFICATION @demande_R_ID , @recevoir_ID , @describ
+	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 END

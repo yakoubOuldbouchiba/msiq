@@ -163,7 +163,7 @@
     <DemandeVehicule 
         forDemandeRelex=true
         :demande="DV_Computed"
-        :type="type_demande_v"
+        type="new"
         @sendDemande="getDemande" 
         v-model="open_dialog" 
         :Editable="true"
@@ -327,7 +327,7 @@ export default {
                     this.dialog = false
                     this.DeleteDV = false
                     this.type_demande = null
-                    this.DemandeRelex.demande_v_id=null
+                    this.DemandeRelex.demande_V_ID=null
     
                 },
                 err => {
@@ -341,6 +341,7 @@ export default {
         this.$refs.form.reset()
         this.deleteDV = false
         this.type_demande = null
+        this.DemandeRelex.demande_V_ID=null
         this.dialog=false
     },
     // the date & the hour actions which means getting its values 

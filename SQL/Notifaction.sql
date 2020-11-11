@@ -37,11 +37,7 @@ ALTER PROCEDURE GetNotification
 AS
 BEGIN
 	SELECT U.nomUtilisateur+' '+U.prenomUtilisateur as nom , 
-			N.description_notif , 
-			N.icon , 
-			N.demande_ID , 
-			N.notification_ID,
-			N.seen
+			N.*
 	FROM notification N , demande D, utilisateurs U
 	WHERE N.demande_ID = D.demande_ID
 	AND D.utilisateurs_ID = U.email

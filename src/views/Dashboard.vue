@@ -36,7 +36,7 @@
              <tr class="pa-2" v-for="Demande in Demandes" :key="Demande.demande_ID" >
                <td @click="checkEditability(Demande)" :class="`demande ${Demande.etat}`" ><b>{{Demande.demande_ID}}</b></td>
                <td @click="checkEditability(Demande)">{{Demande.type_demande}}</td>
-               <td @click="checkEditability(Demande)" >{{Demande.demande_Date}}</td>
+               <td @click="checkEditability(Demande)" >{{Demande.demande_Date.substr(0,10)+" "+Demande.demande_Date.substr(11,5)}}</td>
                <td @click="checkEditability(Demande)" class="text-center">
                  <v-chip 
                   v-if="Demande.etat == 'Acceptee'"

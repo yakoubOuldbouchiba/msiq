@@ -314,7 +314,8 @@ export default {
             Demande: this.DC,
             typeD: 'Demande client', 
             UT: this.$store.state.user.typeUtilisateur})    
-      else if(this.$store.state.user.typeUtilisateur == 'Responsable DAM') 
+      else if(this.$store.state.user.typeUtilisateur == 'Responsable DAM'){
+        this.DC.etat='Acceptee';
         Axios.put('http://localhost:3030/UpdateDemandState/'+this.DC.demande_C_ID, 
           { State :'Acceptee',
             Demande: this.DC,
@@ -322,7 +323,8 @@ export default {
             UT: this.$store.state.user.typeUtilisateur,
             struct : this.$store.state.structure
             })
-            .then(this.update())     
+            .then(this.update())   
+        }  
       this.dialog = false
     }
   }

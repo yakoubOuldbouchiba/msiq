@@ -48,10 +48,18 @@
             <v-icon fab color="white">{{notif.icon}}</v-icon>
           </v-list-item-avatar>
           <v-list-item-content v-if="!notif.seen" >
-            <b>{{notif.nom}} </b> {{" "+notif.description_notif}}
+            <p>
+              <b>{{notif.nom}} </b> 
+              <em>({{notif.date_notification.substr(0,10)+" "+notif.date_notification.substr(11,5)}})</em>
+            </p>
+            {{" "+notif.description_notif}}
           </v-list-item-content>
           <v-list-item-content v-else class="grey--text  lighten-4" >
-            <b>{{notif.nom}} </b> {{" "+notif.description_notif}}
+            <p>
+              <b>{{notif.nom}} </b>
+              <em>({{notif.date_notification.substr(0,10)+" "+notif.date_notification.substr(11,5)}})</em> 
+            </p>
+            {{" "+notif.description_notif}}
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -87,50 +95,27 @@ export default {
         }
       )
       /** notif oncreate */
-      this.$store.state.sokect.on('NewNotif'+this.$store.state.user.email, async (Notif) => {
-        
-        let user = (await Axios.get('http://localhost:3030/users/'+Notif.userID)).data
-        Notif.nom = user.nomUtilisateur+" "+user.prenomUtilisateur
-        this.Notifications.unshift(Notif);
-        this.UnSeen = this.UnSeen+1;
+      this.$store.state.sokect.on('NewNotif'+this.$store.state.user.email, async () => {
+        this.Notifications =(await Axios.get('http://localhost:3030/Notification/'+this.$store.state.user.email)).data.notifications;
+        this.UnSeen =(await Axios.get('http://localhost:3030/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
       }
       )
       /*** notif on delete */
-       this.$store.state.sokect.on('DeleteNofit'+this.$store.state.user.email, async (id) => {
-         
-         let index = this.Notifications.findIndex(x =>  x.demande_ID == id)
-         this.Notifications.splice(index , 1);
-         this.UnSeen= this.UnSeen-1;
+       this.$store.state.sokect.on('DeleteNofit'+this.$store.state.user.email, async () => { 
+        this.Notifications =(await Axios.get('http://localhost:3030/Notification/'+this.$store.state.user.email)).data.notifications;
+        this.UnSeen =(await Axios.get('http://localhost:3030/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
       }
       )
       /** notif on update */
-      this.$store.state.sokect.on('UpdateNotif'+this.$store.state.user.email, async (Notif) => {
-        let user = (await Axios.get('http://localhost:3030/users/'+Notif.userID)).data
-        Notif.nom = user.nomUtilisateur+" "+user.prenomUtilisateur
-         let index = this.Notifications.findIndex(x =>  x.notification_ID == Notif.notification_ID)
-         if(this.Notifications[index].seen==true || this.Notifications[index].seen==1){
-           this.UnSeen = this.UnSeen+1
-         }
-         this.Notifications.splice(index , 1);
-         this.Notifications.unshift(Notif);
-      }
-      )
+      this.$store.state.sokect.on('UpdateNotif'+this.$store.state.user.email, async () => {
+            this.Notifications =(await Axios.get('http://localhost:3030/Notification/'+this.$store.state.user.email)).data.notifications;
+            this.UnSeen =(await Axios.get('http://localhost:3030/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
+      })
       /** REJETEE && ACCEPTE */
       //CLIENT
-      this.$store.state.sokect.on('addNotif'+this.$store.state.user.email, async (Notif) => {
-        let user = (await Axios.get('http://localhost:3030/users/'+Notif.userID)).data
-        Notif.nom = user.nomUtilisateur+" "+user.prenomUtilisateur
-        this.Notifications.unshift(Notif);
-        this.UnSeen = this.UnSeen+1
-        }
-      )
-      //VALIDER NOTIF BY DELETENOTIF
-      /* author type */
-      this.$store.state.sokect.on('addNotif'+this.$store.state.user.typeUtilisateur, async (Notif) => {
-        let user = (await Axios.get('http://localhost:3030/users/'+Notif.userID)).data
-        Notif.nom = user.nomUtilisateur+" "+user.prenomUtilisateur
-        this.Notifications.unshift(Notif);
-        this.UnSeen = this.UnSeen+1
+      this.$store.state.sokect.on('addNotif'+this.$store.state.user.email, async () => {
+          this.Notifications =(await Axios.get('http://localhost:3030/Notification/'+this.$store.state.user.email)).data.notifications;
+          this.UnSeen =(await Axios.get('http://localhost:3030/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
         }
       )
     },

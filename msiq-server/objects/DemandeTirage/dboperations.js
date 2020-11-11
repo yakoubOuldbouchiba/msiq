@@ -41,7 +41,8 @@ async function  setDemandeTirage(Data,io){
                       demande_ID: res.output.DID,
                       seen : 0,
                       description_notif : 'est effecuté(e) une nouvelle demande de tirage',
-                      icon:'print'
+                      icon:'print',
+                      date_notification : res.output.DDATE
                     }
                     io.emit(Data.structure+"TD" , Demand )// for notification
                       io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -85,7 +86,8 @@ async function  setDemandeTirage(Data,io){
                         demande_ID: res.output.DID,
                         seen : 0,
                         description_notif : 'est effecuté(e) une nouvelle demande de tirage',
-                        icon:'print'
+                        icon:'print',
+                        date_notification : res.output.DDATE
                       }
                       io.emit(Data.structure+"TD" , Demand )// for notification
                       io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -128,7 +130,8 @@ async function  setDemandeTirage(Data,io){
                         demande_ID: res.output.DID,
                         seen : 0,
                         description_notif : 'est effecuté(e) une nouvelle demande de tirage',
-                        icon:'print'
+                        icon:'print',
+                        date_notification : res.output.DDATE
                       }
                       io.emit(Data.structure+"TD" , Demand )// for notification
                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -206,6 +209,7 @@ async function  GetDemandeTirage(id){
 // Edit a demand
 async function  upDemandeTirage(Data , io){
     try {
+        console.log(Data);
         await sql.connect(config)
         try {
              await new sql.Request()
@@ -221,6 +225,7 @@ async function  upDemandeTirage(Data , io){
             .input('DP', sql.Date, Data.date_prestation)
             .input('etat',sql.VarChar, Data.etat)
             .output('describ',sql.VarChar)// for notif
+            .output('DDATE', sql.DateTime)
             .execute('UpdatetDemandeTirage')
             .then((res , err)=>{
                 if(err)return 'CNUD';
@@ -230,7 +235,8 @@ async function  upDemandeTirage(Data , io){
                     demande_ID: Data.demande_T_ID,
                     seen : 0,
                     description_notif : res.output.describ,
-                    icon:'print'
+                    icon:'print',
+                    date_notification :res.output.DDATE
                 }
                 console.log(res)
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.

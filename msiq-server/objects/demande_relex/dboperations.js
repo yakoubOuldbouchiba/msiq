@@ -73,7 +73,8 @@ async function  setDemandeRelex(Demande,io){
                       demande_ID: res.output.DID,
                       seen : 0,
                       description_notif : 'est effecuté(e) une nouvelle demande activité relex',
-                      icon:'hotel'
+                      icon:'hotel',
+                      date_notification : res.output.DID
                     }
                     io.emit(Demande.structure+"RD" , Demand )//for repporting 
                     io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -115,7 +116,8 @@ async function  setDemandeRelex(Demande,io){
                         demande_ID: res.output.DID,
                         seen : 0,
                         description_notif : 'est effecuté(e) une nouvelle demande activité relex',
-                        icon:'hotel'
+                        icon:'hotel',
+                        date_notification : res.output.DID
                       }
                       io.emit(Demande.structure+"RD" , Demand )//for repporting 
                       io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -157,7 +159,8 @@ async function  setDemandeRelex(Demande,io){
                         demande_ID: res.output.DID,
                         seen : 0,
                         description_notif : 'est effecuté(e) une nouvelle demande activité relex',
-                        icon:'hotel'
+                        icon:'hotel',
+                        date_notification : res.output.DID
                       }
                       io.emit(Demande.structure+"RD" , Demand )//for repporting 
                       io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -197,6 +200,7 @@ async function  editDemandeRelex(Demande ,io){
             .output('NID',sql.Int)//for notif
             .output('recevoir_ID',sql.VarChar)// for notif
             .input('etat',Demande.etat)
+            .output('DDATE', sql.DateTime)
             .execute('UpdateDemandeRelex')
             .then((res , err)=>{
                 if(err)return 'CNUD';
@@ -206,7 +210,8 @@ async function  editDemandeRelex(Demande ,io){
                     demande_ID: Demande.demande_R_ID,
                     seen : 0,
                     description_notif : 'est modifé(e) la demande activité relex numéro '+Demande.demande_R_ID,
-                    icon:'hotel'
+                    icon:'hotel',
+                    date_notification :res.output.DDATE
                 }
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             })

@@ -63,7 +63,8 @@ async function  setDemandeClient(O,io){
                         demande_ID: res.output.DID,
                         seen : 0,
                         description_notif : 'est effecuté(e) une nouvelle demande client',
-                        icon:'devices'
+                        icon:'devices',
+                        date_notification : res.output.DDATE
                     }
                     io.emit(O.D.structure+"CD", Demand )//for reporting
                     io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -99,7 +100,8 @@ async function  setDemandeClient(O,io){
                         demande_ID: res.output.DID,
                         seen : 0,
                         description_notif : 'est effecuté(e) une nouvelle demande client',
-                        icon:'devices'
+                        icon:'devices',
+                        date_notification : res.output.DDATE
                     }
                     io.emit(O.D.structure+"CD", Demand )//for reporting
                     io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -135,7 +137,8 @@ async function  setDemandeClient(O,io){
                         demande_ID: res.output.DID,
                         seen : 0,
                         description_notif : 'est effecuté(e) une nouvelle demande client',
-                        icon:'devices'
+                        icon:'devices',
+                        date_notification : res.output.DDATE
                     }
                     io.emit(O.D.structure+"CD", Demand )//for reporting
                     io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -209,6 +212,7 @@ async function  updateDemandeClient(Demande , io){
             .input('etat', sql.VarChar,Demande.etat)
             .output('NID',sql.Int)//for notif
             .output('recevoir_ID',sql.VarChar)// for notif
+            .output('DDATE', sql.DateTime)
             .execute('updateDemandeClient').then((res , err)=>{
                 if(err)return 'CNUD';
                 let Notif = {// notification Info 
@@ -217,8 +221,10 @@ async function  updateDemandeClient(Demande , io){
                     demande_ID: Demande.demande_C_ID,
                     seen : 0,
                     description_notif : 'est modifé(e) la demande client numéro '+Demande.demande_C_ID,
-                    icon:'devices'
+                    icon:'devices',
+                    date_notification :res.output.DDATE
                 }
+                console.log(Notif);
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             });
 

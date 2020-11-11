@@ -34,7 +34,7 @@
              <tr :class="`pa-2 ${Demande.seen? 'grey lighten-3' : 'grey lighten-3'}`" v-for="Demande in Demandes" :key="Demande.demande_ID" @click='updateItem(Demande)'>
                <td :class="`demande ${Demande.etat}`" ><b>{{Demande.demande_ID}}</b></td>
                <td >{{Demande.type_demande}}</td>
-               <td >{{Demande.demande_Date}}</td>
+               <td >{{Demande.demande_Date.substr(0,10)+" "+Demande.demande_Date.substr(11,5)}}</td>
                <td class="text-center">
                  <v-chip
                   v-if="Demande.etat == 'Acceptee'"

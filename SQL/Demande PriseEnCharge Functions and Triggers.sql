@@ -136,7 +136,8 @@ ALTER PROCEDURE UpdateDemandePEC
     @HV AS varchar(50),
 	@NID AS int OUTPUT,--For notif
 	@recevoir_ID as varchar(max) OUTPUT,--For notif
-	@etat AS varchar(max)-- for notif
+	@etat AS varchar(max),-- for notif
+	@DDATE AS datetime OUTPUT
 AS
 BEGIN
 	UPDATE demande_priseEnCharge
@@ -157,16 +158,16 @@ BEGIN
 	IF (@etat = 'Directeur')
 	BEGIN
 		select	@recevoir_ID = dbo.GetDirecteurByDI(@id);
-	END
-	ELSE IF (@etat = 'Acceptee')
-	BEGIN
-		select	@recevoir_ID = dbo.GetUserByType('Responsable PEC');
+		SELECT @NID = dbo.GetNotifID(@id);-- for notif
+		SELECT @describ = 'est modifé(e) la demande de prise en charge numéro '+ CONVERT(Varchar(max) , @id)    
+		Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 	END
 	ELSE IF (@etat = 'Chef Departement')
 	BEGIN
 		select	@recevoir_ID = dbo.GetChefDepartementByDI(@id);
+		SELECT @NID = dbo.GetNotifID(@id);-- for notif
+		SELECT @describ = 'est modifé(e) la demande de prise en charge numéro '+ CONVERT(Varchar(max) , @id)    
+		Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 	END
-	SELECT @NID = dbo.GetNotifID(@id);-- for notif
-	SELECT @describ = 'est modifé(e) la demande de prise en charge numéro '+ CONVERT(Varchar(max) , @id)    
-	Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
+	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 END

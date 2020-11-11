@@ -120,7 +120,8 @@ ALTER PROCEDURE updateDemandeClient
 	@oAchat AS varchar(max),
 	@etat AS varchar(max),-- for notif
 	@NID AS int OUTPUT,--For notif
-	@recevoir_ID as varchar(max) OUTPUT--For notif
+	@recevoir_ID as varchar(max) OUTPUT,--For notif
+	@DDATE AS datetime OUTPUT
 AS
 BEGIN
 	update 	demande_client 
@@ -139,18 +140,23 @@ BEGIN
 		IF (@etat = 'Directeur')
 		BEGIN
 			select	@recevoir_ID = dbo.GetDirecteurByDI(@demande_C_ID);
+			SELECT @NID = dbo.GetNotifID(@demande_C_ID);-- for notif
+			SELECT @describ = 'est modifé(e) la demande client numéro '+ CONVERT(Varchar(max) , @demande_C_ID)    
+			Execute Update_NOTIFICATION @demande_C_ID , @recevoir_ID , @describ
 		END
 		ELSE IF (@etat = 'DAM')
 		BEGIN
 			select	@recevoir_ID = dbo.GetUserByType('Responsable DAM');
+			SELECT @NID = dbo.GetNotifID(@demande_C_ID);-- for notif
+			SELECT @describ = 'est modifé(e) la demande client numéro '+ CONVERT(Varchar(max) , @demande_C_ID)    
+			Execute Update_NOTIFICATION @demande_C_ID , @recevoir_ID , @describ
 		END
 		ELSE IF (@etat = 'Chef Departement')
 		BEGIN
 			select	@recevoir_ID = dbo.GetChefDepartementByDI(@demande_C_ID);
+			SELECT @NID = dbo.GetNotifID(@demande_C_ID);-- for notif
+			SELECT @describ = 'est modifé(e) la demande client numéro '+ CONVERT(Varchar(max) , @demande_C_ID)    
+			Execute Update_NOTIFICATION @demande_C_ID , @recevoir_ID , @describ
 		END
-		SELECT @NID = dbo.GetNotifID(@demande_C_ID);-- for notif
-		SELECT @describ = 'est modifé(e) la demande client numéro '+ CONVERT(Varchar(max) , @demande_C_ID)    
-		Execute Update_NOTIFICATION @demande_C_ID , @recevoir_ID , @describ
-	
-
+		SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 END
