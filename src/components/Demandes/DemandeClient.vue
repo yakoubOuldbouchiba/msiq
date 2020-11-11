@@ -324,7 +324,6 @@ export default {
             UT: this.$store.state.user.typeUtilisateur,
             struct : this.$store.state.structure
             })
-            .then(this.update())   
         }  
       this.dialog = false
     }

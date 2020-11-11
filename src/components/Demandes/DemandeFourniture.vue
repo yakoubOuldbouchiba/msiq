@@ -48,12 +48,12 @@
                                                     flat
                                                     solo
                                                     :items="objets"
-                                                    v-if="type=='update' && dialog==true"
+                                                    v-if="type != 'new'"
                                                     v-model="objet.code_object"
                                                     hide-selected
+                                                    :disabled='!Editable'
                                                     item-text="designation"
                                                     item-value="code_object"
-                                                    :label="getDesign(objet.code_object)"
                                                     prepend-inner-icon="edit"
                                                     :rules="[v => !!v || 'Ce champs est obligatoire']"
                                                 ></v-autocomplete>
@@ -75,6 +75,7 @@
                                                 <v-text-field
                                                     flat
                                                     solo
+                                                    :disabled ='!Editable'
                                                     v-model="objet.qty_demande"
                                                     label="Quantite damande"
                                                     type="number"
@@ -87,6 +88,7 @@
                                                     @click="deleteObject(index)"
                                                     color="secondary"
                                                     fab
+                                                    :disabled="!Editable"
                                                     dark
                                                     small
                                                     >
@@ -99,19 +101,39 @@
                                     </tbody>
 
                                 </template>
-                            </v-simple-table>                     
-                            <v-row justify="center">
-                                <v-btn v-if="type=='update'" class="ma-1 pink white--text" 
+                            </v-simple-table>   
+                            <v-row justify="center" v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Agent de magasin') || objetsDF[0].etat =='Rejetee'"> 
+                                <v-col cols="12" sm="8"> 
+                                    <v-textarea
+                                    v-model="objetsDF[0].motif"
+                                    :disabled="objetsDF[0].etat =='Rejetee'"
+                                    label="Motif" 
+                                    prepend-icon="mdi-flag-outline"></v-textarea>
+                                </v-col>   
+                            </v-row>                  
+                            <!----- les button ------------>
+                            <v-row justify="center"> 
+                                <v-btn v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Agent de magasin')" 
+                                    class="ma-1 red white--text"
+                                    @click="Reject"
+                                    :disabled="!objetsDF[0].motif">Rejeter la demande</v-btn>
+
+                                <v-btn v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Agent de magasin')" 
+                                    class="ma-1 green white--text"
+                                    @click="Accept"
+                                    :disabled="objetsDF[0].motif !='' && !!objetsDF[0].motif ">Accepter la demande </v-btn>
+
+                                <v-btn v-if="Editable && type !='new'" class="ma-1 pink white--text" 
                                     :disabled="!valid"
                                     @click="update">
                                     <v-icon left>send</v-icon>
                                     <span  >Modifier la demande</span> 
                                 </v-btn>
-                                <v-btn v-else class="ma-1 pink white--text" 
+                                <v-btn v-if="type=='new'" class="ma-1 pink white--text" 
                                     :disabled="!valid"
                                     @click="send">
                                     <v-icon left>send</v-icon>
-                                    <span  >Envoyer la demande</span> 
+                                    <span>Envoyer la demande</span> 
                                 </v-btn>
                             </v-row> 
                         </v-form>
@@ -163,7 +185,7 @@
 import Axios from 'axios';
 export default {
     name:"DemandeFourniture",
-    props:[ 'value','name','icon','color' , 'type' , 'demande'] ,
+    props:[ 'value','name','icon','color' , 'type' , 'demande', 'Editable'] ,
     computed : {
         dialog : {
             get : function(){
@@ -174,7 +196,7 @@ export default {
             }
         },
         objetsDF : function() {
-             if(this.type=="update" && this.dialog==true){
+             if(this.type=="update" || this.type== "Traiter"){
                 return this.demande
             }else{
                 return this.DemandeFourniture.objetsDemande
@@ -184,7 +206,11 @@ export default {
     },methods :{
         send(){
             this.$refs.form.validate();
-            Axios.post('http://localhost:3030/DemandeFourniture',{userID : this.$store.state.user.email , objetsDemande : this.objetsDF} )
+            Axios.post('http://localhost:3030/DemandeFourniture',
+            {userID : this.$store.state.user.email, 
+            objetsDemande : this.objetsDF, 
+            structure: this.$store.state.user.structure,
+            departement: this.$store.state.user.departement } )
             .then(
                 res =>{
                     this.msg = res.data.title,
@@ -212,7 +238,6 @@ export default {
                 this.$refs.form.reset(),
                 this.Done = true,
                 this.dialog = false
-                this.$emit('resetDemand')
             },
             err => {
                 this.Errr = true,
@@ -235,7 +260,6 @@ export default {
             this.totalObject++;
         },
         close : function(){
-            this.$emit('resetDemand')
             this.$refs.form.reset();
             this.dialog = false;
         },
@@ -249,6 +273,59 @@ export default {
             }else{
                 return 'object '+(this.totalObject+1);
             }
+        },
+        Reject(){
+            let TmpDemande = {
+                demande_F_ID : this.objetsDF[0].demande_F_ID,
+                demande_Date : this.objetsDF[0].demande_Date,
+                motif : this.objetsDF[0].motif,
+                uID : this.$store.state.user.email,
+                structure : this.objetsDF[0].structure,
+                departement : this.objetsDF[0].departement,
+                email: this.objetsDF[0].utilisateurs_ID,
+            }
+            this.$refs.form.validate();
+            Axios.put('http://localhost:3030/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
+                { State :'Rejetee',
+                Demande: TmpDemande,
+                typeD: 'Demande client',
+                UT: this.$store.state.user.typeUtilisateur,
+                struct : this.$store.state.structure})
+            this.dialog = false
+            },
+        Accept(){
+            let TmpDemande = {
+                demande_F_ID : this.objetsDF[0].demande_F_ID,
+                demande_Date : this.objetsDF[0].demande_Date,
+                motif : this.objetsDF[0].motif,
+                uID : this.$store.state.user.email,
+                structure : this.objetsDF[0].structure,
+                departement : this.objetsDF[0].departement,
+                email: this.objetsDF[0].utilisateurs_ID,
+            }
+            if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
+                Axios.put('http://localhost:3030/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
+                { State :'Directeur',
+                    Demande: TmpDemande, 
+                    typeD: 'Demande fourniture', 
+                    UT: this.$store.state.user.typeUtilisateur})
+            else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
+                Axios.put('http://localhost:3030/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
+                { State :'DAM',
+                    Demande: TmpDemande,
+                    typeD: 'Demande fourniture', 
+                    UT: this.$store.state.user.typeUtilisateur})    
+            else if(this.$store.state.user.typeUtilisateur == 'Responsable DAM'){
+                this.objetsDF[0].etat='Acceptee';
+                Axios.put('http://localhost:3030/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
+                { State :'Acceptee',
+                    Demande: TmpDemande,
+                    typeD: 'Demande fourniture', 
+                    UT: this.$store.state.user.typeUtilisateur,
+                    struct : this.$store.state.structure
+                    })  
+                }  
+        this.dialog = false
         }
     },
     async created(){
@@ -258,6 +335,7 @@ export default {
                 qty_demande:null
                 });
         }
+        console.log(this.demande);
         this.objets = (await Axios.get("http://localhost:3030/fournitures")).data
     },
     data(){
