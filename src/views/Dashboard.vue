@@ -295,7 +295,10 @@ data(){
      } else if (this.$store.state.user.typeUtilisateur == 'Chef departement' && Demande.etat != 'Directeur' ) {
         this.Editable = false
         this.updateItem(Demande)
-     } else{
+     } else if (this.$store.state.user.typeUtilisateur == 'Directeur' && (Demande.etat == 'Acceptee' || Demande.etat == 'Rejetee') ) {
+        this.Editable = false
+        this.updateItem(Demande)
+     }else {
         this.Editable = true
         this.updateItem(Demande)
      }

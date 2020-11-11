@@ -153,7 +153,7 @@
                             v-model="Vehicule"
                             prepend-icon="person_add"
                             :items="vehicules"
-                            :disabled="DV.etat == 'Acceptee'"
+                            :disabled="DV.etat == 'Acceptee' || DV.etat == 'Rejetee'"
                             :item-text="item =>item.matricule+' '+item.nom"
                             label="Véhicule"
                             @change="GetMat"
@@ -164,7 +164,7 @@
                             v-model="Chaffeur"
                             prepend-icon="person_add"
                             :items="chauffeurs"
-                            :disabled="DV.etat == 'Acceptee'"
+                            :disabled="DV.etat == 'Acceptee' || DV.etat == 'Rejetee'"
                             :item-text="item => item.chauffeur_id+' '+item.nom+' '+item.prenom"
                             label="Chaffeur"
                             @change="GetChauf"
@@ -177,15 +177,16 @@
                         <v-textarea
                         v-model="DV.observation"
                         label="Observations" 
-                        :disabled="DV.etat == 'Acceptee'"
+                        :disabled="DV.etat == 'Acceptee' || DV.etat == 'Rejetee'"
                         prepend-icon="mdi-flag-outline"></v-textarea>
                     </v-col>   
                 </v-row>
                 <!------------ Motife de rejet----------------->
-                <v-row justify="center" v-if="type =='Traiter' || DV.etat == 'Acceptee' || DV.etat == 'Rejetee'"> 
+                <v-row justify="center" v-if="type =='Traiter' || DV.etat == 'Rejetee'"> 
                     <v-col cols="12" sm="10"> 
                         <v-textarea
                         v-model="DV.motif"
+                        :disabled="DV.etat == 'Rejetee'"
                         label="Motif" 
                         prepend-icon="mdi-flag-outline"></v-textarea>
                     </v-col>   
@@ -195,10 +196,11 @@
                     <v-btn v-if="type=='Traiter'" 
                         class="ma-1 red white--text"
                         @click="Reject"
-                        :disabled="!valid">Rejeter la demande </v-btn>
+                        :disabled="!DV.motif">Rejeter la demande </v-btn>
                     
                     <v-btn v-if="type=='Traiter'" 
                         class="ma-1 green white--text"
+                        :disabled="!!DV.motif && DV.motif != ''"
                         @click="Accept">Accepter la demande </v-btn>
 
                     <v-btn v-if="Editable && type !='new'" class="ma-1 pink white--text" 
@@ -390,7 +392,7 @@ export default {
                     UT: this.$store.state.user.typeUtilisateur})
             else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
                 axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, 
-                    {State :'Acceptee',  
+                    {State :'Chef de parc',  
                         Demande: this.DV, 
                         typeD: 'Demande véhicule',
                         UT: this.$store.state.user.typeUtilisateur})    
