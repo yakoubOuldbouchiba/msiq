@@ -45,7 +45,46 @@
                 </template>
             </v-data-table>
         </v-container>
+        <v-snackbar
+        v-model="Done"
+        :timeout="5000"
+        color="green"
+        outlined
+        class="mb-5"
+        >
+        {{ msg}}
+
+        <template v-slot:action="{ attrs }">
+            <v-btn
+            color="green"
+            text
+            v-bind="attrs"
+            @click="Done = false"
+            >
+            Close
+            </v-btn>
+        </template>
+       </v-snackbar>
+       <v-dialog v-model="Errr" max-width="290">
+        <v-card>
+            <v-card-title class="headline red lighten-2">
+            Error
+            </v-card-title>
+            <v-card-text  class="mt-10 title">{{msg}}</v-card-text>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="red darken-1"
+                text
+                @click="Errr = false"
+            >
+                OK
+            </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
     </div>
+    
 </template>
 
 <script>
@@ -77,32 +116,36 @@ export default {
             this.dialog=true;
         },
         async deleteItem (item){
-            axios.delete("http://localhost:3030/fourniture/"+item.code_objet)
-            const index = this.Fournitures.indexOf(item)
-            confirm('vous êtes sur que vous voulez supprimer ce objet ?') && this.Fournitures.splice(index, 1)
+            let deleted =(await axios.delete("http://localhost:3030/fourniture/"+item.code_object)).data
+           if(deleted){
+                const index = this.Fournitures.indexOf(item)
+                confirm('vous êtes sur que vous voulez supprimer ce objet ?') && this.Fournitures.splice(index, 1)
+                this.Done=true;
+                this.msg="Le objet est supprimé"
+           }else{
+               this.Errr=true
+               this.msg='Le objet est exister dans le magasin ! La quantité doit être égale à zero '
+           }
         },
         async ajouterFourniture  (value){
-            (await axios.post("http://localhost:3030/fourniture",value));
+            console.log(value)
+            await axios.post("http://localhost:3030/fourniture",value);
             this.Fournitures.push(value);
              this.item = {
-                code_objet : 'xxxxx',
-                designation :'xxxx',
-                quantite :''
-            };
-            this.dialog=false;
-        },
-        editerFourniture :function(){
-            // modifier au niveau de data base
-             this.item = {
-                code_objet : 'xxxxx',
+                code_object : 'xxxxx',
                 designation :'xxxx',
                 quantite :'0'
             };
             this.dialog=false;
         },
+        async editerFourniture (value){
+            // modifier au niveau de data base
+            (await axios.put("http://localhost:3030/fourniture/"+value.Founiture.code_object,value.Founiture));
+             this.dialog=false;
+        },
         close :function(){
             this.item = {
-                code_objet : 'xxxxx',
+                code_object : 'xxxxx',
                 designation :'xxxx',
                 quantite :'0'
             };
@@ -111,10 +154,13 @@ export default {
     },
     data(){
         return{
+        Done: false,
+        Errr: false,
+        msg :'',
         search:'',
         editedIndex:'-1',
         item : {
-            code_objet : 'xxxxx',
+            code_object : 'xxxxx',
             designation :'xxxx',
             quantite :'0'
         },
