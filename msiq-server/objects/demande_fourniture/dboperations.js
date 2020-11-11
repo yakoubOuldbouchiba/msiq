@@ -29,9 +29,101 @@ async function  getDemandeFourniture(id){
 // set new demande
 async function  setDemandeFourniture(Demande , io){
     try {
-        console.log(Demande);
         await sql.connect(config)
         try {
+        console.log(Demande);
+        if (Demande.UT == 'Chef departement') {
+            let objets = await new sql.Request()
+            .input('userID',sql.VarChar,Demande.userID)
+            .output('demande_id',sql.Int)
+            .output('FID', sql.Int)
+            .output('recevoir_ID', sql.VarChar)
+            .output('DDATE',sql.DateTime)
+            .input('etat', sql.VarChar,'Directeur')
+            .execute('InsertDemandeFourniture');
+            let notification_ID = objets.output.FID;
+            let demande_id=objets.output.demande_id;//id of demande insert it 
+            for(let i = 0 ; i <Demande.objetsDemande.length ; i++){
+                let objet = Demande.objetsDemande[i]
+                
+                await new sql.Request()
+                .input('demande_id',sql.Int,demande_id)
+                .input('code_objet',sql.VarChar,objet.code_object)
+                .input('qty_demande',sql.Int,objet.qty_demande)
+                .execute('InserObjetOftDemandeFourniture')
+            }
+            let Demand = { //  for the WorkFlow
+                demande_ID: objets.output.demande_id,
+                demande_Date: objets.output.DDATE,
+                type_demande: 'Demande fourniture',
+                etat: 'Directeur',
+                motif: '',
+                seen: 0
+
+            }
+            let Notif = {// notification Info 
+                userID : Demande.userID,
+                notification_ID : notification_ID,
+                demande_ID: demande_id,
+                seen : 0,
+                description_notif : 'est effecuté(e) une nouvelle demande fourniture',
+                icon:'edit'
+            }
+            console.log(Notif)
+            //io.emit(Demande.struct+"FD" , Demand )//for repporting 
+            io.emit("NewNotif"+objets.output.recevoir_ID , Notif)//notifier le CD.
+            io.emit(Demande.userID , Demand )
+            io.emit('NewDemandD'+Demande.structure, Demand )
+            console.log('Demande Inserted');
+            sql.close();
+            return  'DI' //Demand inserted
+        } if (Demande.UT == 'Directeur') {
+            let objets = await new sql.Request()
+            .input('userID',sql.VarChar,Demande.userID)
+            .output('demande_id',sql.Int)
+            .output('FID', sql.Int)
+            .output('recevoir_ID', sql.VarChar)
+            .output('DDATE',sql.DateTime)
+            .input('etat', sql.VarChar,'DAM')
+            .execute('InsertDemandeFourniture');
+            let notification_ID = objets.output.FID;
+            let demande_id=objets.output.demande_id;//id of demande insert it 
+            for(let i = 0 ; i <Demande.objetsDemande.length ; i++){
+                let objet = Demande.objetsDemande[i]
+                
+                await new sql.Request()
+                .input('demande_id',sql.Int,demande_id)
+                .input('code_objet',sql.VarChar,objet.code_object)
+                .input('qty_demande',sql.Int,objet.qty_demande)
+                .execute('InserObjetOftDemandeFourniture')
+            }
+            let Demand = { //  for the WorkFlow
+                demande_ID: objets.output.demande_id,
+                demande_Date: objets.output.DDATE,
+                type_demande: 'Demande fourniture',
+                etat: 'DAM',
+                motif: '',
+                seen: 0
+
+            }
+            let Notif = {// notification Info 
+                userID : Demande.userID,
+                notification_ID : notification_ID,
+                demande_ID: demande_id,
+                seen : 0,
+                description_notif : 'est effecuté(e) une nouvelle demande fourniture',
+                icon:'edit'
+            }
+            console.log(Notif)
+            //io.emit(Demande.struct+"FD" , Demand )//for repporting 
+            io.emit("NewNotif"+objets.output.recevoir_ID , Notif)//notifier le CD.
+            io.emit(Demande.userID , Demand )
+            io.emit('NewDemandRD', Demand )
+            console.log('Demande Inserted');
+            sql.close();
+            return  'DI' //Demand inserted
+        } else {
+            
             let objets = await new sql.Request()
             .input('userID',sql.VarChar,Demande.userID)
             .output('demande_id',sql.Int)
@@ -76,6 +168,7 @@ async function  setDemandeFourniture(Demande , io){
             console.log('Demande Inserted');
             sql.close();
             return  'DI' //Demand inserted
+        }
 
         } catch (error) {
             console.log(error);

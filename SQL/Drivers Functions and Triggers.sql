@@ -5,7 +5,7 @@ BEGIN
 	where shown = 1
 END
 
-CREATE PROCEDURE SETCHAUFFEUR
+ALTER PROCEDURE SETCHAUFFEUR
 @nom AS varchar(50),
 @prenom AS varchar(50),
 @type_permis AS varchar(50),
@@ -17,7 +17,7 @@ BEGIN
 	Values(@nom,@prenom,@type_permis,@telephone,@email)
 END
 
-ALTER PROCEDURE UPDATECHAUFFEUR
+CREATE PROCEDURE UPDATECHAUFFEUR
 	@chauffeur_id int,
 	@nom AS varchar(50),
 	@prenom AS varchar(50),

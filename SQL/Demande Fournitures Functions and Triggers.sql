@@ -77,7 +77,7 @@ BEGIN
 	INSERT INTO demande 
 	VALUES (	(SELECT CONVERT (datetime, SYSDATETIME())),
 				@userID,
-				'Chef Departement', 
+				@etat, 
 				null,
 				0,
 				1)
