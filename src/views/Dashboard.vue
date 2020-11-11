@@ -141,6 +141,7 @@
       icon='edit'
       color='red'
       @resetDemand="resetDemand"
+      :Editable="Editable"
        />
     <DemandeVehicule 
       v-model="openDialogVehicule"

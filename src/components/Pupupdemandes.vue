@@ -40,7 +40,8 @@
             :name='demandes[1].name'
             :color='demandes[1].color'
             :icon='demandes[1].icon' 
-             />
+            type='new' 
+            :Editable="true"/>
 
     <DemandeTirage v-model="openDialogTirage" type='new' :Editable="true"/>
 

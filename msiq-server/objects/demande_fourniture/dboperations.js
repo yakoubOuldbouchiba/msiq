@@ -11,7 +11,7 @@ async function  getDemandeFourniture(id){
             .execute('GetObjetOftDemandeFourniture')
             console.log('Demande getted');
             sql.close();
-            console.log(demande.recordset[0])
+            console.log(demande.recordset)
             return {
                  result : 'DG' , //Demand inserted
                  demande : demande.recordset
@@ -29,7 +29,7 @@ async function  getDemandeFourniture(id){
 // set new demande
 async function  setDemandeFourniture(Demande , io){
     try {
-        
+        console.log(Demande);
         await sql.connect(config)
         try {
             let objets = await new sql.Request()
@@ -51,6 +51,15 @@ async function  setDemandeFourniture(Demande , io){
                 .input('qty_demande',sql.Int,objet.qty_demande)
                 .execute('InserObjetOftDemandeFourniture')
             }
+            let Demand = { //  for the WorkFlow
+                demande_ID: objets.output.demande_id,
+                demande_Date: objets.output.DDATE,
+                type_demande: 'Demande fourniture',
+                etat: 'Chef Departement',
+                motif: '',
+                seen: 0
+
+            }
             let Notif = {// notification Info 
                 userID : Demande.userID,
                 notification_ID : notification_ID,
@@ -62,9 +71,12 @@ async function  setDemandeFourniture(Demande , io){
             console.log(Notif)
             //io.emit(Demande.struct+"FD" , Demand )//for repporting 
             io.emit("NewNotif"+objets.output.recevoir_ID , Notif)//notifier le CD.
+            io.emit(Demande.userID , Demand )
+            io.emit('NewDemandCD'+Demande.structure+Demande.departement, Demand )
             console.log('Demande Inserted');
             sql.close();
             return  'DI' //Demand inserted
+
         } catch (error) {
             console.log(error);
             console.log('can not instert Demande');
@@ -86,7 +98,7 @@ async function  editDemandeFourniture(Demande ,io){
             .input('demande_id',sql.Int ,Demande.demande_id)//notifier le CD.)
             .output('NID',sql.Int)//for notif
             .output('recevoir_ID',sql.VarChar)// for notif
-            .input(etat ,sql.VarChar ,Demande[0].etat)
+            .input('etat' ,sql.VarChar ,Demande.objetsDemande[0].etat)
             .execute('deleteObjetOftDemandeFourniture'); //id of demande insert it 
             let Notif = {// notification Info 
                 userID : Demande.uID,

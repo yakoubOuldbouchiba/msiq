@@ -78,15 +78,26 @@ ALTER PROCEDURE GetObjetOftDemandeFourniture
 	@demande_f_id as int
 AS
 BEGIN
-	SELECT 
-		DFC.demande_F_ID ,DFC.code_object ,  O.designation , DFC.qty_demande , D.etat
-	FROM demande_fourniture_object  DFC , objet O , demande D
+	SELECT	DFC.demande_F_ID,
+			DFC.code_object,  
+			O.designation, 
+			DFC.qty_demande, 
+			D.utilisateurs_ID,
+			D.motif,
+			D.etat,
+			D.demande_Date,
+			U.nomUtilisateur, 
+			U.prenomUtilisateur,
+			U.departement,
+			U.structure                     
+	FROM demande_fourniture_object  DFC , objet O , demande D, utilisateurs U
 	WHERE DFC.demande_F_ID = @demande_f_id
 	AND O.code_object = DFC.code_object
 	AND D.demande_ID = DFC.demande_F_ID
+	AND D.utilisateurs_ID= U.email
 END
 
-Execute GetObjetOftDemandeFourniture 1133
+Execute GetObjetOftDemandeFourniture 59
 
 
 Execute GetObjetOftDemandeFourniture 1130
