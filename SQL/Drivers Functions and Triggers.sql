@@ -14,7 +14,7 @@ CREATE PROCEDURE SETCHAUFFEUR
 AS
 BEGIN
 	INSERT INTO chauffeur(nom,prenom,type_permis,telephone,email)
-	Values(@nom,@prenom,@type_permis,@telephone,@email)
+	Values(@nom,@prenom,@type_permis,@telephone,@email,1,1)
 END
 
 ALTER PROCEDURE UPDATECHAUFFEUR
