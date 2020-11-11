@@ -18,7 +18,7 @@ BEGIN
 		END
 	return @Etat
 END
-
+SELECT dbo.DemandeEtat (436)
 ALTER VIEW demandeNewEtat
 	AS
 	SELECT 
