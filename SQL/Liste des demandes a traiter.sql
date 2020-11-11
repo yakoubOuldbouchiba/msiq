@@ -51,7 +51,7 @@ BEGIN
 		SELECT	* 
 		FROM	Demandes_A_Traiter
 		WHERE	type_demande = 'Demande de tirage'
-		AND		etat = 'Acceptee'
+		AND		etat = 'Agent de Tirage'
 
 	if(@UserType = 'Chef de parc')
 		SELECT	* 

@@ -1,3 +1,0 @@
-processus "traiter demande client" :
-<Debut> Etablir une demande -> Valider une demande "Chef dep" -#valider ou nn#-> Valider une demander "directeur" -#valider ou nn#-> valider une demande "directeur "Dam" 
--#valider ou nn#->valider une demande "chef dep" -#valider ou nn#-> traiter la demande -> etablir attestation bien fait <<fin>>

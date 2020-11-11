@@ -182,10 +182,12 @@
                         <v-row justify="center"> 
                             <v-btn v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Agent de Tirage')" 
                                 class="ma-1 red white--text"
+                                :disabled="!DT.motif"
                                 @click="Reject">Rejeter la demande </v-btn>
 
                             <v-btn v-if="type=='Traiter'" 
                                 class="ma-1 green white--text"
+                                :disabled="!!DT.motif && DT.motif!=''"
                                 @click="Accept">Accepter la demande </v-btn>
 
                             <v-btn v-if="Editable && type!='new'" 
@@ -341,7 +343,6 @@ export default {
         formData.append('UserID', this.DT.UserID)
         formData.append('UT', this.$store.state.user.typeUtilisateur)
         formData.append('departement', this.DT.departement)
-        formData.append('structure', this.DT.structure)
         this.loading = true;
         await Axios.post('http://localhost:3030/DemandeTirage',formData)
         .then(
@@ -392,7 +393,7 @@ export default {
                     UT: this.$store.state.user.typeUtilisateur})
         else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
             Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, 
-                {State :'Acceptee',
+                {State :'Agent de Tirage',
                     Demande: this.DT, 
                     typeD: 'Demande de tirage',
                     UT: this.$store.state.user.typeUtilisateur})    
