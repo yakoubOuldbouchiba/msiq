@@ -127,7 +127,7 @@
                       <v-col cols="12" sm="8"> 
                           <v-textarea
                           v-model="DC.motif"
-                          :disabled="DC.etat =='Acceptee' || DC.etat =='Rejetee'"
+                          :disabled="DC.etat =='Rejetee'"
                           label="Motif" 
                           prepend-icon="mdi-flag-outline"></v-textarea>
                       </v-col>   
@@ -137,11 +137,12 @@
                       <v-btn v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Agent de magasin')" 
                         class="ma-1 red white--text"
                         @click="Reject"
-                        :disabled="!valid">Rejeter la demande</v-btn>
+                        :disabled="!DC.motif">Rejeter la demande</v-btn>
 
                        <v-btn v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Agent de magasin')" 
                         class="ma-1 green white--text"
-                        @click="Accept">Accepter la demande </v-btn>
+                        @click="Accept"
+                        :disabled="DC.motif !='' && !!DC.motif ">Accepter la demande </v-btn>
 
                       <v-btn v-if="Editable && type !='new'" class="ma-1 pink white--text" 
                         :disabled="!valid"
@@ -248,7 +249,7 @@ export default {
             nAchat: null,
             date_achat: null,
             oAchats: null,
-            motif: '',
+            motif: null,
             etat: 'Chef Departement',
           },
       }

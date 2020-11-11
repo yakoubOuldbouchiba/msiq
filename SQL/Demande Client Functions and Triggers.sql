@@ -89,7 +89,6 @@ ALTER PROCEDURE GetDemandeClient
 AS
 BEGIN
 	SELECT	DC.*,
-			D.etat,
 			U.email,
 			U.nomUtilisateur, 
 			U.prenomUtilisateur,
@@ -102,7 +101,6 @@ BEGIN
 	AND		D.demande_ID = DC.demande_C_ID
 	AND		U.email = D.utilisateurs_ID
 END
-
 
 ----------------------------------------------------------------
 
