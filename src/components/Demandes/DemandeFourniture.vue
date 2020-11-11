@@ -17,12 +17,28 @@
                     </v-toolbar>
                     <v-card-text>
                         <v-form v-model="valid" ref="form" >
+                            <v-row justify="center" v-if="type == 'Traiter'"> 
+                      <v-col cols="12" sm="5"> 
+                        <v-text-field 
+                          :value="objetsDF[0].nomUtilisateur+' '+objetsDF[0].prenomUtilisateur"
+                          disabled
+                          label="Nom et prenom"
+                          prepend-icon="mdi-account"></v-text-field>
+                      </v-col>  
+                      <v-col cols="12" sm="5"> 
+                        <v-text-field  
+                        :value="objetsDF[0].departement"
+                        disabled
+                        label="Departement"
+                        prepend-icon="mdi-office-building"></v-text-field>
+                      </v-col>  
+                    </v-row>
                             <v-simple-table>
                                 <template v-slot:default color="white">
                                     <thead>
                                         <tr>
                                             <th>
-                                                <v-btn
+                                                <v-btn v-if=" type != 'Traiter'"
                                                     @click="addNewObject()"
                                                     color="cyan"
                                                     fab
@@ -210,7 +226,8 @@ export default {
             {userID : this.$store.state.user.email, 
             objetsDemande : this.objetsDF, 
             structure: this.$store.state.user.structure,
-            departement: this.$store.state.user.departement } )
+            departement: this.$store.state.user.departement,
+            UT: this.$store.state.user.typeUtilisateur} )
             .then(
                 res =>{
                     this.msg = res.data.title,
