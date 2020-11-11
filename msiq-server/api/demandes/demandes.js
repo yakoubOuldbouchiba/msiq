@@ -159,10 +159,10 @@ module.exports=(io)=>{
             io.emit('RemoveDemandD'+req.body.Demande.structure, Demand )       
         }else if (req.body.State == 'Chef de parc') {
             io.emit('NewDemandCP', Demand )  
-            io.emit('RemoveDemandD'+req.body.Demande.structure, Demand, Demand ) 
+            io.emit('RemoveDemandD'+req.body.Demande.structure, Demand ) 
         }else if (req.body.State == 'Agent de Tirage'){
             io.emit('NewDemandAT', Demand )  
-            io.emit('RemoveDemandD', Demand )       
+            io.emit('RemoveDemandD'+req.body.Demande.structure, Demand )       
         }else if (req.body.State == 'Agent de magasin') {
             io.emit('NewDemandAM', Demand )  
             io.emit('RemoveDemandRD', Demand ) 
@@ -179,8 +179,6 @@ module.exports=(io)=>{
             else if (req.body.typeD == 'Demande de prise en charge') {
                 io.emit('NewDemandRPEC', Demand )   
                 io.emit('RemoveDemandD', Demand ) }
-            else if (req.body.typeD == 'Demande de tirage') 
-                io.emit('RemoveDemandAT', Demand ) 
             else {
                 io.emit('NewDemandRR', Demand)
                 io.emit('RemoveDemandD', Demand ) 
