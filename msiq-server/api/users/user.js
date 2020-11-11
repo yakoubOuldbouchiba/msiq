@@ -27,7 +27,7 @@ module.exports=(io)=>{
                 })
             }else if (result ==='CNIU') {
                 res.status(401).json({
-                    title: 'Email déja prit ou quelque information est incorrect. Veuillez verifier vous données',
+                    title: 'Email déja prit ou le compte est désactivé par votre directeu ou quelque information est incorrect. Veuillez verifier vous données',
                     error: 'CNIU'
                 })
             } else {
@@ -44,10 +44,6 @@ module.exports=(io)=>{
         let user  = (req.body);
         dbOperationsClient.Login(user).then(result=>{
             res.json(result);
-            if(result.title=='User in'){
-                console.log(req.body.email);
-                io.emit('Login'+req.body.email)
-            }
         })
     })
     //update a user
@@ -56,8 +52,10 @@ module.exports=(io)=>{
     });
     // delete a user
     router.delete('/users/:id',auth.requireLogin,(req , res)=>{ 
-        dbOperationsClient.deleteUser(req.params.id).then(result=>{
+        dbOperationsClient.deleteUser(req.params.id).then((result,err)=>{
+            if(err) return false
             res.send(result);
+            io.emit("DeleteCompte"+req.params.id);
         }); 
     });
    // Confirm User

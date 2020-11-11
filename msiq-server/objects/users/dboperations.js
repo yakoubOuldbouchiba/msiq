@@ -70,7 +70,7 @@ async function  Login(user){
         .execute("LOGIN");
         if(user_data.recordset.length == 0){
             return {
-                title: "Ce utilisateur n'exister pas",
+                title: "Ce utilisateur n'exister pas ou le compte est désactivé par votre directeur",
                 error: 'User not found'}
 
             }else{  

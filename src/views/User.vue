@@ -26,21 +26,19 @@
                         <v-icon left class="blue--text">add_box</v-icon>
                         <span class="blue--text"> ajouter employee </span>
                     </v-btn>
-                    <Edit 
-                        name='Chauffeur'
-                        :dialogEdit="dialog"
-                        :editIndex="editedIndex"
-                        :item = "item"
-                        @close="close"
-                        @add="ajouterChauffeur"
-                        @edit="editerChauffeur"
-                    ></Edit>
 
                 </v-toolbar>
                 </template>
                 <template v-slot:item.actions="{item}">
-                    <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
-                    <v-icon small @click="deleteItem(item)">delete</v-icon>
+                    <v-btn text fab>
+                        <v-icon  @click="editItem(item)">edit</v-icon>
+                    </v-btn>
+                    <v-btn text fab v-if="item.shown==1" @click="deleteItem(item)">
+                        <v-icon   >explore_off</v-icon>
+                    </v-btn>
+                    <v-btn text fab v-else @click="deleteItem(item)">
+                        <v-icon   >explore</v-icon>
+                    </v-btn>
                 </template>
             </v-data-table>
         </v-container>
@@ -48,10 +46,10 @@
 </template>
 
 <script>
-import Edit from '../components/Edit'
+
 export default {
-    name : "Chauffeurs",
-    components :{Edit},
+    name : "Users",
+
     async created(){
         this.$store.dispatch('getTeam');
     },
@@ -73,27 +71,6 @@ export default {
             // 2- deleting for db nodejs part
             //var email = item.email;
             this.$store.dispatch('deleteUser',item);
-        },
-        ajouterChauffeur : function(value){
-            //bdd function nodejs
-            this.Chauffeurs.push(value);
-            this.item={
-                idChauffeur : "xxxx",
-                nom : "xxxxxx",
-                prenom : "xxxxx",
-                permis : "xxxx x"
-           }
-           this.dialog=false;
-        },
-        editerChauffeur : function(){
-            //add bdd function nodejs
-            this.item={
-                idChauffeur : "xxxx",
-                nom : "xxxxxx",
-                prenom : "xxxxx",
-                permis : "xxxx x"
-           }
-           this.dialog=false;  
         }
     },
     data(){

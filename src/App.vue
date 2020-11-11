@@ -21,5 +21,11 @@ export default {
 
     }
   },
+  mounted(){
+    this.$store.state.sokect.on("DeleteCompte"+this.$store.state.user.email, () => {
+        this.$store.commit('logout');
+        this.$router.push('/',()=>{})
+    })
+  }
 };
 </script>

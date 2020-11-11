@@ -92,7 +92,8 @@ export default new Vuex.Store({
             let deleted = (await axios.delete("http://localhost:3030/users/"+item.email)).data;
             if(deleted){
                 var index = state.users.indexOf(item);
-                state.users.splice(index,1);
+                item.shown=!item.shown;
+                state.users.splice(index,1,item);
             }
         }, 
         getuser ({state}){
