@@ -167,7 +167,6 @@ module.exports=(io)=>{
             io.emit('NewDemandAM', Demand )  
             io.emit('RemoveDemandRD', Demand ) 
         }else if (req.body.State == 'Acceptee') {
-            
             if (req.body.typeD == 'Demande client'){
                 io.emit('NewDemandAM', Demand )
                 io.emit('RemoveDemandRD', Demand ) 

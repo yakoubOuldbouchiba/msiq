@@ -12,7 +12,15 @@
             </v-toolbar>
             <v-card-text>
                 <v-form v-model="valid" ref="form">
-
+                    <v-alert
+                        v-if="type== 'update' && !!DR.demande_V_ID"
+                        class="ml-8 mb-6 mt-2"
+                        dense
+                        outlined
+                        type="warning"
+                        >
+                    Si vous voulez modifier votre demande de Véhicule, vous devez la modifier sur votre list des demandes
+                    </v-alert>
                     <v-row justify="center" v-if="type == 'Traiter'"> 
                             <v-col cols="12" sm="6"> 
                                 <v-text-field 
@@ -101,7 +109,7 @@
                                 @click=" openDemandeVehicule">
                             </v-checkbox>
                             <div v-if="DR.demande_V_ID!=null">
-                                <b class="green--text" v-show="disabled">Le demande véhicule est bien crée</b>
+                                <b class="green--text" v-show="disabled">Votre demande de Véhicule a etait crée, Numéro de la demande est : {{DR.demande_V_ID}}</b>
                             </div>
                         </v-col>
                         <v-col cols="12">
@@ -136,10 +144,11 @@
                         <v-btn v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Responsable AR')" 
                         class="ma-1 red white--text"
                         @click="Reject"
-                        :disabled="!valid">Rejeter la demande </v-btn>
+                        :disabled="!DR.motif">Rejeter la demande </v-btn>
 
                         <v-btn v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Responsable AR')" 
                         class="ma-1 green white--text"
+                        :disabled="!!DR.motif && DR.motif !=''"
                         @click="Accept">Accepter la demande </v-btn>
 
                         <v-btn v-if="Editable && type != 'new'" class="ma-1 pink white--text" 
@@ -367,12 +376,14 @@ export default {
       if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
         axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
             {State :'Directeur',
-                Demande: this.DR, typeD: 'Demande activité relex', 
+                Demande: this.DR, 
+                typeD: 'Demande activité relex', 
                 UT: this.$store.state.user.typeUtilisateur})
       else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
         axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
             {State :'Acceptee',
-            Demande: this.DR, typeD: 'Demande activité relex',
+            Demande: this.DR, 
+            typeD: 'Demande activité relex',
             UT: this.$store.state.user.typeUtilisateur,
             struct : this.$store.state.structure})    
         this.dialog = false

@@ -140,10 +140,11 @@
                             <v-btn v-if="type=='Traiter' &&($store.state.user.typeUtilisateur != 'Responsable PEC')" 
                             class="ma-1 red white--text"
                             @click="Reject"
-                            :disabled="!valid">Rejeter la demande </v-btn>
+                            :disabled="!DPEC.motif">Rejeter la demande </v-btn>
 
                             <v-btn v-if="type=='Traiter' &&($store.state.user.typeUtilisateur != 'Responsable PEC')" 
                                 class="ma-1 green white--text"
+                                :disabled="!!DPEC.motif && DPEC.motif !=''"
                                 @click="Accept">Accepter la demande </v-btn>
 
                             <v-btn v-if="Editable && type!='new'" class="ma-1 pink white--text" 
