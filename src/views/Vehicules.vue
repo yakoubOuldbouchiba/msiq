@@ -92,8 +92,8 @@ export default {
             };
             this.dialog=false;
         },
-        editerVehicule :function(){
-            // modifier au niveau de data base
+        async editerVehicule (item){
+            await axios.put("http://localhost:3030/vehicule/"+item.item.matricule, item.item);
              this.item = {
                 name :'xxxx',
                 matricule : 'xxxxx-xxx-xx',

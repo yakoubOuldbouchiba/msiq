@@ -44,20 +44,31 @@ async function  setVehicule(vehicule){
     }
 }
 //edit user
-async function  editVehicule(){
+async function  editVehicule(vehicule){
     try{
-        //let pool =  sql.connect(config);
-    }catch(error){
-        console.log(error);
+        let pool = await sql.connect(config);
+         await pool.request()
+        .input('matricule', sql.VarChar, vehicule.matricule)
+        .input('nom',sql.VarChar, vehicule.nom )
+        .input('annee',sql.Int,parseInt(vehicule.annee))
+        .input('type_vehicule',sql.VarChar,vehicule.type_vehicule)
+        .execute("UPDATEVEHICULE");      
+        console.log("we inserted");
+         return true;
+    }catch(error){ 
+        console.log("wrong");
+        return false;
     }
 }
 // delete user
 async function  deleteVehicule(matricule){
     try{
+        console.log(matricule)
         let pool = await (sql.connect(config));
          await pool.request()
         .input("matricule", sql.VarChar, matricule)
-        .query("DELETEVEHICULE");
+        .execute("DELETEVEHICULE");
+        sql.close();
         return true;
     }catch(error){
         return false;

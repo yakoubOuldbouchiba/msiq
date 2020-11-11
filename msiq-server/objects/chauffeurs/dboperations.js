@@ -5,6 +5,7 @@ async function  getChauffeurs(){
     try{
         let pool = await (sql.connect(config));
         let users = await (pool.request().execute("GETCHAUFFEURS"));
+        sql.close();
         return users.recordsets;
     }catch(error){
         console.log(error);
@@ -21,7 +22,8 @@ async function  setChauffeur(chauffeur){
         .input('type_permis',sql.VarChar,chauffeur.type_permis)
         .input('telephone',sql.VarChar,chauffeur.telephone)
         .input('email',sql.VarChar,chauffeur.email)
-        .execute("SETCHAUFFEUR")     
+        .execute("SETCHAUFFEUR")  
+        sql.close();   
          return true;
     }catch(error){ 
         console.log("wrong");
@@ -29,9 +31,20 @@ async function  setChauffeur(chauffeur){
     }
 }
 //edit chauffeur
-async function  editChauffeur(){
+async function  editChauffeur(id , chauffeur){
     try{
+        console.log(id)
         let pool = await sql.connect(config);
+        await pool.request()
+        .input('chauffeur_id',sql.Int , chauffeur.chauffeur_id)
+       .input('nom',sql.VarChar,chauffeur.nom)
+       .input('prenom',sql.VarChar,chauffeur.prenom)
+       .input('type_permis',sql.VarChar,chauffeur.type_permis)
+       .input('telephone',sql.VarChar,chauffeur.telephone)
+       .input('email',sql.VarChar,chauffeur.email)
+       .execute("UPDATECHAUFFEUR")  
+       sql.close();   
+        return true;
     }catch(error){
         console.log(error);
     }
@@ -39,11 +52,11 @@ async function  editChauffeur(){
 // delete chauffeur
 async function  deleteChauffeur(chauffeur_id){
     try{
-        console.log("chauffeur id : "+chauffeur_id);
         let pool = await (sql.connect(config));
          await pool.request()
         .input("chauffeur_id", sql.VarChar,chauffeur_id)
         .execute("DELETECHAUFFEUR");
+        sql.close();
         return true;
     }catch(error){
         return false;

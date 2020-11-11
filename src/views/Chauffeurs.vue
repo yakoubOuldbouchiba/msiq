@@ -58,7 +58,7 @@ export default {
         edit : function(){
             this.dialog=true;
         },
-        editItem : function(item){
+        async editItem (item){
             this.item=item;
             this.editedIndex= this.Chauffeurs.indexOf(item);
             this.dialog=true;
@@ -74,6 +74,7 @@ export default {
             this.Chauffeurs.splice(index ,1)
         },
         async ajouterChauffeur(value){
+            console.log(value);
             (await Axios.post("http://localhost:3030/chauffeur",value));
             this.Chauffeurs=(await Axios.get("http://localhost:3030/chauffeurs")).data
             this.item={
@@ -85,8 +86,9 @@ export default {
            }
            this.dialog=false;
         },
-        editerChauffeur : function(){
-            //add bdd function nodejs
+        editerChauffeur : function(item){
+            console.log(item)
+            Axios.put("http://localhost:3030/chauffeur/"+item.item.chauffeur_id , item.item);
             this.item={
                 nom : "xxxxxx",
                 prenom : "xxxxx",

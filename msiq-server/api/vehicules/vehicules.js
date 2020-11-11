@@ -23,7 +23,9 @@ module.exports=(users)=>{
     })
     //update a vehicule
     router.put('/vehicule/:id',auth.requireLogin,(req , res)=>{ 
-        
+        dbOperationsVehicule.editVehicule(req.body).then(result=>{
+            res.json(result);
+        })
     });
     // delete a vehicule
     router.delete('/vehicule/:id',auth.requireLogin,(req , res)=>{ 

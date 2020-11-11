@@ -17,7 +17,9 @@ module.exports=()=>{
     })
     //update a chauffeur
     router.put('/chauffeur/:id',auth.requireLogin,(req , res)=>{ 
-        res.send({title : 'update a chauffeur'});
+        dboperationChauffeur.editChauffeur(req.params.id , req.body).then(result=>{
+            res.json(result);
+        })
     });
     // delete a chauffeur
     router.delete('/chauffeur/:id',auth.requireLogin,(req , res)=>{ 
