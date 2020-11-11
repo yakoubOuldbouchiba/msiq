@@ -13,8 +13,8 @@ CREATE PROCEDURE SETCHAUFFEUR
 @email AS varchar(50)
 AS
 BEGIN
-	INSERT INTO chauffeur(nom,prenom,type_permis,telephone,email)
-	Values(@nom,@prenom,@type_permis,@telephone,@email)
+	INSERT INTO chauffeur
+	Values(@nom,@prenom,@type_permis,@telephone,@email,1,1)
 END
 
 ALTER PROCEDURE UPDATECHAUFFEUR
