@@ -217,6 +217,7 @@ CREATE TABLE vehicule(
 	annee integer,
 	type_vehicule varchar(20),
 	dispo bit,
+	shown bit,
 	PRIMARY KEY (Matricule)
 );
 
@@ -230,5 +231,6 @@ CREATE TABLE chauffeur(
 	telephone varchar(Max),
 	email varchar(MAX),
 	dispoC bit,
+	shown bit,
 	PRIMARY KEY (chauffeur_id)
 )

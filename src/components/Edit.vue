@@ -79,7 +79,7 @@ export default {
             if(this.editIndex =='-1'){
                 this.$emit('add' , this.item)
             }else{
-                this.$emit('edit' , {editIndex: this.editIndex, vehicule : this.item})
+                this.$emit('edit' , {editIndex: this.editIndex, item : this.item})
             }
         }
     }
