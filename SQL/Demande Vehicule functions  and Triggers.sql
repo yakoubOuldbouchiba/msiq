@@ -160,7 +160,8 @@ ALTER PROCEDURE UpdateDemandeVehicule
 	@matricule AS varchar(20),
 	@CID AS int,
 	@Observ AS varchar(max),
-	@etat as varchar(max)
+	@etat as varchar(max),
+	@DDATE AS datetime OUTPUT
 AS
 BEGIN
 	update demande_vehicule
@@ -197,5 +198,5 @@ BEGIN
 	SELECT @NID = dbo.GetNotifID(@demande_v_id);-- for notif
 	SELECT @describ = 'est modifé(e) la demande véhicule numéro '+ CONVERT(Varchar(max) , @demande_v_id)    
 	Execute Update_NOTIFICATION @demande_v_id , @recevoir_ID , @describ
-
+	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 END

@@ -354,8 +354,9 @@ export default {
             )
         },
         closeDemande :function(){
-            if(this.type=="new")
-            this.$emit("sendDemande",null);
+            if(this.type=="new"){
+                this.$emit("sendDemande",null);
+            }
             this.$refs.form.reset();
             this.dialog=false;
         },

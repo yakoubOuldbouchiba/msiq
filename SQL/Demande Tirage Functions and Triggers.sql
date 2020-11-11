@@ -122,7 +122,8 @@ ALTER PROCEDURE UpdatetDemandeTirage
 	@NO AS int,
 	@DP AS Date,
 	@etat as varchar(max),
-	@describ as varchar(max) output
+	@describ as varchar(max) output,
+	@DDATE AS datetime OUTPUT
 AS
 BEGIN
 	UPDATE 	document
@@ -146,13 +147,6 @@ BEGIN
 		SELECT @describ = 'est modifé(e) la demande de tirage numéro '+ CONVERT(Varchar(max) , @id)    
 		Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 	END
-	ELSE IF (@etat ='Acceptee')
-	BEGIN
-		SELECT @recevoir_ID = dbo.GetUserByDI(@id);
-		SELECT @NID = dbo.GetNotifID(@id);-- for notif
-		SELECT @describ = 'La demande de tirage numéro '+ CONVERT(Varchar(max) , @id)+ ' est fait'    
-		Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
-	END
 	ELSE IF (@etat = 'Chef Departement')
 	BEGIN
 		select	@recevoir_ID = dbo.GetChefDepartementByDI(@id);
@@ -160,4 +154,5 @@ BEGIN
 		SELECT @describ = 'est modifé(e) la demande de tirage numéro '+ CONVERT(Varchar(max) , @id)    
 		Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
 	END
+	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 END

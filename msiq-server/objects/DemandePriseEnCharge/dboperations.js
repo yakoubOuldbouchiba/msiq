@@ -43,7 +43,8 @@ async function  setDemandePriseEnCharge(Data,io){
                         demande_ID: res.output.DID,
                         seen : 0,
                         description_notif : 'est effecuté(e) une nouvelle demande de prise en charge',
-                        icon:'flight'
+                        icon:'flight',
+                        date_notification : res.output.DDATE
                    }
                    io.emit(Data.D.structure+"PD" , Demand )//for reporting 
                    io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -92,7 +93,8 @@ async function  setDemandePriseEnCharge(Data,io){
                         demande_ID: res.output.DID,
                         seen : 0,
                         description_notif : 'est effecuté(e) une nouvelle demande de prise en charge',
-                        icon:'flight'
+                        icon:'flight',
+                        date_notification : res.output.DDATE
                    }
                    io.emit(Data.structure+"PD" , Demand )//for reporting 
                    io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -140,7 +142,8 @@ async function  setDemandePriseEnCharge(Data,io){
                         demande_ID: res.output.DID,
                         seen : 0,
                         description_notif : 'est effecuté(e) une nouvelle demande de prise en charge',
-                        icon:'flight'
+                        icon:'flight',
+                        date_notification : res.output.DDATE
                    }
                    io.emit(Data.structure+"PD" , Demand )//for reporting 
                    io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
@@ -233,6 +236,7 @@ async function  UpdateDemandePriseEnCharge(Data , io){
             .output('NID',sql.Int)//for notif
             .output('recevoir_ID',sql.VarChar)// for notif
             .input('etat',sql.VarChar , Data.etat)// for notif
+            .output('DDATE', sql.DateTime)
             .execute('UpdateDemandePEC').then((res , err)=>{
                 if(err)return 'CNUD';
                 let Notif = {// notification Info 
@@ -241,7 +245,8 @@ async function  UpdateDemandePriseEnCharge(Data , io){
                     demande_ID: Data.demande_P_ID,
                     seen : 0,
                     description_notif : 'est modifé(e) la demande de prise en charge numéro ' +Data.demande_P_ID,
-                    icon:'flight'
+                    icon:'flight',
+                    date_notification :res.output.DDATE
                 }
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             });

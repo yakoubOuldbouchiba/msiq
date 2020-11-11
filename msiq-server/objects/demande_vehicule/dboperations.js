@@ -78,7 +78,8 @@ async function  setDemandeVehicule(Demande,io){
                     demande_ID: result.output.demande_v_id,
                     seen : 0,
                     description_notif : 'est effecuté(e) une nouvelle demande véhicule',
-                    icon:'commute'
+                    icon:'commute',
+                    date_notification :result.output.DDATE
                 }
                 io.emit(Demande.structure+"VD" , Demand )//notifier reporting
                 io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
@@ -126,7 +127,8 @@ async function  setDemandeVehicule(Demande,io){
                         demande_ID: result.output.demande_v_id,
                         seen : 0,
                         description_notif : 'est effecuté(e) une nouvelle demande véhicule',
-                        icon:'commute'
+                        icon:'commute',
+                        date_notification :result.output.DDATE
                     }
                 io.emit(Demande.structure+"VD" , Demand )//notifier reporting
                 io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
@@ -174,7 +176,8 @@ async function  setDemandeVehicule(Demande,io){
                     demande_ID: result.output.demande_v_id,
                     seen : 0,
                     description_notif : 'est effecuté(e) une nouvelle demande véhicule',
-                    icon:'commute'
+                    icon:'commute',
+                    date_notification :result.output.DDATE
                 }
                 io.emit(Demande.structure+"VD" , Demand )//notifier reporting
                 io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
@@ -257,6 +260,7 @@ async function  editDemandeVehicule(Demande ,io){
              .output('NID',sql.Int)//for notif
              .output('recevoir_ID',sql.VarChar)// for notif
              .input('etat',sql.VarChar , Demande.etat)
+             .output('DDATE', sql.DateTime)
             .execute('UpdateDemandeVehicule')
             .then((res , err)=>{
                 if(err)return 'CNUD';
@@ -266,7 +270,8 @@ async function  editDemandeVehicule(Demande ,io){
                     demande_ID: Demande.demande_V_ID,
                     seen : 0,
                     description_notif : 'est modifé(e) la demande véhicule numéro '+Demande.demande_V_ID,
-                    icon:'commute'
+                    icon:'commute',
+                    date_notification :res.output.DDATE
                 }
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             })
