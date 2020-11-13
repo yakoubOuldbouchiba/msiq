@@ -9,7 +9,7 @@
             <v-container>
                 <v-row>
                     <v-col cols="12"  sm="6" md="4" >
-                        <v-text-field v-model="item.code_objet" label="code objet"></v-text-field>
+                        <v-text-field v-model="item.code_object" label="code object"></v-text-field>
                     </v-col>
                     <v-col cols="12"  sm="6" md="4" >
                         <v-text-field v-model="item.designation" label="designation"></v-text-field>
@@ -57,7 +57,7 @@ export default {
             if(this.editIndex =='-1'){
                 this.$emit('add' , this.item)
             }else{
-                this.$emit('edit' , {editIndex: this.editIndex, vehicule : this.item})
+                this.$emit('edit' , {editIndex: this.editIndex, Founiture : this.item})
             }
         }
     }

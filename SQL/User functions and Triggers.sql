@@ -69,9 +69,24 @@ BEGIN
 	 AND utilisateurs_ID = @email
 	 AND dbo.DemandeEtat (demande_ID)= 'Encours'
 	)
+
+	DELETE FROM notification
+	 Where demande_ID in (
+	 select N.demande_ID
+	 FROM demande D , notification N
+	 WHERE D.demande_ID = N.demande_ID
+	 AND utilisateurs_ID = @email
+	)
+
+	DELETE FROM notification
+	WHERE recevoir_ID = @email 
+	
+	
+	AND dbo.DemandeEtat (demande_ID)= 'Encours'
 	DELETE FROM demande
 	WHERE utilisateurs_ID = @email 
 	AND dbo.DemandeEtat (demande_ID)= 'Encours'
+	
 	DECLARE @shown as bit
 	SELECT @shown = shown
 	FROM utilisateurs

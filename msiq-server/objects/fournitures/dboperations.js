@@ -6,8 +6,9 @@ const sql = require('mssql');
 // getting all ojects.
 async function  getObjects(){
     try{
-        let pool = await (sql.connect(config));
-        let users = await (pool.request().query("GETOBJETS"));
+         await (sql.connect(config));
+        let users = await (new sql.Request().execute("GETOBJETS"));
+        sql.close();
         return users.recordsets;
     }catch(error){
         console.log(error);
@@ -18,31 +19,45 @@ async function  setObject(objet){
     try{
         let pool = await (sql.connect(config));
         await pool.request()
-        .input('co', sql.VarChar, objet.code_objet)
+        .input('co', sql.VarChar, objet.code_object)
         .input('desig', sql.VarChar, objet.designation)
         .input('qty', sql.Int, parseInt(objet.quantite))
-        .execute("SETOBJETS");
+        .execute("SETOBJET");
+        sql.close();
         return true;
     }catch(error){ 
         return false;
     }
 }
 //edit object
-async function  editObject(){
+async function  editObject(objet){
     try{
-        let pool = await sql.connect(config);
+         await (sql.connect(config));
+         await new sql.Request()
+        .input('co', sql.VarChar, objet.code_object)
+        .input('desig', sql.VarChar, objet.designation)
+        .input('qty', sql.Int, parseInt(objet.quantite))
+        .execute("UPDATEOBJECT")
+        sql.close();
+        return true;
     }catch(error){
-        console.log(error);
+        console.log(error)
+        return false;
     }
 }
 // delete message
 async function  deleteObject(code_objet){
     try{
-        let pool = await (sql.connect(config));
-         await pool.request()
+         await (sql.connect(config));
+        let res =  await new sql.Request()
         .input("code_objet", sql.VarChar, code_objet)
-        .execute("DELETEOBJET");
-        return true;
+        .output("deleted",sql.Bit)
+        .execute("DELETEOBJET")
+        sql.close();
+        console.log(res.output.deleted)
+        return  res.output.deleted ;
+    
+        
     }catch(error){
         return false;
     }

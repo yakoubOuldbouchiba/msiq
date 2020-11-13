@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const dboperationsFournitures = require('../../objects/fournitures/dboperations')
+import { error } from 'jquery';
 import * as auth from '../../services/auth-service.js'
 module.exports=()=>{
     //get a list of fournitures
@@ -18,12 +19,14 @@ module.exports=()=>{
     })
     //update a fourniture
     router.put('/fourniture/:id',auth.requireLogin,(req , res)=>{ 
-        res.send({title : 'update a fourniture'});
+        dboperationsFournitures.editObject(req.body).then((result ,error)=>{
+            res.json(result)
+        })
     });
     // delete a user
     router.delete('/fourniture/:id',auth.requireLogin,(req , res)=>{ 
         dboperationsFournitures.deleteObject(req.params.id).then(result=>{
-            res.json(result)
+            res.status(200).json( result)
         })
     });
     return router;

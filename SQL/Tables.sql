@@ -143,7 +143,8 @@ DROP TABLE objet
 CREATE TABLE objet (
     code_object varchar(6) PRIMARY KEY,
 	designation varchar (255) NOT NULL,
-	quantite int NOT NULL
+	quantite int NOT NULL,
+	shown bit Null
 )ON [PRIMARY];
 
 /*------------------------------------------------------------------------------------------------------------------------*/

@@ -61,13 +61,13 @@
                  <v-btn
                   class="mx-2"
                   outlined
-                  color="blue-grey"
+                  color="green"
                   fab
                   dark
                   x-small
                   @click='updateItem(Demande)'>
                   <v-icon dark>
-                    edit
+                    visibility
                   </v-icon>
                 </v-btn>
                  <v-btn
