@@ -65,11 +65,12 @@ async function  deleteVehicule(matricule){
     try{
         console.log(matricule)
         let pool = await (sql.connect(config));
-         await pool.request()
+        let res = await pool.request()
         .input("matricule", sql.VarChar, matricule)
+        .output('deleted',sql.Bit)
         .execute("DELETEVEHICULE");
         sql.close();
-        return true;
+        return res.output.deleted;
     }catch(error){
         return false;
     }

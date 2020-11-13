@@ -44,6 +44,44 @@
                 </template>
             </v-data-table>
         </v-container>
+        <v-snackbar
+        v-model="Done"
+        :timeout="5000"
+        color="green"
+        outlined
+        class="mb-5"
+        >
+        {{ msg}}
+
+        <template v-slot:action="{ attrs }">
+            <v-btn
+            color="green"
+            text
+            v-bind="attrs"
+            @click="Done = false"
+            >
+            Close
+            </v-btn>
+        </template>
+       </v-snackbar>
+       <v-dialog v-model="Errr" max-width="290">
+        <v-card>
+            <v-card-title class="headline red lighten-2">
+            Error
+            </v-card-title>
+            <v-card-text  class="mt-10 title">{{msg}}</v-card-text>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                color="red darken-1"
+                text
+                @click="Errr = false"
+            >
+                OK
+            </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
     </div>
 </template>
 
@@ -69,9 +107,17 @@ export default {
         async deleteItem (item){
             // 1- we should assigne an anthors cars for the demandesV have this car    
             // 2- deleting for db nodejs part
-            Axios.delete("http://localhost:3030/chauffeur/"+item.chauffeur_id);
-            var index = this.Chauffeurs.indexOf(item);
-            this.Chauffeurs.splice(index ,1)
+            confirm('Vous êtes sur que vous voulez supprimer le chauffeur ?')
+            let deleted = (await Axios.delete("http://localhost:3030/chauffeur/"+item.chauffeur_id)).data;
+            if(deleted){
+                const index = this.Chauffeurs.indexOf(item)
+                this.Chauffeurs.splice(index, 1)
+                this.Done=true;
+                this.msg="Le chauffeur est supprimé"
+           }else{
+               this.Errr=true
+               this.msg='Le chauffeur est attribuer une ou plusieurs demande véhicule'
+           }
         },
         async ajouterChauffeur(value){
             console.log(value);
@@ -105,6 +151,9 @@ export default {
     ,
     data(){
         return{
+        Done: false,
+        Errr: false,
+        msg :'',
         search:'',
         dialog : false,
         editedIndex : '-1',
