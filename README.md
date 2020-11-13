@@ -14,12 +14,13 @@ npm install
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npm run serve only -- front end 
+npm run dev -- both front end & back end
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+npm run build -- we to check the setup of command
 ```
 
 ### Lints and fixes files
