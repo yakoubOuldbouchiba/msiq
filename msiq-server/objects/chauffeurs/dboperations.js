@@ -53,11 +53,12 @@ async function  editChauffeur(id , chauffeur){
 async function  deleteChauffeur(chauffeur_id){
     try{
         let pool = await (sql.connect(config));
-         await pool.request()
+        let res = await pool.request()
         .input("chauffeur_id", sql.VarChar,chauffeur_id)
+        .output('deleted',sql.Bit)
         .execute("DELETECHAUFFEUR");
         sql.close();
-        return true;
+        return res.output.deleted;
     }catch(error){
         return false;
     }

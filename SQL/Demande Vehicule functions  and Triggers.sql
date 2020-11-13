@@ -33,12 +33,32 @@ BEGIN
 END
 ------------------------------------------------------
 ALTER PROCEDURE DELETEVEHICULE
-	@matricule as varchar(20)
+	@matricule as varchar(20),
+	@deleted as bit output
 AS
 BEGIN
 	Update vehicule
 	set shown = 0
 	where matricule = @matricule
+	AND matricule not in (
+		select matricule
+		from demande_vehicule
+		where (date_depart >= GETDATE()
+		OR date_retour >= GETDATE())
+		AND matricule = @matricule
+	)
+		
+	set @deleted = 1;
+	
+	select @deleted = 0
+	FROM demande_vehicule
+	WHERE matricule  in (
+		select matricule
+		from demande_vehicule 
+		where (date_depart >= GETDATE()
+		OR date_retour >= GETDATE())
+		AND matricule = @matricule
+	)
 END
 
 /*--------------------------------------------*/

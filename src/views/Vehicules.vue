@@ -45,6 +45,44 @@
                 </template>
             </v-data-table>
         </v-container>
+        <v-snackbar
+            v-model="Done"
+            :timeout="5000"
+            color="green"
+            outlined
+            class="mb-5"
+            >
+            {{ msg}}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                color="green"
+                text
+                v-bind="attrs"
+                @click="Done = false"
+                >
+                Close
+                </v-btn>
+            </template>
+        </v-snackbar>
+        <v-dialog v-model="Errr" max-width="290">
+            <v-card>
+                <v-card-title class="headline red lighten-2">
+                Error
+                </v-card-title>
+                <v-card-text  class="mt-10 title">{{msg}}</v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="red darken-1"
+                    text
+                    @click="Errr = false"
+                >
+                    OK
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -77,9 +115,17 @@ export default {
             this.dialog=true;
         },
         async deleteItem (item){
-            axios.delete("http://localhost:3030/vehicule/"+item.matricule)
-            const index = this.Vehicules.indexOf(item)
-            confirm('vous êtes sur que vous voulez supprimer cette véhicule ?') && this.Vehicules.splice(index, 1)
+            confirm('vous êtes sur que vous voulez supprimer cette véhicule ?')
+            let deleted = (await axios.delete("http://localhost:3030/vehicule/"+item.matricule)).data
+            if(deleted){
+                const index = this.Vehicules.indexOf(item)
+                this.Vehicules.splice(index, 1)
+                this.Done=true;
+                this.msg="La véhicule est supprimée"
+           }else{
+               this.Errr=true
+               this.msg='La véhicule est attribuer une ou plusieurs demande véhicule'
+           }
         },
         async ajouterVehicule  (value){
             (await axios.post("http://localhost:3030/vehicule",value));
@@ -114,27 +160,30 @@ export default {
     },
     data(){
         return{
-        search:'',
-        editedIndex:'-1',
-        item : {
-            matricule : 'xxxxx-xxx-xx',
-            nom :'xxxx',
-            annee: 'xxxx',
-            type_vehicule : 'xxxx'
-        },
-        dialog :false,
-        headers: [
-          {
-            text: 'name',
-            align: 'start',
-            value: 'nom',
-          },
-          { text: 'Matricule', value: 'matricule' },
-          { text: 'année', value: 'annee' },
-          { text: 'type', value: 'type_vehicule' },
-          { text: 'actions' , value :'actions' ,sortable : false}
-        ],
-        Vehicules : []
+            Done: false,
+            Errr: false,
+            msg :'',
+            search:'',
+            editedIndex:'-1',
+            item : {
+                matricule : 'xxxxx-xxx-xx',
+                nom :'xxxx',
+                annee: 'xxxx',
+                type_vehicule : 'xxxx'
+            },
+            dialog :false,
+            headers: [
+            {
+                text: 'name',
+                align: 'start',
+                value: 'nom',
+            },
+            { text: 'Matricule', value: 'matricule' },
+            { text: 'année', value: 'annee' },
+            { text: 'type', value: 'type_vehicule' },
+            { text: 'actions' , value :'actions' ,sortable : false}
+            ],
+            Vehicules : []
         }
     }
 }

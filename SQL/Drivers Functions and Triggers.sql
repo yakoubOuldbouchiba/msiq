@@ -37,10 +37,31 @@ BEGIN
 END
 
 ALTER PROCEDURE DELETECHAUFFEUR
-	@chauffeur_id as int
+	@chauffeur_id as int,
+	@deleted as bit output
 AS
 BEGIN
 	update chauffeur
 	set shown= 0
 	where chauffeur_id = @chauffeur_id
+	AND chauffeur_ID not in (
+		select chauffeur_ID 
+		from demande_vehicule
+		where (date_depart >= GETDATE()
+		OR date_retour >= GETDATE())
+		AND chauffeur_id = @chauffeur_id
+	)
+	
+	set @deleted = 1;
+	
+	select @deleted = 0
+	FROM demande_vehicule
+	WHERE chauffeur_ID  in (
+		select chauffeur_ID 
+		from demande_vehicule 
+		where (date_depart >= GETDATE()
+		OR date_retour >= GETDATE())
+		AND chauffeur_id = @chauffeur_id
+	)
+
 END
