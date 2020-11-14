@@ -4,6 +4,19 @@ BEGIN
 	SELECT * FROM vehicule
 	where shown = 1
 END
+
+CREATE PROCEDURE GETDISPOVEHICULE
+	@date_depart as datetime
+AS
+BEGIN
+	SELECT * FROM vehicule
+	where shown = 1
+	AND matricule not in (
+		select matricule
+		from demande_vehicule
+		where @date_depart between date_depart and date_retour
+	)
+END
 ------------------------------------------------------------------------
 ALTER PROCEDURE SETVEHICULE 
 @matricule as varchar(50),
