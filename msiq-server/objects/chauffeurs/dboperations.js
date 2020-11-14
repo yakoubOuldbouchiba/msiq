@@ -11,6 +11,19 @@ async function  getChauffeurs(){
         console.log(error);
     }
 }
+// getting all chauffeurs.
+async function  getDispoChauffeurs(date){
+    try{
+        let pool = await (sql.connect(config));
+        let users = await (pool.request()
+        .input('date_depart',sql.DateTime,date)
+        .execute("GETDISPOCHAUFFEURS"));
+        sql.close();
+        return users.recordsets;
+    }catch(error){
+        console.log(error);
+    }
+}
 // set new chauffeur
 async function  setChauffeur(chauffeur){
     console.log(chauffeur);
@@ -65,6 +78,7 @@ async function  deleteChauffeur(chauffeur_id){
 }
 module.exports = {
     getChauffeurs,
+    getDispoChauffeurs,
     setChauffeur,
     editChauffeur,
     deleteChauffeur

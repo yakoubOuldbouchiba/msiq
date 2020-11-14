@@ -352,7 +352,7 @@ export default {
                 qty_demande:null
                 });
         }
-        console.log(this.demande);
+        //console.log(this.demande);
         this.objets = (await Axios.get("http://localhost:3030/fournitures")).data
     },
     data(){
