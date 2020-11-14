@@ -9,6 +9,12 @@ module.exports=()=>{
             res.json(result[0]);
         })
     });
+    //get a list of chauffeurs
+        router.get('/dispochauffeurs/:date',auth.requireLogin,(req , res)=>{ 
+            dboperationChauffeur.getDispoChauffeurs(req.params.date).then(result=>{
+                res.json(result[0]);
+            })
+        });
     //add a new chauffeur
     router.post('/chauffeur' , auth.requireLogin,(req , res)=>{
         dboperationChauffeur.setChauffeur(req.body).then(result=>{
