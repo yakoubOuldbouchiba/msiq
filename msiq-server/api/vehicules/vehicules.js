@@ -9,6 +9,12 @@ module.exports=(users)=>{
             res.json(result[0]);
         })
     });
+    //get a list of vehicules
+    router.get('/dispovehicules/:date',auth.requireLogin,(req , res)=>{ 
+        dbOperationsVehicule.getVehicules(req.params.date).then(result=>{
+            res.json(result[0]);
+        })
+    });
     //get a specific  vehicule
     router.get('/vehicule/:id',auth.requireLogin,(req , res)=>{ 
         dbOperationsVehicule.getVehicule(req.params.id).then(result=>{
