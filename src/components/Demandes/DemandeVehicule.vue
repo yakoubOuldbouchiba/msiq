@@ -418,6 +418,7 @@ export default {
         this.collegues = this.$store.state.users
     },
     beforeUpdate(){
+
             if (this.DV.matricule != '' ) {
                 let index = this.vehicules.findIndex(x => x.matricule == this.DV.matricule)
                 this.Vehicule = this.vehicules[index].matricule+' '+this.vehicules[index].nom;
