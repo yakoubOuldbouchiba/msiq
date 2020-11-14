@@ -268,7 +268,7 @@ import Heure from '../Heure'
 import axios from 'axios'
 export default {
     name:"DemandeVehicule",
-    props:[ 'value','name','color','icon' ,'forDemandeRelex', 'type','demande', 'Editable'] ,
+    props:[ 'value','name','color','icon' ,'forDemandeRelex', 'type','demande', 'chauffeurs' , 'vehicules' , 'Editable'] ,
     components:{Date , Heure ,Autocomplete},
     computed :{
         dialog : {
@@ -416,22 +416,19 @@ export default {
     },async created(){
         await this.$store.dispatch('getTeam')
         this.collegues = this.$store.state.users
-
-        let Vehc =  await axios.get("http://localhost:3030/vehicules")
-        this.vehicules = Vehc.data;
-
-        let Chauf =  await axios.get("http://localhost:3030/chauffeurs")
-        this.chauffeurs = Chauf.data;
     },
     beforeUpdate(){
             if (this.DV.matricule != '' ) {
                 let index = this.vehicules.findIndex(x => x.matricule == this.DV.matricule)
                 this.Vehicule = this.vehicules[index].matricule+' '+this.vehicules[index].nom;
-            }  
+            } 
+        } 
+        if (this.DV.chauffeur_ID) {  
             if (this.DV.chauffeur_ID != '') {
                 let index = this.chauffeurs.findIndex(x => x.chauffeur_id == this.DV.chauffeur_ID)
                 this.Chaffeur = this.chauffeurs[index].chauffeur_id+' '+this.chauffeurs[index].nom+' '+this.chauffeurs[index].prenom;
-            }  
+            } 
+        }  
     },
     data(){
         return{
@@ -442,8 +439,8 @@ export default {
             Errr: false,
             valid:false,
             collegues: [],
-            vehicules: null,
-            chauffeurs: null,
+            /*vehicules: null,
+            chauffeurs: null,*/
             Vehicule:'',
             Chaffeur:'',
             DemandeVehicule : {
