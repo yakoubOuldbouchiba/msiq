@@ -85,11 +85,7 @@ export default {
             permis : "xxxx x"
         }
         ,headers: [
-          {
-            text: 'email',
-            align: 'start',
-            value: 'email',
-          },
+          { text: 'email', align: 'start', value: 'email'},
           { text: 'Nom', value: 'nomUtilisateur' },
           { text: 'Prénom', value: 'prenomUtilisateur' },
           { text: 'fonction', value: 'fonction' },

@@ -19,7 +19,7 @@ BEGIN
 	return @Etat
 END
 SELECT dbo.DemandeEtat (436)
-ALTER VIEW demandeNewEtat
+CREATE VIEW demandeNewEtat
 	AS
 	SELECT 
 		D.demande_ID , 
@@ -34,7 +34,7 @@ ALTER VIEW demandeNewEtat
 	FROM demande D , utilisateurs U
 	WHERE U.email = D.utilisateurs_ID
 	
-ALTER PROCEDURE Total
+CREATE PROCEDURE Total
 	@struct as varchar(max)
 AS
 BEGIN
@@ -43,7 +43,7 @@ BEGIN
 	Where D.structure = @struct
 	GROUP BY D.etat
 END
-ALTER PROCEDURE TotalYEAR
+CREATE PROCEDURE TotalYEAR
 	@struct as varchar(max)
 AS
 BEGIN
@@ -53,7 +53,7 @@ BEGIN
 	AND D.structure = @struct
 	GROUP BY D.etat
 END
-ALTER PROCEDURE TotalMonth
+CREATE PROCEDURE TotalMonth
 	@struct as varchar(max)
 AS
 BEGIN
@@ -64,7 +64,7 @@ BEGIN
 	AND D.structure = @struct
 	GROUP BY D.etat
 END
-ALTER PROCEDURE TotalDay
+CREATE PROCEDURE TotalDay
 	@struct as varchar(max)
 AS
 BEGIN
@@ -77,7 +77,7 @@ BEGIN
 	GROUP BY D.etat
 END
 
-ALTER PROCEDURE TotalByDemand
+CREATE PROCEDURE TotalByDemand
 	@struct as varchar(max)
 AS
 BEGIN
@@ -99,7 +99,7 @@ BEGIN
 END
 
 
-ALTER PROCEDURE TotalByDemandInMonth
+CREATE PROCEDURE TotalByDemandInMonth
 	@struct as varchar(max)
 AS
 BEGIN
@@ -111,7 +111,7 @@ BEGIN
 	GROUP BY D.etat , type_demande
 END
 
-ALTER PROCEDURE TotalByDemandInDay
+CREATE PROCEDURE TotalByDemandInDay
 	@struct as varchar(max)
 AS
 BEGIN

@@ -1,4 +1,4 @@
-ALTER PROCEDURE InsertDemandeClient
+CREATE PROCEDURE InsertDemandeClient
 	@userID AS varchar(50),
 	@nature AS varchar(50),
 	@objet AS varchar(50),
@@ -55,7 +55,7 @@ END
 Declare @typedelete  bit 
 Execute DeleteDemandeClient  167 , @typedelete 
 
-ALTER PROCEDURE DeleteDemandeClient 
+CREATE PROCEDURE DeleteDemandeClient 
 	@id as int,
 	@typedelete as bit output,
 	@recevoir_ID as varchar(max) OUTPUT--For notif
@@ -84,7 +84,7 @@ END
 
 -------------------------------------------------------------
 
-ALTER PROCEDURE GetDemandeClient 
+CREATE PROCEDURE GetDemandeClient 
 	@id as int
 AS
 BEGIN
@@ -105,7 +105,7 @@ END
 ----------------------------------------------------------------
 
 
-ALTER PROCEDURE updateDemandeClient
+CREATE PROCEDURE updateDemandeClient
 	@demande_C_ID AS INT,
 	@nature AS varchar(50),
 	@objet 	AS varchar(50),

@@ -144,7 +144,7 @@
       :Editable="Editable"
        />
     <DemandeVehicule 
-      v-model="openDialogVehicule"
+      v-model="openDialogVehicule2"
       :demande="demande"
       type= "update"
       forDemandeRelex="false"
@@ -205,7 +205,7 @@ data(){
         Done: false,
         Errr: false,
         Editable: false,
-        openDialogVehicule : false,
+        openDialogVehicule2 : false,
         openDialogClient : false,
         openDialogFourniture : false,
         openDialogRelex : false,
@@ -269,7 +269,7 @@ data(){
        this.demande.date_retour = dr.substr(0,10)
        this.demande.heure_depart = dp.substr(11,5)
        this.demande.heure_retour = dr.substr(11,5)
-       this.openDialogVehicule = true
+       this.openDialogVehicule2 = true
      }else if(Demande.type_demande== 'Demande activité relex'){
        let dp = this.demande.date_depart;
        let dr = this.demande.date_retour

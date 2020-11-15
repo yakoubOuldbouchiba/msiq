@@ -16,7 +16,7 @@
             <v-row>
                 <v-col cols="12" sm="4">
                     <v-select 
-                    v-model="user.usertype"
+                    v-model="user.typeUtilisateur"
                     :items="items"
                     :rules="[v => !!v || 'Ce champs est obligatoire']" 
                     label="Type d'utilisateur" 
@@ -25,7 +25,7 @@
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-text-field 
-                    v-model="user.lastName" 
+                    v-model="user.nomUtilisateur" 
                     label="Nom*" 
                     :rules="[v => !!v || 'Ce champs est obligatoire']" 
                     prepend-icon="mdi-nothing" 
@@ -34,7 +34,7 @@
                 </v-col>
                 <v-col cols="12" sm="4">
                     <v-text-field 
-                    v-model="user.firstName" 
+                    v-model="user.prenomUtilisateur" 
                     label="Prénom*" 
                     :rules="[v => !!v || 'Ce champs est obligatoire']" 
                     prepend-icon="mdi-nothing" 
@@ -201,8 +201,8 @@ export default {
             dialog: false,
             msg: '',
             user: {                           
-                lastName: '',
-                firstName: '',
+                prenomUtilisateur: '',
+                nomUtilisateur: '',
                 passWord: '',
                 passWordConfirm: '',
                 fonction: '',
@@ -211,7 +211,7 @@ export default {
                 departement: '',
                 email: '',
                 mobile: '',
-                usertype: 'Client',
+                typeUtilisateur: 'Client',
                 posteTelephonique: ''
             },
             Emailrules: [

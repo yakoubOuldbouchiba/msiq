@@ -1,4 +1,4 @@
-ALTER PROCEDURE CREE_NOTIFICATION
+CREATE PROCEDURE CREE_NOTIFICATION
 	@id as int,
 	@email as varchar(max),
 	@description_notif as varchar(max),
@@ -32,7 +32,7 @@ BEGIN
 	
 END
 EXECUTE GetNotification 'chefdepart@gmail.com'
-ALTER PROCEDURE GetNotification
+CREATE PROCEDURE GetNotification
 	@email as varchar(max)
 AS
 BEGIN
@@ -55,7 +55,7 @@ BEGIN
 
 END
 
-ALTER PROCEDURE UnSeenNotif
+CREATE PROCEDURE UnSeenNotif
 	@email as varchar(Max) 
 AS
 BEGIN
@@ -65,7 +65,7 @@ BEGIN
 	AND seen = 0
 
 END
-ALTER FUNCTION GetNotifID (@id	as int)
+CREATE FUNCTION GetNotifID (@id	as int)
 RETURNS int
 AS
 BEGIN
