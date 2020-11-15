@@ -1,4 +1,4 @@
-ALTER FUNCTION DemandeType (@id as int)
+CREATE FUNCTION DemandeType (@id as int)
 RETURNS varchar(Max)
 AS
 BEGIN
@@ -53,7 +53,7 @@ return @demande_type
 END
 
 
-ALTER VIEW demande_view 
+CREATE VIEW demande_view 
 	AS
 	SELECT	U.email, 
 			dbo.DemandeType(D.demande_ID) as type_demande, 
@@ -63,7 +63,7 @@ ALTER VIEW demande_view
 	AND D.shown = '1'
 
 
-ALTER PROCEDURE getDemandes 
+CREATE PROCEDURE getDemandes 
 @email as varchar(max)
 AS
 BEGIN

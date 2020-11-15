@@ -1,71 +1,28 @@
-
-ALTER PROCEDURE GETOBJETS
+CREATE PROCEDURE GETOBJETS
 AS
 BEGIN 
 	SELECT * FROM objet
-	WHERE shown = 1
 END
 
-ALTER PROCEDURE SETOBJET
-@co as varchar(6),
-@desig as varchar(50),
-@qty as int 
-AS
-BEGIN
-	 DECLARE @exist as bit
-	 select @exist = 1
-	 FROM objet
-	 WHERE code_object = @co
-	 IF (@exist = 1 )
-	 BEGIN
-		UPDATE objet
-		 set
-		 code_object = @co,
-		 designation = @desig,
-		 quantite = @qty,
-		 shown=1
-		 Where code_object = @co
-	 END
-	 ELSE
-	 BEGIN
-		INSERT INTO objet VALUES(@co,@desig,@qty,1)
-	 END
-END
-
-
-ALTER PROCEDURE UPDATEOBJECT
+CREATE PROCEDURE SEOJETS
 @co as varchar(50),
 @desig as varchar(50),
 @qty as int 
 AS
 BEGIN
- UPDATE objet
- set
- code_object = @co,
- designation = @desig,
- quantite = @qty
- Where code_object = @co
+ INSERT INTO objet VALUES(@co,@desig,@qty)
 END
 
-ALTER PROCEDURE DELETEOBJET
-@code_objet as varchar(50),
-@deleted as bit output
+CREATE PROCEDURE DELETEOBJET
+@code_objet as varchar(50)
 AS
 BEGIN
-	update objet set shown=0
-	where code_object=@code_objet
-	AND quantite<=0;
-	
-	set @deleted = 1;
-	
-	select @deleted = 0
-	FROM objet
-	WHERE @code_objet = code_object
-	AND quantite>0;
+	DELETE FROM objet where code_objet = @code_objet
 END
  
 /*Create type objet*/
-ALTER PROCEDURE InsertDemandeFourniture
+select	dbo.GetChefDepartementByDI(331);
+CREATE PROCEDURE InsertDemandeFourniture
 	@userID AS varchar(50),
 	@demande_id AS int output,
 	@FID AS int OUTPUT,--for notif
@@ -106,7 +63,7 @@ BEGIN
 	set @recevoir_ID = @email
 END
 
-ALTER PROCEDURE InserObjetOftDemandeFourniture
+CREATE PROCEDURE InserObjetOftDemandeFourniture
     @demande_id as int, 
 	@code_objet as varchar(6),
 	@qty_demande as int 
@@ -118,35 +75,24 @@ END
 
 --------------------------------------------------------------------------------------------
 
-ALTER PROCEDURE GetObjetOftDemandeFourniture
+CREATE PROCEDURE GetObjetOftDemandeFourniture
 	@demande_f_id as int
 AS
 BEGIN
-	SELECT	DFC.demande_F_ID,
-			DFC.code_object,  
-			O.designation, 
-			DFC.qty_demande, 
-			D.utilisateurs_ID,
-			D.motif,
-			D.etat,
-			D.demande_Date,
-			U.nomUtilisateur, 
-			U.prenomUtilisateur,
-			U.departement,
-			U.structure                     
-	FROM demande_fourniture_object  DFC , objet O , demande D, utilisateurs U
+	SELECT 
+		DFC.demande_F_ID ,DFC.code_object ,  O.designation , DFC.qty_demande , D.etat
+	FROM demande_fourniture_object  DFC , objet O , demande D
 	WHERE DFC.demande_F_ID = @demande_f_id
 	AND O.code_object = DFC.code_object
 	AND D.demande_ID = DFC.demande_F_ID
-	AND D.utilisateurs_ID= U.email
 END
 
-Execute GetObjetOftDemandeFourniture 59
+Execute GetObjetOftDemandeFourniture 1133
 
 
 Execute GetObjetOftDemandeFourniture 1130
 
-ALTER PROCEDURE deleteObjetOftDemandeFourniture
+CREATE PROCEDURE deleteObjetOftDemandeFourniture
     @demande_id as int,
 	@NID AS int OUTPUT,--For notif
 	@recevoir_ID as varchar(max) OUTPUT,--For notif
@@ -158,26 +104,20 @@ BEGIN
 	IF (@recevoir_ID = 'Directeur')
 	BEGIN
 		select	@recevoir_ID = dbo.GetDirecteurByDI(@demande_id);
-		SELECT @NID = dbo.GetNotifID(@demande_id);-- for notif
-		SELECT @describ = 'est modifé(e) la demande fourniture numéro '+ CONVERT(Varchar(max) , @demande_id)    
-		Execute Update_NOTIFICATION @demande_id , @recevoir_ID , @describ
 	END
 	ELSE IF (@etat = 'DAM')
 	BEGIN
 		select	@recevoir_ID = dbo.GetUserByType('Responsable DAM');
-		SELECT @NID = dbo.GetNotifID(@demande_id);-- for notif
-		SELECT @describ = 'est modifé(e) la demande fourniture numéro '+ CONVERT(Varchar(max) , @demande_id)    
-		Execute Update_NOTIFICATION @demande_id , @recevoir_ID , @describ
 	END
 	ELSE IF (@etat = 'Chef Departement')
 	BEGIN
 		select	@recevoir_ID = dbo.GetChefDepartementByDI(@demande_id);
-		SELECT @NID = dbo.GetNotifID(@demande_id);-- for notif
-		SELECT @describ = 'est modifé(e) la demande fourniture numéro '+ CONVERT(Varchar(max) , @demande_id)    
-		Execute Update_NOTIFICATION @demande_id , @recevoir_ID , @describ
 	END
+	SELECT @NID = dbo.GetNotifID(@demande_id);-- for notif
+	SELECT @describ = 'est modifé(e) la demande fourniture numéro '+ CONVERT(Varchar(max) , @demande_id)    
+	Execute Update_NOTIFICATION @demande_id , @recevoir_ID , @describ
 END
-ALTER PROCEDURE deleteDemandeFourniture
+CREATE PROCEDURE deleteDemandeFourniture
     @id as int,
 	@typedelete as bit output,
 	@recevoir_ID as varchar(max) OUTPUT--For notif
@@ -196,7 +136,7 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		SELECT @recevoir_ID = dbo.GetRecevoirByDI(@id)--for notif
+		SELECT @recevoir_ID = dbo.GetChefDepartementByDI(@id)--for notif
 		DELETE FROM notification WHERE demande_ID = @id
 		DELETE  FROM demande_fourniture_object where demande_F_ID = @id;
 		DELETE  FROM demande_fourniture where demande_F_ID = @id;
@@ -205,3 +145,4 @@ BEGIN
 	END
 END
 
+INSERT INTO objet VALUES ('7856s', 'Cable Type B',  100)

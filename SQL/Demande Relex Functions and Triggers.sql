@@ -1,4 +1,4 @@
-ALTER PROCEDURE InsertDemandeRelex
+CREATE PROCEDURE InsertDemandeRelex
 	@userID AS varchar(50),
 	@destination AS varchar(max),
 	@objet_mission as varchar(max),
@@ -51,7 +51,7 @@ END
 
 --------------------------------------
 execute DeleteDemandeRelex 99
-ALTER PROCEDURE DeleteDemandeRelex
+CREATE PROCEDURE DeleteDemandeRelex
 	@id as int,
 	@typedelete as bit output,
 	@recevoir_ID as varchar(max) OUTPUT--For notif
@@ -82,7 +82,7 @@ END
 
 -----------------------------------------------
 
-ALTER PROCEDURE GetDemandeRelex
+CREATE PROCEDURE GetDemandeRelex
 	@id as int
 AS
 BEGIN
@@ -102,7 +102,7 @@ END
 
 -- update relex demande  --
 
-ALTER PROCEDURE UpdateDemandeRelex
+CREATE PROCEDURE UpdateDemandeRelex
 	@destination AS varchar(max),
 	@objet_mission as varchar(max),
 	@date_depart as datetime,

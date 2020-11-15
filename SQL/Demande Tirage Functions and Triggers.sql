@@ -1,4 +1,4 @@
-ALTER PROCEDURE InsertDemandeTirage
+CREATE PROCEDURE InsertDemandeTirage
 	@userID AS varchar(50),
 	@FN		AS varchar(max),
 	@NF		AS int,
@@ -57,7 +57,7 @@ BEGIN
 	set @recevoir_ID = @email
 END
 
-ALTER PROCEDURE DeleteDemandeTirage
+CREATE PROCEDURE DeleteDemandeTirage
 	@id as int,
 	@typedelete as bit output,
 	@recevoir_ID as varchar(max) OUTPUT--For notif
@@ -85,7 +85,7 @@ BEGIN
 	END
 END
 
-ALTER PROCEDURE GetDemandeTirage
+CREATE PROCEDURE GetDemandeTirage
 	@id AS int
 AS
 BEGIN
@@ -110,7 +110,7 @@ BEGIN
 	AND		DT.demande_T_ID = @id
 END
 GetDemandeTirage 1
-ALTER PROCEDURE UpdatetDemandeTirage
+CREATE PROCEDURE UpdatetDemandeTirage
 	@id AS int,
 	@NF AS int,
 	@NE AS int,

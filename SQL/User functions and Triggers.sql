@@ -1,5 +1,5 @@
 
-ALTER PROCEDURE GetUsers 
+CREATE PROCEDURE GetUsers 
 AS
 BEGIN
 	SELECT email,nomUtilisateur,prenomUtilisateur,typeUtilisateur,dateNaissance,mobile,fonction,structure,posteTelephonique,departement,shown 
@@ -9,7 +9,7 @@ END
 /*----------------------------------------------------------------------------------*/
 
 
-ALTER PROCEDURE DeleteUser 
+CREATE PROCEDURE DeleteUser 
 @email AS VarChar(50)
 AS
 BEGIN
@@ -100,7 +100,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-ALTER PROCEDURE SetUsers
+CREATE PROCEDURE SetUsers
 	@email AS varChar(50),
 	@pw AS nvarchar(Max),
 	@ln AS varChar(50),
@@ -120,7 +120,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-ALTER PROCEDURE LOGIN
+CREATE PROCEDURE LOGIN
 	@email AS VARCHAR(30)
 AS
 BEGIN
@@ -134,7 +134,7 @@ LOGIN 'Yacinelalmi19@gmail.com'
 
 /*----------------------------------------------------------------------------------*/
 
-ALTER PROCEDURE GetUser
+CREATE PROCEDURE GetUser
 	@email  AS VarChar(50)
 AS
 BEGIN
@@ -145,7 +145,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-ALTER PROCEDURE setAccountDemand
+CREATE PROCEDURE setAccountDemand
 	@email AS varChar(50),
 	@pw AS nvarchar(max),
 	@ln AS varChar(50),
@@ -179,7 +179,7 @@ END
 
 /*----------------------------------------------------------------------------------*/
 
-ALTER PROCEDURE UpdateUser
+CREATE PROCEDURE UpdateUser
 	@email AS varchar(50),
 	@ln AS varChar(50),
 	@fn AS varChar(50),
@@ -201,4 +201,25 @@ BEGIN
 		posteTelephonique = @pt,
 		departement = @depart
 	WHERE email=@email
+END
+
+CREATE PROCEDURE TAccDemande
+	@email	AS varchar(50),
+	@Msg	AS varchar(10)
+AS
+BEGIN
+	IF(@Msg = 'Accept')
+	BEGIN
+		UPDATE	utilisateurs
+		SET		typeUtilisateur = (SELECT typeUtilisateur FROM demande_compte WHERE email = @email)
+
+		DELETE FROM demande_compte WHERE email = @email
+	END
+	IF(@Msg = 'Reject')
+	BEGIN
+		UPDATE	utilisateurs
+		SET		shown = 0
+
+		DELETE FROM demande_compte WHERE email = @email
+	END
 END

@@ -96,8 +96,8 @@ async function  getDemandesATraiter(Params){
             .input('Depart',sql.VarChar , Params.Depart)
             .input('Struct', sql.VarChar, Params.Struct)
             .execute('getDemandeATraiter')
-            console.log(demandes.recordset);
-            return  demandes.recordset
+            console.log(demandes.recordsets);
+            return  demandes.recordsets
         }catch(err){
             console.log(err);
             console.log('can not get the demandes');

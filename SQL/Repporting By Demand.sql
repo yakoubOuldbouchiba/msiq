@@ -1,6 +1,6 @@
 
 --deparment max demand--
-ALTER PROCEDURE MaxDemandByDep
+CREATE PROCEDURE MaxDemandByDep
 	@struct as varchar(max),
 	@typeDemand as varchar(max),
 	@peroidVarchar as varchar(max)
@@ -50,7 +50,7 @@ BEGIN
 	END
 END
 --user max demand--
-ALTER PROCEDURE MaxDemandByUser
+CREATE PROCEDURE MaxDemandByUser
 	@struct as varchar(max),
 	@typeDemand as varchar(max),
 	@peroidVarchar as varchar(max)
@@ -158,7 +158,7 @@ BEGIN
 	END
 END
 --deparment avg demand--
-ALTER PROCEDURE AvgDemandByDep
+CREATE PROCEDURE AvgDemandByDep
 	@struct as varchar(max),
 	@typeDemand as varchar(max),
 	@peroidVarchar as varchar(max)

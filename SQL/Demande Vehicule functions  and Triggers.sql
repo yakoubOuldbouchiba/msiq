@@ -76,7 +76,7 @@ END
 
 /*--------------------------------------------*/
 
-ALTER PROCEDURE InsertDemandeVehicule
+CREATE PROCEDURE InsertDemandeVehicule
 	@userID AS varchar(50),
 	@lieu AS varchar(100),
 	@organisme As varchar(50),
@@ -145,7 +145,7 @@ END
 /--------------------------------------------------------/
 
 
-ALTER PROCEDURE DeleteDemandeVehicule
+CREATE PROCEDURE DeleteDemandeVehicule
 	@id as int,
 	@typedelete as bit output,
 	@recevoir_ID as varchar(max) OUTPUT--For notif
@@ -175,7 +175,7 @@ END
 
 -------------------------------------------------
 
-ALTER PROCEDURE GetDemandeVehicule
+CREATE PROCEDURE GetDemandeVehicule
 	@id as int
 AS
 BEGIN
@@ -194,7 +194,7 @@ BEGIN
 END
 
 --------------------------------------------------------
-ALTER PROCEDURE UpdateDemandeVehicule
+CREATE PROCEDURE UpdateDemandeVehicule
 	@demande_v_id AS int,
 	@lieu AS varchar(100),
 	@organisme As varchar(50),

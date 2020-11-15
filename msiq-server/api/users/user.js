@@ -25,6 +25,7 @@ module.exports=(io)=>{
                 res.status(200).json({
                     title: 'Voter demande de compte a été envoyée'
                 })
+                io.emit('NewAccDemande'+req.body.structure,  req.body)
             }else if (result ==='CNIU') {
                 res.status(401).json({
                     title: 'Email déja prit ou le compte est désactivé par votre directeu ou quelque information est incorrect. Veuillez verifier vous données',
@@ -112,5 +113,30 @@ module.exports=(io)=>{
             })
         })
    })
+   
+   router.put('/AccDemande/:email', (req,res) => {
+        dbOperationsClient.TAccDemande(req.params.email,req.body.msg)
+        .then( 
+            resu => {
+                console.log(resu);
+            if (resu === 'Accept') 
+                res.status(200).json({
+                    title: 'Demande de compte a ete accepté'
+                })
+            else if (resu === 'Reject') {
+                console.log(req.params.email);
+                io.emit("DeleteCompte"+req.params.email);
+                res.status(200).json({
+                    title: 'Demande de compte a ete rejeté'
+                })             
+            }        
+            else 
+                res.status(401).json({
+                title: 'Quel que chose est mal passée coté serveur',
+                error: 'CNCTDB'
+                })
+        })
+   })
+   
    return router;
 }

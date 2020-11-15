@@ -19,8 +19,26 @@
           </v-tooltip>
         </v-row>
       </div>
-      <v-card  class="my-6 pa-2" >    
+      <v-card  class="my-6 pa-2" >
          <v-simple-table>
+           <thead v-if="AccDemandes.length != 0">
+             <tr >
+               <th></th>
+               <th>Type de demande</th>
+               <th>Nom et Prénom</th>
+               <th class="text-center">Type de compte</th>
+               <th class="text-center"></th>
+             </tr>
+           </thead>
+           <tbody v-if="AccDemandes.length != 0">
+             <tr class="pa-2 yellow lighten-4" v-for="Demande in AccDemandes" :key="Demande.email" @click='TDemandeAcc(Demande)'>
+               <td ><b>-</b></td>
+               <td >Demande De Compte</td>
+               <td >{{Demande.nomUtilisateur}} {{Demande.prenomUtilisateur}}</td>
+               <td class="text-center">{{Demande.typeUtilisateur}}</td>
+               <td class="text-center">-</td>
+             </tr>
+           </tbody>
            <thead>
              <tr >
                <th>ID</th>
@@ -114,7 +132,7 @@
       @resetDemand="resetDemand"
        />
     <DemandeVehicule 
-      v-model="openDialogVehicule"
+      v-model="openDialogVehicule1"
       :demande="demande"
       :chauffeurs="chauffeurs"
       :vehicules ="vehicules"
@@ -141,6 +159,10 @@
       color='blue'
       :Editable="false"
      />
+     <AccDemande 
+     v-model="openDialogAccDemand"
+     :demande="demandeCompte"
+      />
   </div>
 </template>
 
@@ -151,12 +173,15 @@ import DemandePriseEnCharge from '../components/Demandes/DemandePriseEnCharge'
 import DemandeRelex from '../components/Demandes/DemandeRelex'
 import DemandeTirage from '../components/Demandes/DemandeTirage'
 import DemandeVehicule from '../components/Demandes/DemandeVehicule'
+import AccDemande from "../components/AccDemande";
 import axios from 'axios'
 export default {
 name: 'ListeDAT',
-components:{DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture},
+components:{DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture, AccDemande},
 async created(){
-  this.Demandes = (await axios.get("http://localhost:3030/demandesATraiter/"+this.$store.state.user.typeUtilisateur+'/'+this.$store.state.user.departement+'/'+this.$store.state.user.structure)).data.demandes.reverse()
+  let ALLDemandes = (await axios.get("http://localhost:3030/demandesATraiter/"+this.$store.state.user.typeUtilisateur+'/'+this.$store.state.user.departement+'/'+this.$store.state.user.structure)).data.demandes
+  this.Demandes = ALLDemandes[0].reverse()
+  this.AccDemandes = ALLDemandes[1].reverse()
 },
 mounted(){
   /*** demande on delete */
@@ -164,6 +189,15 @@ mounted(){
          let index = this.Demandes.findIndex(x =>  x.demande_ID == id)
          this.Demandes.splice(index , 1);
   })
+   this.$store.state.sokect.on('NewAccDemande'+this.$store.state.user.structure , (newDemand)=> {
+      this.AccDemandes.unshift(newDemand)
+    })
+    this.$store.state.sokect.on('RemoveDemandeAcc'+this.$store.state.user.structure , (Demand)=> {
+      console.log('HERE');
+      let index = this.AccDemandes.findIndex(x =>  x.email === Demand.email)
+      this.AccDemandes.splice(index , 1)
+    })
+    
   if (this.$store.state.user.typeUtilisateur == 'Chef departement') {
     this.$store.state.sokect.on('NewDemandCD'+this.$store.state.user.structure+this.$store.state.user.departement, (newDemand) => {
       this.Demandes.unshift(newDemand)
@@ -233,19 +267,22 @@ mounted(){
 data(){
    return{
         Demandes :[],
+        AccDemandes:[],
         vehicules : null,
         chauffeurs : null,
         valid:false,
         msg :'',
         Done: false,
         Errr: false,
-        openDialogVehicule : false,
+        openDialogVehicule1 : false,
         openDialogClient : false,
         openDialogFourniture : false,
         openDialogRelex : false,
         openDialogTirage : false,
         openDialogPEC : false,
-        demande:null
+        openDialogAccDemand: false,
+        demande:null,
+        demandeCompte: null
    }
  },
  methods:{
@@ -306,7 +343,7 @@ data(){
        this.demande.date_retour = dr.substr(0,10)
        this.demande.heure_depart = dp.substr(11,5)
        this.demande.heure_retour = dr.substr(11,5)
-       this.openDialogVehicule = true
+       this.openDialogVehicule1 = true
      }else if(Demande.type_demande== 'Demande activité relex'){
        let dp = this.demande.date_depart;
        let dr = this.demande.date_retour
@@ -352,6 +389,10 @@ data(){
                     this.msg = err.response.data.title
                 }
           )
+   },
+   TDemandeAcc(Demande){
+     this.demandeCompte = Demande
+     this.openDialogAccDemand = true
    },
  }
 }

@@ -1,4 +1,4 @@
-ALTER PROCEDURE InsertDemandePriseEnCharge
+CREATE PROCEDURE InsertDemandePriseEnCharge
 	@userID 	AS varchar(50), 
     @Col1_ID 	AS varchar(50), 
     @Col2_ID 	AS varchar(50), 
@@ -61,7 +61,7 @@ BEGIN
 	set @recevoir_ID = @email
 END
 
-ALTER PROCEDURE DeleteDemandePEC
+CREATE PROCEDURE DeleteDemandePEC
 	@id as int,
 	@typedelete as bit output,
 	@recevoir_ID as varchar(max) OUTPUT--For notif
@@ -88,7 +88,7 @@ BEGIN
 	END
 END
 
-ALTER PROCEDURE GetDemandePEC
+CREATE PROCEDURE GetDemandePEC
 	@id AS int 
 AS
 BEGIN
@@ -120,7 +120,7 @@ END
 
 /*-------------------------------------------------------------------------------------------*/
 
-ALTER PROCEDURE UpdateDemandePEC
+CREATE PROCEDURE UpdateDemandePEC
 	@id AS int,
     @Col1_ID AS varchar(50), 
     @Col2_ID AS varchar(50), 

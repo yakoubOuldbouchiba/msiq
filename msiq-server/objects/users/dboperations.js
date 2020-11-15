@@ -36,10 +36,10 @@ async function  setUser(user){
             let PW = await BCRYPT.hash(user.passWord, saltRounds);
             await new sql.Request()
             .input('pw', sql.NVarChar, PW)
-            .input('ln', sql.VarChar, user.lastName)
-            .input('fn', sql.VarChar, user.firstName)
+            .input('ln', sql.VarChar, user.nomUtilisateur)
+            .input('fn', sql.VarChar, user.prenomUtilisateur)
             .input('bd', sql.DateTimeOffset, user.ddn)
-            .input('tu', sql.VarChar, user.usertype)
+            .input('tu', sql.VarChar, user.typeUtilisateur)
             .input('tel', sql.VarChar, user.mobile)
             .input('email', sql.VarChar, user.email)
             .input('job', sql.VarChar, user.fonction)
@@ -180,6 +180,26 @@ async function  changePW(user){
     }
 }
 
+async function  TAccDemande(UserID,Msg){
+    try{
+        await sql.connect(config);
+        try {
+            console.log(UserID+' '+Msg);
+            await new sql.Request()
+            .input('email', sql.VarChar, UserID)
+            .input('Msg', sql.VarChar, Msg)
+            .execute('TAccDemande');
+            console.log('Accout has been '+Msg+'ed');
+            return Msg;
+        } catch (error) {
+            console.log(error);
+            console.log('Something went wrong');
+            return 'SomeThing went wrong'
+        }
+    }catch(error){
+        return 'CNCTDB';
+    }
+}
 
 module.exports = {
     getUsers,
@@ -190,4 +210,6 @@ module.exports = {
     Login,
     confirm,
     changePW,
+    TAccDemande,
+
 }

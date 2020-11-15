@@ -5,7 +5,7 @@ BEGIN
 	DELETE FROM demande WHERE demande_ID = @id
 END
 
-ALTER PROCEDURE GetDemande
+CREATE PROCEDURE GetDemande
 	@id as int
 AS
 BEGIN

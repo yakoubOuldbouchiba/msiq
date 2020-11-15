@@ -1,4 +1,4 @@
-ALTER PROCEDURE GETCHAUFFEURS
+CREATE PROCEDURE GETCHAUFFEURS
 AS
 BEGIN
 	SELECT * FROM chauffeur
@@ -19,6 +19,7 @@ BEGIN
 END
 
 ALTER PROCEDURE SETCHAUFFEUR
+
 @nom AS varchar(50),
 @prenom AS varchar(50),
 @type_permis AS varchar(50),
@@ -49,9 +50,11 @@ BEGIN
 	where chauffeur_id = @chauffeur_id
 END
 
+
 ALTER PROCEDURE DELETECHAUFFEUR
 	@chauffeur_id as int,
 	@deleted as bit output
+
 AS
 BEGIN
 	update chauffeur

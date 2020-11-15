@@ -1,4 +1,4 @@
-ALTER VIEW 	Demandes_A_Traiter 
+CREATE VIEW 	Demandes_A_Traiter 
 	AS
 	SELECT 	U.departement, 
 			U.structure,
@@ -7,7 +7,7 @@ ALTER VIEW 	Demandes_A_Traiter
 	FROM	demande D, utilisateurs U
 	where	D.utilisateurs_ID = U.email;
 
-ALTER VIEW 	Demandes_A_Traiter 
+CREATE VIEW 	Demandes_A_Traiter 
 	AS
 	SELECT 	U.departement, 
 			U.structure,
@@ -15,6 +15,10 @@ ALTER VIEW 	Demandes_A_Traiter
 			D.*
 	FROM	demande D, utilisateurs U
 	where	D.utilisateurs_ID = U.email;
+
+getDemandeATraiter 'Directeur',  'Informatqiue',  'DAM'
+
+SELECT * FROM demande_compte
 
 ALTER PROCEDURE getDemandeATraiter 
 	@UserType AS varchar(50),
@@ -30,10 +34,20 @@ BEGIN
 		AND		departement = @Depart
 
 	if(@UserType = 'Directeur')
+	BEGIN
 		SELECT	* 
 		FROM	Demandes_A_Traiter
 		WHERE	etat = 'Directeur' 
 		AND		structure = @Struct
+
+		SELECT	email, 
+				nomUtilisateur, 
+				prenomUtilisateur,
+				typeUtilisateur,
+				structure,
+				departement
+		FROM demande_compte
+	END
 
 	if(@UserType = 'Responsable DAM')
 		SELECT	* 
@@ -72,8 +86,7 @@ BEGIN
 		AND		type_demande = 'Demande activité relex'
 END
 
-
-ALTER PROCEDURE UpdateDemandState 
+CREATE PROCEDURE UpdateDemandState 
 	@Demand_ID	AS int,
 	@motif		AS varchar(max),
 	@State		AS varchar(50),
