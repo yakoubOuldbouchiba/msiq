@@ -1,10 +1,24 @@
-CREATE PROCEDURE GETVEHICULE
+ALTER PROCEDURE GETVEHICULE
 AS
 BEGIN
 	SELECT * FROM vehicule
+	where shown = 1
+END
+
+CREATE PROCEDURE GETDISPOVEHICULE
+	@date_depart as datetime
+AS
+BEGIN
+	SELECT * FROM vehicule
+	where shown = 1
+	AND matricule not in (
+		select matricule
+		from demande_vehicule
+		where @date_depart between date_depart and date_retour
+	)
 END
 ------------------------------------------------------------------------
-CREATE PROCEDURE SETVEHICULE 
+ALTER PROCEDURE SETVEHICULE 
 @matricule as varchar(50),
 @nom as varchar(50),
 @annee as varchar(50),
@@ -12,14 +26,52 @@ CREATE PROCEDURE SETVEHICULE
 AS
 BEGIN
 	INSERT INTO vehicule 
-	VALUES(@matricule , @nom ,@annee , @type_vehicule)
+	VALUES(@matricule , @nom ,@annee , @type_vehicule,1,1)
 END
-------------------------------------------------------
-CREATE PROCEDURE DELETEVEHICULE
-@matricule as varchar(50)
+------------------------------------------------------------------------
+CREATE PROCEDURE UPDATEVEHICULE 
+@matricule as varchar(50),
+@nom as varchar(50),
+@annee as varchar(50),
+@type_vehicule as varchar(50)
 AS
 BEGIN
-	DELETE FROM vehicule where matricule = @matricule
+	UPDATE vehicule 
+	set 
+	matricule = @matricule ,
+	nom = @nom,
+	annee = @annee,
+	type_vehicule= @type_vehicule
+	WHERE matricule = @matricule
+END
+------------------------------------------------------
+ALTER PROCEDURE DELETEVEHICULE
+	@matricule as varchar(20),
+	@deleted as bit output
+AS
+BEGIN
+	Update vehicule
+	set shown = 0
+	where matricule = @matricule
+	AND matricule not in (
+		select matricule
+		from demande_vehicule
+		where (date_depart >= GETDATE()
+		OR date_retour >= GETDATE())
+		AND matricule = @matricule
+	)
+		
+	set @deleted = 1;
+	
+	select @deleted = 0
+	FROM demande_vehicule
+	WHERE matricule  in (
+		select matricule
+		from demande_vehicule 
+		where (date_depart >= GETDATE()
+		OR date_retour >= GETDATE())
+		AND matricule = @matricule
+	)
 END
 
 /*--------------------------------------------*/

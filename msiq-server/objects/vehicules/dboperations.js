@@ -12,6 +12,18 @@ async function getVehicules(){
         console.log(error);
     }
 }
+// getting all vehicules.
+async function getDispoVehicules(date){
+    try{
+        let pool = await (sql.connect(config));
+        let users = await (pool.request()
+        .input('date_depart',sql.DateTime,date)
+        .query("GETDISPOVEHICULE"));
+        return users.recordsets;
+    }catch(error){
+        console.log(error);
+    }
+}
 // get a single car.
 async function getVehicule(matricule){
     try{
@@ -65,17 +77,19 @@ async function  deleteVehicule(matricule){
     try{
         console.log(matricule)
         let pool = await (sql.connect(config));
-         await pool.request()
+        let res = await pool.request()
         .input("matricule", sql.VarChar, matricule)
+        .output('deleted',sql.Bit)
         .execute("DELETEVEHICULE");
         sql.close();
-        return true;
+        return res.output.deleted;
     }catch(error){
         return false;
     }
 }
 module.exports = {
     getVehicules,
+    getDispoVehicules,
     getVehicule,
     setVehicule,
     editVehicule,

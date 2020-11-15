@@ -5,7 +5,21 @@ BEGIN
 	where shown = 1
 END
 
-CREATE PROCEDURE SETCHAUFFEUR
+CREATE PROCEDURE GETDISPOCHAUFFEURS
+	@date_depart as datetime
+AS
+BEGIN
+	SELECT * FROM chauffeur
+	where shown = 1
+	AND chauffeur_id not in (
+		select chauffeur_id 
+		from demande_vehicule
+		where @date_depart between date_depart and date_retour
+	)
+END
+
+ALTER PROCEDURE SETCHAUFFEUR
+
 @nom AS varchar(50),
 @prenom AS varchar(50),
 @type_permis AS varchar(50),
@@ -13,7 +27,7 @@ CREATE PROCEDURE SETCHAUFFEUR
 @email AS varchar(50)
 AS
 BEGIN
-	INSERT INTO chauffeur(nom,prenom,type_permis,telephone,email)
+	INSERT INTO chauffeur
 	Values(@nom,@prenom,@type_permis,@telephone,@email,1,1)
 END
 
@@ -36,11 +50,34 @@ BEGIN
 	where chauffeur_id = @chauffeur_id
 END
 
-CREATE PROCEDURE DELETECHAUFFEUR
-	@chauffeur_id as int
+
+ALTER PROCEDURE DELETECHAUFFEUR
+	@chauffeur_id as int,
+	@deleted as bit output
+
 AS
 BEGIN
 	update chauffeur
 	set shown= 0
 	where chauffeur_id = @chauffeur_id
+	AND chauffeur_ID not in (
+		select chauffeur_ID 
+		from demande_vehicule
+		where (date_depart >= GETDATE()
+		OR date_retour >= GETDATE())
+		AND chauffeur_id = @chauffeur_id
+	)
+	
+	set @deleted = 1;
+	
+	select @deleted = 0
+	FROM demande_vehicule
+	WHERE chauffeur_ID  in (
+		select chauffeur_ID 
+		from demande_vehicule 
+		where (date_depart >= GETDATE()
+		OR date_retour >= GETDATE())
+		AND chauffeur_id = @chauffeur_id
+	)
+
 END

@@ -134,6 +134,8 @@
     <DemandeVehicule 
       v-model="openDialogVehicule1"
       :demande="demande"
+      :chauffeurs="chauffeurs"
+      :vehicules ="vehicules"
       type= "Traiter"
       forDemandeRelex="false"
       name ='demande de véhicule'
@@ -266,6 +268,8 @@ data(){
    return{
         Demandes :[],
         AccDemandes:[],
+        vehicules : null,
+        chauffeurs : null,
         valid:false,
         msg :'',
         Done: false,
@@ -328,7 +332,11 @@ data(){
        this.openDialogClient = true;
      }else if(Demande.type_demande=='Demande fourniture'){
        this.openDialogFourniture = true;
-     }else if(Demande.type_demande=='Demande véhicule'){
+     }else if(Demande.type_demande=='Demande véhicule'){  
+       let Vehc =  await axios.get("http://localhost:3030/dispovehicules/"+this.demande.date_depart)
+       this.vehicules = Vehc.data;
+       let Chauf =  await axios.get("http://localhost:3030/dispochauffeurs/"+this.demande.date_depart)
+       this.chauffeurs = Chauf.data;
        let dp = this.demande.date_depart;
        let dr = this.demande.date_retour
        this.demande.date_depart = dp.substr(0,10)
