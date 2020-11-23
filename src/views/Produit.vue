@@ -64,7 +64,7 @@ export default {
         }
     },
     async created(){
-        this.Produits =(await axios.get("http://localhost:3030/produits")).data
+        this.Produits =(await axios.get("/api/produits")).data
     },
     methods:{
         // edit & editItem use to lancer the pupup
@@ -77,12 +77,12 @@ export default {
             this.dialog=true;
         },
         async deleteItem (item){
-            axios.delete("http://localhost:3030/produit/" +item.code_produit)
+            axios.delete("/api/produit/" +item.code_produit)
             const index = this.Produits.indexOf(item)
             confirm('vous êtes sur que vous voulez supprimer ce produit ?') && this.Produits.splice(index, 1)
         },
         async ajouterProduit  (value){
-            (await axios.post("http://localhost:3030/produit",value));
+            (await axios.post("/api/produit",value));
             this.Produits.push(value);
              this.item = {
                 code_produit : 'xxxxx',

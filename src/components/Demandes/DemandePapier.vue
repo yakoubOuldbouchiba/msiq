@@ -222,7 +222,7 @@ export default {
     },methods :{
         send(){
             this.$refs.form.validate();
-            Axios.post('http://localhost:3030/DemandeFourniture',
+            Axios.post('/api/DemandeFourniture',
             {userID : this.$store.state.user.email, 
             objetsDemande : this.objetsDF, 
             structure: this.$store.state.user.structure,
@@ -243,7 +243,7 @@ export default {
         },
         update(){
         this.$refs.form.validate();
-            Axios.post('http://localhost:3030/UpdateDemandeFourniture', 
+            Axios.post('/api/UpdateDemandeFourniture', 
                             {
                                 demande_id : this.objetsDF[0].demande_F_ID,
                                 objetsDemande : this.objetsDF,
@@ -302,7 +302,7 @@ export default {
                 email: this.objetsDF[0].utilisateurs_ID,
             }
             this.$refs.form.validate();
-            Axios.put('http://localhost:3030/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
+            Axios.put('/api/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
                 { State :'Rejetee',
                 Demande: TmpDemande,
                 typeD: 'Demande client',
@@ -321,20 +321,20 @@ export default {
                 email: this.objetsDF[0].utilisateurs_ID,
             }
             if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
-                Axios.put('http://localhost:3030/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
+                Axios.put('/api/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
                 { State :'Directeur',
                     Demande: TmpDemande, 
                     typeD: 'Demande fourniture', 
                     UT: this.$store.state.user.typeUtilisateur})
             else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
-                Axios.put('http://localhost:3030/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
+                Axios.put('/api/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
                 { State :'DAM',
                     Demande: TmpDemande,
                     typeD: 'Demande fourniture', 
                     UT: this.$store.state.user.typeUtilisateur})    
             else if(this.$store.state.user.typeUtilisateur == 'Responsable DAM'){
                 this.objetsDF[0].etat='Acceptee';
-                Axios.put('http://localhost:3030/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
+                Axios.put('/api/UpdateDemandState/'+this.objetsDF[0].demande_F_ID, 
                 { State :'Acceptee',
                     Demande: TmpDemande,
                     typeD: 'Demande fourniture', 
@@ -353,7 +353,7 @@ export default {
                 });
         }
         //console.log(this.demande);
-        this.objets = (await Axios.get("http://localhost:3030/fournitures")).data
+        this.objets = (await Axios.get("/api/fournitures")).data
     },
     data(){
         return{

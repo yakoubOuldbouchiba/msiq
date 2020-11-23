@@ -186,7 +186,7 @@ export default {
 name: 'dashboard',
 components:{Pupupdemandes ,   PrintDemande , DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture},
 async created(){
-  this.Demandes = (await axios.get("http://localhost:3030/demandes/"+this.$store.state.user.email)).data.demandes.reverse()
+  this.Demandes = (await axios.get("/api/demandes/"+this.$store.state.user.email)).data.demandes.reverse()
 },
 mounted(){
     this.$store.state.sokect.on(this.$store.state.user.email, (newDemand) => {

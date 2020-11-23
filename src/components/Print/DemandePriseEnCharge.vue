@@ -25,7 +25,7 @@ export default {
     },
     methods :{
         async print(){
-        await axios.get('http://localhost:3030/DemandePriseEnCharge/'+this.ID)
+        await axios.get('/api/DemandePriseEnCharge/'+this.ID)
             .then(
                     res =>{
                         this.demande = res.data.demande;     
@@ -62,7 +62,7 @@ export default {
             var users =[];
             users.push(['Nom : '+this.demande.nomUtilisateur , 'Prénom : '+this.demande.prenomUtilisateur ,'Poste Tél : '+(this.demande.posteTelephonique).toString()])
             for (let i = 0 ; i< this.demande.Collegues ; i++){
-                var dataUser = (await axios.get('http://localhost:3030/users/'+this.demande.Collegues[i])).data
+                var dataUser = (await axios.get('/api/users/'+this.demande.Collegues[i])).data
                 users.push ( [
                     'Nom : '+dataUser.nomUtilisateur ,
                     'Prénom : '+dataUser.prenomUtilisateur,

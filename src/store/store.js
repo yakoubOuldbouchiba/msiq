@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import io from 'socket.io-client'
 import jwt from 'jsonwebtoken'
+import {http} from '../services/httpServices'
 Vue.use(Vuex);
 export default new Vuex.Store({
     //strict: true,
@@ -25,7 +26,7 @@ export default new Vuex.Store({
             dateNaissance: '',
 
         },
-        sokect:io('http://localhost:3030/'),
+        sokect:io(http()),
         messages :[],
         users : [],
         token:!!localStorage.getItem('token')|| '',
@@ -72,7 +73,7 @@ export default new Vuex.Store({
     actions:{
         async getMessages ({commit}){
 
-            let messages =  (await  axios.get("http://localhost:3030/messages")).data
+            let messages =  (await  axios.get("/api/messages")).data
             commit('updatemessages',messages);
         
         },
@@ -81,15 +82,15 @@ export default new Vuex.Store({
             let msg = {}
             msg.content=content;
             msg.reciever_ID=this.state.reciever_ID;
-            (await axios.post("http://localhost:3030/messages",msg)).data; 
+            (await axios.post("/api/messages",msg)).data; 
 
         },
         async getTeam ({commit}){
-            let users  =  (await  axios.get("http://localhost:3030/team")).data
+            let users  =  (await  axios.get("/api/team")).data
             commit('updateTeam',users);
         },
         async deleteUser({state},item){
-            let deleted = (await axios.delete("http://localhost:3030/users/"+item.email)).data;
+            let deleted = (await axios.delete("/api/users/"+item.email)).data;
             if(deleted){
                 var index = state.users.indexOf(item);
                 item.shown=!item.shown;

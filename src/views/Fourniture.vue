@@ -103,7 +103,7 @@ export default {
         }
     },
     async created(){
-        this.Fournitures =(await axios.get("http://localhost:3030/fournitures")).data
+        this.Fournitures =(await axios.get("/api/fournitures")).data
     },
     methods:{
         // edit & editItem use to lancer the pupup
@@ -116,7 +116,7 @@ export default {
             this.dialog=true;
         },
         async deleteItem (item){
-            let deleted =(await axios.delete("http://localhost:3030/fourniture/"+item.code_object)).data
+            let deleted =(await axios.delete("/api/fourniture/"+item.code_object)).data
            if(deleted){
                 const index = this.Fournitures.indexOf(item)
                 confirm('vous êtes sur que vous voulez supprimer ce objet ?') && this.Fournitures.splice(index, 1)
@@ -129,7 +129,7 @@ export default {
         },
         async ajouterFourniture  (value){
             console.log(value)
-            await axios.post("http://localhost:3030/fourniture",value);
+            await axios.post("/api/fourniture",value);
             this.Fournitures.push(value);
              this.item = {
                 code_object : 'xxxxx',
@@ -140,7 +140,7 @@ export default {
         },
         async editerFourniture (value){
             // modifier au niveau de data base
-            (await axios.put("http://localhost:3030/fourniture/"+value.Founiture.code_object,value.Founiture));
+            (await axios.put("/api/fourniture/"+value.Founiture.code_object,value.Founiture));
              this.dialog=false;
         },
         close :function(){

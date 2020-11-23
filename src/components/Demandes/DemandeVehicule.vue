@@ -304,7 +304,7 @@ export default {
         async sendDemande (){
             this.$refs.form.validate();
             if(this.forDemandeRelex){
-                await axios.post('http://localhost:3030/DemandeVehicule', {D: this.DV ,UT :this.$store.state.user.typeUtilisateur})
+                await axios.post('/api/DemandeVehicule', {D: this.DV ,UT :this.$store.state.user.typeUtilisateur})
                     .then(
                         res =>{
                             this.valid=false,
@@ -322,7 +322,7 @@ export default {
             }
             else
             {
-                await axios.post('http://localhost:3030/DemandeVehicule', this.DV)
+                await axios.post('/api/DemandeVehicule', this.DV)
                 .then(
                     res =>{
                         this.valid=false,
@@ -340,7 +340,7 @@ export default {
         },
         update(){
             this.$refs.form.validate();
-            axios.post('http://localhost:3030/UpdateDemandeVehicule', this.DV )
+            axios.post('/api/UpdateDemandeVehicule', this.DV )
             .then(
                 res =>{
                     this.msg = res.data.title,
@@ -375,7 +375,7 @@ export default {
         },
         Reject(){
             this.$refs.form.validate();
-            axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, 
+            axios.put('/api/UpdateDemandState/'+this.DV.demande_V_ID, 
                 {State :'Rejetee',
                     Demande: this.DV,
                     typeD: 'Demande véhicule', 
@@ -385,19 +385,19 @@ export default {
             },
         Accept(){
             if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
-                axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, 
+                axios.put('/api/UpdateDemandState/'+this.DV.demande_V_ID, 
                     {State :'Directeur', 
                     Demande: this.DV, 
                     typeD: 'Demande véhicule', 
                     UT: this.$store.state.user.typeUtilisateur})
             else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
-                axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, 
+                axios.put('/api/UpdateDemandState/'+this.DV.demande_V_ID, 
                     {State :'Chef de parc',  
                         Demande: this.DV, 
                         typeD: 'Demande véhicule',
                         UT: this.$store.state.user.typeUtilisateur})    
             else if(this.$store.state.user.typeUtilisateur == 'Chef de parc') 
-                axios.put('http://localhost:3030/UpdateDemandState/'+this.DV.demande_V_ID, 
+                axios.put('/api/UpdateDemandState/'+this.DV.demande_V_ID, 
                     {State :'Acceptee',
                         Demande: this.DV, 
                         typeD: 'Demande véhicule', 
@@ -422,14 +422,12 @@ export default {
             if (this.DV.matricule != '' ) {
                 let index = this.vehicules.findIndex(x => x.matricule == this.DV.matricule)
                 this.Vehicule = this.vehicules[index].matricule+' '+this.vehicules[index].nom;
-            } 
-        } 
-        if (this.DV.chauffeur_ID) {  
+            }   
             if (this.DV.chauffeur_ID != '') {
                 let index = this.chauffeurs.findIndex(x => x.chauffeur_id == this.DV.chauffeur_ID)
                 this.Chaffeur = this.chauffeurs[index].chauffeur_id+' '+this.chauffeurs[index].nom+' '+this.chauffeurs[index].prenom;
             } 
-        }  
+         
     },
     data(){
         return{

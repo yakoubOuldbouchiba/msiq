@@ -90,7 +90,7 @@ export default {
     }),
     methods:{
       async login (){
-         let res =(await Axios.post("http://localhost:3030/login",this.user)).data;
+         let res =(await Axios.post("/api/login",this.user)).data;
             if(typeof res.token !== "undefined"){
                 localStorage.setItem('token',res.token);
                 this.showError=false;

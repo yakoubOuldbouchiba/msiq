@@ -27,7 +27,7 @@ export default {
     },
     methods :{
         async print(){
-            await axios.get('http://localhost:3030/DemandeVehicule/'+this.ID)
+            await axios.get('/api/DemandeVehicule/'+this.ID)
             .then(
                     res =>{
                         this.demande = res.data.demande;      
@@ -64,7 +64,7 @@ export default {
             var user =[];
             user.push(['Nom : '+this.demande.nomUtilisateur , 'Prénom : '+this.demande.prenomUtilisateur ,'Poste Tél : '+(this.demande.posteTelephonique).toString()])
             if(this.demande.utilisateur1_ID !==null){
-                var dataUser = (await axios.get('http://localhost:3030/users/'+this.demande.utilisateur1_ID)).data
+                var dataUser = (await axios.get('/api/users/'+this.demande.utilisateur1_ID)).data
                 user.push ( [
                     'Nom : '+dataUser.nomUtilisateur ,
                     'Prénom : '+dataUser.prenomUtilisateur,
@@ -72,7 +72,7 @@ export default {
                 ])
             }
              if(this.demande.utilisateur2_ID !==null){
-                dataUser = (await axios.get('http://localhost:3030/users/'+this.demande.utilisateur2_ID)).data
+                dataUser = (await axios.get('/api/users/'+this.demande.utilisateur2_ID)).data
                 user.push ( [
                     'Nom : '+dataUser.nomUtilisateur ,
                     'Prénom : '+dataUser.prenomUtilisateur,
@@ -80,7 +80,7 @@ export default {
                 ])
             }
              if(this.demande.utilisateur3_ID !==null){
-                dataUser = (await axios.get('http://localhost:3030/users/'+this.demande.utilisateur3_ID)).data
+                dataUser = (await axios.get('/api/users/'+this.demande.utilisateur3_ID)).data
                 user.push ( [
                     'Nom : '+dataUser.nomUtilisateur ,
                     'Prénom : '+dataUser.prenomUtilisateur,

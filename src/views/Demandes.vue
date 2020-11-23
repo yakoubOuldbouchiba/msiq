@@ -179,7 +179,7 @@ export default {
 name: 'ListeDAT',
 components:{DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture, AccDemande},
 async created(){
-  let ALLDemandes = (await axios.get("http://localhost:3030/demandesATraiter/"+this.$store.state.user.typeUtilisateur+'/'+this.$store.state.user.departement+'/'+this.$store.state.user.structure)).data.demandes
+  let ALLDemandes = (await axios.get("/api/demandesATraiter/"+this.$store.state.user.typeUtilisateur+'/'+this.$store.state.user.departement+'/'+this.$store.state.user.structure)).data.demandes
   this.Demandes = ALLDemandes[0].reverse()
   this.AccDemandes = ALLDemandes[1].reverse()
 },
@@ -333,9 +333,9 @@ data(){
      }else if(Demande.type_demande=='Demande fourniture'){
        this.openDialogFourniture = true;
      }else if(Demande.type_demande=='Demande véhicule'){  
-       let Vehc =  await axios.get("http://localhost:3030/dispovehicules/"+this.demande.date_depart)
+       let Vehc =  await axios.get("/api/dispovehicules/"+this.demande.date_depart)
        this.vehicules = Vehc.data;
-       let Chauf =  await axios.get("http://localhost:3030/dispochauffeurs/"+this.demande.date_depart)
+       let Chauf =  await axios.get("/api/dispochauffeurs/"+this.demande.date_depart)
        this.chauffeurs = Chauf.data;
        let dp = this.demande.date_depart;
        let dr = this.demande.date_retour

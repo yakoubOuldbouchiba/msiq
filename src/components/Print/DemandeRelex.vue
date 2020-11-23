@@ -25,7 +25,7 @@ export default {
     },
     methods :{
         async print(){
-             await axios.get('http://localhost:3030/demande/'+this.ID)
+             await axios.get('/api/demande/'+this.ID)
             .then(
                     res =>{
                         this.demande = res.data.demande;       
@@ -59,7 +59,7 @@ export default {
             doc.text(48, 52, (this.demande.posteTelephonique).toString())
             doc.line(10, 56, 205, 56)
             /** relex info */
-            await axios.get('http://localhost:3030/DemandeRelex/'+this.ID)
+            await axios.get('/api/DemandeRelex/'+this.ID)
             .then(
                     res =>{
                     this.demande = res.data.demande;

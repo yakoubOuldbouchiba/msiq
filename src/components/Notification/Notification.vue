@@ -80,8 +80,8 @@ export default {
       )
     },
     async created(){
-        this.Notifications =(await Axios.get('http://localhost:3030/Notification/'+this.$store.state.user.email)).data.notifications;
-        this.UnSeen =(await Axios.get('http://localhost:3030/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
+        this.Notifications =(await Axios.get('/api/Notification/'+this.$store.state.user.email)).data.notifications;
+        this.UnSeen =(await Axios.get('/api/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
       
    },
     async mounted(){
@@ -96,26 +96,26 @@ export default {
       )
       /** notif oncreate */
       this.$store.state.sokect.on('NewNotif'+this.$store.state.user.email, async () => {
-        this.Notifications =(await Axios.get('http://localhost:3030/Notification/'+this.$store.state.user.email)).data.notifications;
-        this.UnSeen =(await Axios.get('http://localhost:3030/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
+        this.Notifications =(await Axios.get('/api/Notification/'+this.$store.state.user.email)).data.notifications;
+        this.UnSeen =(await Axios.get('/api/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
       }
       )
       /*** notif on delete */
        this.$store.state.sokect.on('DeleteNofit'+this.$store.state.user.email, async () => { 
-        this.Notifications =(await Axios.get('http://localhost:3030/Notification/'+this.$store.state.user.email)).data.notifications;
-        this.UnSeen =(await Axios.get('http://localhost:3030/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
+        this.Notifications =(await Axios.get('/api/Notification/'+this.$store.state.user.email)).data.notifications;
+        this.UnSeen =(await Axios.get('/api/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
       }
       )
       /** notif on update */
       this.$store.state.sokect.on('UpdateNotif'+this.$store.state.user.email, async () => {
-            this.Notifications =(await Axios.get('http://localhost:3030/Notification/'+this.$store.state.user.email)).data.notifications;
-            this.UnSeen =(await Axios.get('http://localhost:3030/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
+            this.Notifications =(await Axios.get('/api/Notification/'+this.$store.state.user.email)).data.notifications;
+            this.UnSeen =(await Axios.get('/api/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
       })
       /** REJETEE && ACCEPTE */
       //CLIENT
       this.$store.state.sokect.on('addNotif'+this.$store.state.user.email, async () => {
-          this.Notifications =(await Axios.get('http://localhost:3030/Notification/'+this.$store.state.user.email)).data.notifications;
-          this.UnSeen =(await Axios.get('http://localhost:3030/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
+          this.Notifications =(await Axios.get('/api/Notification/'+this.$store.state.user.email)).data.notifications;
+          this.UnSeen =(await Axios.get('/api/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
         }
       )
     },
@@ -123,7 +123,7 @@ export default {
        async seen(id){
         let index = this.Notifications.findIndex(x =>  x.notification_ID == id)
         if (this.Notifications[index].seen==false)
-        await Axios.put('http://localhost:3030/Notification/'+id+'/'+this.$store.state.user.email)
+        await Axios.put('/api/Notification/'+id+'/'+this.$store.state.user.email)
       }
     }
 }

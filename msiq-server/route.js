@@ -40,20 +40,20 @@ module.exports = (io)=>{
     io.on('connection', (socket)=>{
         console.log('someone is onligne');
     })
-    router.use(chauffeurs());
-    router.use(demandes(io));
-    router.use(demande_relex(io));
-    router.use(demande_vehicule(io));
-    router.use(demande_fourniture(io));
-    router.use(fournitures(io));
-    router.use(messages(Messages , Users,io));
-    router.use(produits());
-    router.use(users(io));
-    router.use(reporting());
-    router.use(notifications(io));
-    router.use(vehicules());
-    router.use(DemandeClient(io));
-    router.use(DemandeTirage(io));
-    router.use(DemandePriseEnCharge(io));
+    router.use('/api',chauffeurs());
+    router.use('/api',demandes(io));
+    router.use('/api',demande_relex(io));
+    router.use('/api',demande_vehicule(io));
+    router.use('/api',demande_fourniture(io));
+    router.use('/api',fournitures(io));
+    router.use('/api',messages(Messages , Users,io));
+    router.use('/api',produits());
+    router.use('/api',users(io));
+    router.use('/api',reporting());
+    router.use('/api',notifications(io));
+    router.use('/api',vehicules());
+    router.use('/api',DemandeClient(io));
+    router.use('/api',DemandeTirage(io));
+    router.use('/api',DemandePriseEnCharge(io));
     return router
 }

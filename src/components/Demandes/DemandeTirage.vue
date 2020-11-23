@@ -315,7 +315,7 @@ export default {
     async update(){
         this.$refs.form.validate();
         this.loading = true;
-        await Axios.post('http://localhost:3030/UpdateDemandeTirage', this.DT)
+        await Axios.post('/api/UpdateDemandeTirage', this.DT)
         .then(
             res =>{
             this.loading = false;
@@ -344,7 +344,7 @@ export default {
         formData.append('UT', this.$store.state.user.typeUtilisateur)
         formData.append('departement', this.DT.departement)
         this.loading = true;
-        await Axios.post('http://localhost:3030/DemandeTirage',formData)
+        await Axios.post('/api/DemandeTirage',formData)
         .then(
             res =>{
                 console.log(res);
@@ -376,7 +376,7 @@ export default {
     },
     Reject(){
       this.$refs.form.validate();
-      Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, 
+      Axios.put('/api/UpdateDemandState/'+this.DT.demande_T_ID, 
         {State :'Rejetee',
             Demande: this.DT, 
             typeD: 'Demande de tirage', 
@@ -386,19 +386,19 @@ export default {
     },
     Accept(){
         if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
-            Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, 
+            Axios.put('/api/UpdateDemandState/'+this.DT.demande_T_ID, 
                 {State :'Directeur',
                     Demande: this.DT, 
                     typeD: 'Demande de tirage',
                     UT: this.$store.state.user.typeUtilisateur})
         else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
-            Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, 
+            Axios.put('/api/UpdateDemandState/'+this.DT.demande_T_ID, 
                 {State :'Agent de Tirage',
                     Demande: this.DT, 
                     typeD: 'Demande de tirage',
                     UT: this.$store.state.user.typeUtilisateur})    
         else if(this.$store.state.user.typeUtilisateur == 'Agent de Tirage') 
-            Axios.put('http://localhost:3030/UpdateDemandState/'+this.DT.demande_T_ID, 
+            Axios.put('/api/UpdateDemandState/'+this.DT.demande_T_ID, 
                 {State :'Acceptee', 
                    Demande: this.DT, 
                    typeD: 'Demande de tirage',
@@ -409,7 +409,7 @@ export default {
     },
     Download(){
         Axios({
-            url: 'http://localhost:3030/'+this.DT.stored_name,
+            url: '/api/'+this.DT.stored_name,
             method: 'GET',
             responseType: 'blob', // important
             }).then((response) => {
