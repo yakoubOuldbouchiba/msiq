@@ -64,7 +64,7 @@ export default {
         }
     },
     async created(){
-        this.Vehicules =(await axios.get("http://localhost:3030/vehicules/")).data
+        this.Vehicules =(await axios.get("/api/vehicules/")).data
     },
     methods:{
         // edit & editItem use to lancer the pupup
@@ -77,12 +77,12 @@ export default {
             this.dialog=true;
         },
         async deleteItem (item){
-            axios.delete("http://localhost:3030/vehicule/"+item.matricule)
+            axios.delete("/api/vehicule/"+item.matricule)
             const index = this.Vehicules.indexOf(item)
             confirm('vous êtes sur que vous voulez supprimer cette véhicule ?') && this.Vehicules.splice(index, 1)
         },
         async ajouterVehicule  (value){
-            (await axios.post("http://localhost:3030/vehicule",value));
+            (await axios.post("/api/vehicule",value));
             this.Vehicules.push(value);
              this.item = {
                 matricule : 'xxxxx-xxx-xx',
@@ -93,7 +93,7 @@ export default {
             this.dialog=false;
         },
         async editerVehicule (item){
-            await axios.put("http://localhost:3030/vehicule/"+item.item.matricule, item.item);
+            await axios.put("/api/vehicule/"+item.item.matricule, item.item);
              this.item = {
                 name :'xxxx',
                 matricule : 'xxxxx-xxx-xx',

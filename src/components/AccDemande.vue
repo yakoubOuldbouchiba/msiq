@@ -151,7 +151,7 @@ export default {
         this.dialog=false
     },
     Reject(){
-        Axios.put('http://localhost:3030/AccDemande/'+this.demande.email, {msg: 'Reject'})
+        Axios.put('/api/AccDemande/'+this.demande.email, {msg: 'Reject'})
         .then(
             res =>{
                 this.msg = res.data.title,
@@ -166,7 +166,7 @@ export default {
         this.dialog = false
     },
     Accept(){
-        Axios.put('http://localhost:3030/AccDemande/'+this.demande.email, {msg: 'Accept'}).then(
+        Axios.put('/api/AccDemande/'+this.demande.email, {msg: 'Accept'}).then(
             res =>{
                 console.log(res.data);
                 this.msg = res.data.title,

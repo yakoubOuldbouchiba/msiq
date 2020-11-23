@@ -371,7 +371,7 @@ export default {
   },
   methods: {
     confirm(){
-      Axios.post('http://localhost:3030/confirm',this.confirmData)
+      Axios.post('/api/confirm',this.confirmData)
       .then(
         res => {
           this.msg = res.data.title,
@@ -388,7 +388,7 @@ export default {
     },
     
     ChangeMDP(){
-      Axios.post('http://localhost:3030/changeMDP',this.ChangePassword)
+      Axios.post('/api/changeMDP',this.ChangePassword)
       .then(
         res => {
           this.msg = res.data.title,
@@ -404,7 +404,7 @@ export default {
       )
     },
     submit(){
-      Axios.post('http://localhost:3030/updateuser',this.UserInfo)
+      Axios.post('/api/updateuser',this.UserInfo)
       .then(
         res => {
           this.$refs.form.validate(),

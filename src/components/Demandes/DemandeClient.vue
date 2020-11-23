@@ -261,7 +261,7 @@ export default {
     },
     submit () {
         this.$refs.form.validate();
-        Axios.post('http://localhost:3030/DemandeClient', {D: this.DC ,UT :this.$store.state.user.typeUtilisateur})
+        Axios.post('/api/DemandeClient', {D: this.DC ,UT :this.$store.state.user.typeUtilisateur})
         .then(
           res =>{
             this.msg = res.data.title,
@@ -277,7 +277,7 @@ export default {
     },
     update(){
        this.$refs.form.validate();
-        Axios.post('http://localhost:3030/UpdateDemandeClient', this.DC )
+        Axios.post('/api/UpdateDemandeClient', this.DC )
         .then(
           res =>{
             this.msg = res.data.title,
@@ -294,7 +294,7 @@ export default {
     },
     Reject(){
       this.$refs.form.validate();
-      Axios.put('http://localhost:3030/UpdateDemandState/'+this.DC.demande_C_ID, 
+      Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
         { State :'Rejetee',
           Demande: this.DC,
           typeD: 'Demande client',
@@ -304,20 +304,20 @@ export default {
     },
     Accept(){
       if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
-        Axios.put('http://localhost:3030/UpdateDemandState/'+this.DC.demande_C_ID, 
+        Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
           { State :'Directeur',
             Demande: this.DC, 
             typeD: 'Demande client', 
             UT: this.$store.state.user.typeUtilisateur})
       else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
-        Axios.put('http://localhost:3030/UpdateDemandState/'+this.DC.demande_C_ID, 
+        Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
           { State :'DAM',
             Demande: this.DC,
             typeD: 'Demande client', 
             UT: this.$store.state.user.typeUtilisateur})    
       else if(this.$store.state.user.typeUtilisateur == 'Responsable DAM'){
         this.DC.etat='Acceptee';
-        Axios.put('http://localhost:3030/UpdateDemandState/'+this.DC.demande_C_ID, 
+        Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
           { State :'Acceptee',
             Demande: this.DC,
             typeD: 'Demande client', 

@@ -269,7 +269,7 @@ export default {
         },
         submit(){
             this.$refs.form.validate();
-            Axios.post('http://localhost:3030/DemandePriseEnCharge', {D: this.DPEC ,UT :this.$store.state.user.typeUtilisateur})
+            Axios.post('/api/DemandePriseEnCharge', {D: this.DPEC ,UT :this.$store.state.user.typeUtilisateur})
             .then(
             res =>{
                 this.msg = res.data.title,
@@ -285,7 +285,7 @@ export default {
         },
         update(){
             this.$refs.form.validate();
-            Axios.post('http://localhost:3030/UpdateDemandePriseEnCharge', this.DPEC)
+            Axios.post('/api/UpdateDemandePriseEnCharge', this.DPEC)
             .then(
             res =>{
                 this.msg = res.data.title,
@@ -301,7 +301,7 @@ export default {
         },
         Reject(){
             this.$refs.form.validate();
-            Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID, 
+            Axios.put('/api/UpdateDemandState/'+this.DPEC.demande_P_ID, 
                 {State :'Rejetee', 
                     Demande: this.DPEC, 
                     typeD: 'Demande de prise en charge', 
@@ -311,13 +311,13 @@ export default {
             },
         Accept(){
             if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
-                Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID, 
+                Axios.put('/api/UpdateDemandState/'+this.DPEC.demande_P_ID, 
                     {State :'Directeur', 
                     Demande: this.DPEC, 
                     typeD: 'Demande de prise en charge', 
                     UT: this.$store.state.user.typeUtilisateur})
             else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
-                Axios.put('http://localhost:3030/UpdateDemandState/'+this.DPEC.demande_P_ID,   
+                Axios.put('/api/UpdateDemandState/'+this.DPEC.demande_P_ID,   
                     {State :'Acceptee',
                     Demande: this.DPEC, 
                     typeD: 'Demande de prise en charge', 

@@ -33,7 +33,7 @@ export default {
     },
     methods :{
         async print(){
-            await axios.get('http://localhost:3030/DemandeClient/'+this.ID)
+            await axios.get('/api/DemandeClient/'+this.ID)
             .then(
                     res =>{
                     this.demande = res.data.demande;

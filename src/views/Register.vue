@@ -243,7 +243,7 @@ export default {
         submit(){
             (this.$refs.form.validate());
 
-            axios.post("http://localhost:3030/register",this.user)
+            axios.post("/api/register",this.user)
             .then(
                 res =>{
                     this.msg = res.data.title,

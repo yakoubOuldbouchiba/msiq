@@ -1,9 +1,7 @@
-import axios from 'axios';
+
 
 export function http(){
-   return axios.create(
-       {
-           baseURL:'http://localhost:3030'
-       }
+   return (
+        'http://localhost:3030'    
    );
 }

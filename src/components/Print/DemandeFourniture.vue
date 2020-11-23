@@ -25,7 +25,7 @@ export default {
     },
     methods :{
         async print(){
-            await axios.get('http://localhost:3030/demande/'+this.ID)
+            await axios.get('/api/demande/'+this.ID)
             .then(
                     res =>{
                         this.demande = res.data.demande;       
@@ -60,7 +60,7 @@ export default {
             doc.line(10, 56, 205, 56)
             /** fournitures */
             var objets = [['Code objet' , 'Designation' , 'Quantité demandée']]
-            await axios.get('http://localhost:3030/DemandeFourniture/'+this.ID)
+            await axios.get('/api/DemandeFourniture/'+this.ID)
             .then(
                     res =>{
                     this.demande = res.data.demande;       

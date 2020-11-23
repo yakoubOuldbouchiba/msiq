@@ -144,12 +144,12 @@ export default {
     components: {StatByDemand},
     async created(){
         /** total */
-        this.total = (await axios.get("http://localhost:3030/Total/"+this.$store.state.user.structure)).data.total
-        this.totalYear = (await axios.get("http://localhost:3030/TotalYear/"+this.$store.state.user.structure)).data.total
-        this.totalMonth = (await axios.get("http://localhost:3030/TotalMonth/"+this.$store.state.user.structure)).data.total
-        this.totalDay = (await axios.get("http://localhost:3030/TotalDay/"+this.$store.state.user.structure)).data.total
+        this.total = (await axios.get("/api/Total/"+this.$store.state.user.structure)).data.total
+        this.totalYear = (await axios.get("/api/TotalYear/"+this.$store.state.user.structure)).data.total
+        this.totalMonth = (await axios.get("/api/TotalMonth/"+this.$store.state.user.structure)).data.total
+        this.totalDay = (await axios.get("/api/TotalDay/"+this.$store.state.user.structure)).data.total
         /** total by demand */
-        this.totalByDemand = (await axios.get("http://localhost:3030/TotalByDemand/"+this.$store.state.user.structure+"/total")).data.total;
+        this.totalByDemand = (await axios.get("/api/TotalByDemand/"+this.$store.state.user.structure+"/total")).data.total;
        
     },
     mounted(){        
@@ -162,7 +162,7 @@ export default {
     methods:{
         async getTotalByDemand(value){
             /** total by demand */
-            this.totalByDemand = (await axios.get("http://localhost:3030/TotalByDemand/"+this.$store.state.user.structure+"/"+value)).data.total;
+            this.totalByDemand = (await axios.get("/api/TotalByDemand/"+this.$store.state.user.structure+"/"+value)).data.total;
         },
         getIndex1(etat , tab){
             for(let i= 0 ; i<tab.length ; i ++){

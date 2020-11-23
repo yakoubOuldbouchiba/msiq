@@ -69,14 +69,14 @@ export default {
         async deleteItem (item){
             // 1- we should assigne an anthors cars for the demandesV have this car    
             // 2- deleting for db nodejs part
-            Axios.delete("http://localhost:3030/chauffeur/"+item.chauffeur_id);
+            Axios.delete("/api/chauffeur/"+item.chauffeur_id);
             var index = this.Chauffeurs.indexOf(item);
             this.Chauffeurs.splice(index ,1)
         },
         async ajouterChauffeur(value){
             console.log(value);
-            (await Axios.post("http://localhost:3030/chauffeur",value));
-            this.Chauffeurs=(await Axios.get("http://localhost:3030/chauffeurs")).data
+            (await Axios.post("/api/chauffeur",value));
+            this.Chauffeurs=(await Axios.get("/api/chauffeurs")).data
             this.item={
                 nom : "xxxxxx",
                 prenom : "xxxxx",
@@ -88,7 +88,7 @@ export default {
         },
         editerChauffeur : function(item){
             console.log(item)
-            Axios.put("http://localhost:3030/chauffeur/"+item.item.chauffeur_id , item.item);
+            Axios.put("/api/chauffeur/"+item.item.chauffeur_id , item.item);
             this.item={
                 nom : "xxxxxx",
                 prenom : "xxxxx",
@@ -100,7 +100,7 @@ export default {
         }
     },
     async created(){
-        this.Chauffeurs=(await Axios.get("http://localhost:3030/chauffeurs")).data
+        this.Chauffeurs=(await Axios.get("/api/chauffeurs")).data
     }
     ,
     data(){

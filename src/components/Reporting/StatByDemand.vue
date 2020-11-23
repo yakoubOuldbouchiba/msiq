@@ -61,11 +61,11 @@ export default {
     },
     async mounted (){
         for(let i=0 ; i <this.peroids.length ; i++){
-         this.maxDep.push((await  Axios.get('http://localhost:3030/MaxByDep/'+this.$store.state.user.structure+"/"+this.peroids[i]+"/"+this.name)).data)
-         this.maxUser.push( (await  Axios.get('http://localhost:3030/MaxByUser/'+this.$store.state.user.structure+"/"+this.peroids[i]+"/"+this.name)).data)
-         this.nom.push((await Axios.get('http://localhost:3030/users/'+this.maxUser[i].max[0].email)).data)
-         this.avgDep .push((await  Axios.get('http://localhost:3030/AvgByDep/'+this.$store.state.user.structure+"/"+this.peroids[i]+"/"+this.name)).data)
-         this.avgUser.push( (await  Axios.get('http://localhost:3030/AvgByUser/'+this.$store.state.user.structure+"/"+this.peroids[i]+"/"+this.name)).data)
+         this.maxDep.push((await  Axios.get('/api/MaxByDep/'+this.$store.state.user.structure+"/"+this.peroids[i]+"/"+this.name)).data)
+         this.maxUser.push( (await  Axios.get('/api/MaxByUser/'+this.$store.state.user.structure+"/"+this.peroids[i]+"/"+this.name)).data)
+         this.nom.push((await Axios.get('/api/users/'+this.maxUser[i].max[0].email)).data)
+         this.avgDep .push((await  Axios.get('/api/AvgByDep/'+this.$store.state.user.structure+"/"+this.peroids[i]+"/"+this.name)).data)
+         this.avgUser.push( (await  Axios.get('/api/AvgByUser/'+this.$store.state.user.structure+"/"+this.peroids[i]+"/"+this.name)).data)
         }
     }
 }
