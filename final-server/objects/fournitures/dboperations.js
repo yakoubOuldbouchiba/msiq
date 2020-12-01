@@ -17,7 +17,7 @@ function getObjects() {
 
 function _getObjects() {
   _getObjects = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-    var users;
+    var objets;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -27,25 +27,37 @@ function _getObjects() {
             return sql.connect(config);
 
           case 3:
-            _context.next = 5;
+            _context.prev = 3;
+            _context.next = 6;
             return new sql.Request().execute("GETOBJETS");
 
-          case 5:
-            users = _context.sent;
+          case 6:
+            objets = _context.sent;
             sql.close();
-            return _context.abrupt("return", users.recordsets);
+            console.log(objets.recordset);
+            return _context.abrupt("return", objets.recordset);
 
-          case 10:
-            _context.prev = 10;
-            _context.t0 = _context["catch"](0);
+          case 12:
+            _context.prev = 12;
+            _context.t0 = _context["catch"](3);
             console.log(_context.t0);
 
-          case 13:
+          case 15:
+            _context.next = 21;
+            break;
+
+          case 17:
+            _context.prev = 17;
+            _context.t1 = _context["catch"](0);
+            console.log('connection error');
+            return _context.abrupt("return", 'CNCTDB');
+
+          case 21:
           case "end":
             return _context.stop();
         }
       }
-    }, _callee, null, [[0, 10]]);
+    }, _callee, null, [[0, 17], [3, 12]]);
   }));
   return _getObjects.apply(this, arguments);
 }

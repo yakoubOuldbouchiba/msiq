@@ -1,10 +1,11 @@
-module.exports = {
-  "transpileDependencies": [
-    "vuetify"
-  ]
-}
 const path = require('path');
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production '
+    ? ''
+    : '/',
+  "transpileDependencies": [
+    "vuetify"
+  ],
   devServer :{
     proxy :{
       '/api':{
@@ -12,4 +13,6 @@ module.exports = {
       }
     }
   }
-};
+}
+
+

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "start": "set NODE_ENV=production && node final-server/index.js",
+    "start": "set NODE_ENV=production && nodemon final-server/index.js",
     "build": "set NODE_ENV=production && babel msiq-server --out-dir final-server && vue-cli-service build",
     "lint": "vue-cli-service lint",
     "dev": "concurrently \"babel msiq-server --watch --out-dir prod-server \" \"nodemon prod-server/index.js\" \"npm run serve\"",

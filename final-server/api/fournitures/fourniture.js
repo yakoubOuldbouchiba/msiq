@@ -16,7 +16,8 @@ module.exports = function () {
   //get a list of fournitures
   router.get('/fournitures', auth.requireLogin, function (req, res) {
     dboperationsFournitures.getObjects().then(function (result) {
-      res.json(result[0]);
+      console.log(result);
+      res.json(result);
     });
   }); //add a new fourniture
 

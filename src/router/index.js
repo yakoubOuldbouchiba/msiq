@@ -232,7 +232,8 @@ Vue.use(VueRouter)
     }
   },
   {
-    path: '/',
+    path: '*',
+    //component : Login
     beforeEnter: (to, from, next) => {
       console.log(store.state.token);
       if(store.state.token){
@@ -247,7 +248,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  //base: process.env.BASE_URL,
   routes
 })
 

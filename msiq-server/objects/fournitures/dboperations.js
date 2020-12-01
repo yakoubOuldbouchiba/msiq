@@ -6,12 +6,18 @@ const sql = require('mssql');
 // getting all ojects.
 async function  getObjects(){
     try{
-         await (sql.connect(config));
-        let users = await (new sql.Request().execute("GETOBJETS"));
-        sql.close();
-        return users.recordsets;
-    }catch(error){
-        console.log(error);
+        await (sql.connect(config));
+        try{
+            let objets = await (new sql.Request().execute("GETOBJETS"));
+            sql.close();
+            console.log(objets.recordset)
+            return objets.recordset;
+        }catch(error){
+            console.log(error);
+        }
+    }catch(err){
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
     }
 }
 // set new object

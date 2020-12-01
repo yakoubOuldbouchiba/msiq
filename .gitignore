@@ -1,6 +1,5 @@
 .DS_Store
 node_modules
-/dist
 /prod-server
 msiq-server/config/dbconfig.js
 

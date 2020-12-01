@@ -12,7 +12,8 @@ var io = require('socket.io')(http)
 setEnvironement(app);
 
 app.use(route(io));
-app.use(express.static('FilesTirage'))
+//app.use(express.static('FilesTirage'))
+app.use(express.static(__dirname+'/../dist/'))
 
 app.get('/',(rep,res)=>{
   if(process.env.NODE_ENV!=='production '){
