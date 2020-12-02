@@ -8,7 +8,7 @@ async function  getTotal(struct){
             let total = await new sql.Request()
             .input("struct", sql.VarChar, struct)
             .execute('Total')
-            sql.close();
+            //sql.close();
             return {
                  result : 'TG' , //total getted
                  total : total.recordset
@@ -16,7 +16,7 @@ async function  getTotal(struct){
         }catch(error){
             console.log(error)
             console.log('can not get total');
-            sql.close();
+            //sql.close();
             return 'CNGT'; // can not get Demand
         }
     }catch(error){
@@ -32,14 +32,14 @@ async function  getTotalYear(struct){
             let totalYear = await new sql.Request()
             .input("struct", sql.VarChar, struct)
             .execute('TotalYear')
-            sql.close();
+            //sql.close();
             return {
                  result : 'TG' , //total getted
                  total : totalYear.recordset
             }  
         }catch(error){
             console.log('can not get total');
-            sql.close();
+            //sql.close();
             return 'CNGT'; // can not get Demand
         }
     }catch(error){
@@ -55,14 +55,14 @@ async function  getTotalMonth(struct){
             let totalMonth = await new sql.Request()
             .input("struct", sql.VarChar, struct)
             .execute('TotalMonth')
-            sql.close();
+            //sql.close();
             return {
                  result : 'TG' , //total getted
                  total : totalMonth.recordset
             }  
         }catch(error){
             console.log('can not get total');
-            sql.close();
+            //sql.close();
             return 'CNGT'; // can not get Demand
         }
     }catch(error){
@@ -78,14 +78,14 @@ async function  getTotalDay(struct){
             let totalDay = await new sql.Request()
             .input("struct", sql.VarChar, struct)
             .execute('TotalDay')
-            sql.close();
+            //sql.close();
             return {
                  result : 'TG' , //total getted
                  total : totalDay.recordset
             }  
         }catch(error){
             console.log('can not get total');
-            sql.close();
+            //sql.close();
             return 'CNGT'; // can not get Demand
         }
     }catch(error){
@@ -103,14 +103,14 @@ async function  maxDep (struct , peroid , typeDemand){
             .input("typeDemand", sql.VarChar, typeDemand)
             .input("peroidVarchar", sql.VarChar, peroid)
             .execute('MaxDemandByDep')
-            sql.close();
+            //sql.close();
             return {
                  result : 'TG' , //total getted
                  max : max.recordset
             }  
         }catch(error){
             console.log('can not get total');
-            sql.close();
+            //sql.close();
             return 'CNGT'; // can not get Demand
         }
     }catch(error){
@@ -128,14 +128,14 @@ async function  maxUser(struct ,peroid , typeDemand){
             .input("typeDemand", sql.VarChar, typeDemand)
             .input("peroidVarchar", sql.VarChar, peroid)
             .execute('MaxDemandByUser')
-            sql.close();
+            //sql.close();
             return {
                  result : 'TG' , //total getted
                  max : max.recordset
             }  
         }catch(error){
             console.log('can not get total');
-            sql.close();
+            //sql.close();
             return 'CNGT'; // can not get Demand
         }
     }catch(error){
@@ -153,14 +153,14 @@ async function  AvgDep (struct ,peroid , typeDemand){
             .input("typeDemand", sql.VarChar, typeDemand)
             .input("peroidVarchar", sql.VarChar, peroid)
             .execute('AvgDemandByDep')
-            sql.close();
+            //sql.close();
             return {
                  result : 'TG' , //total getted
                  avg : avg.recordset
             }  
         }catch(error){
             console.log('can not get total');
-            sql.close();
+            //sql.close();
             return 'CNGT'; // can not get Demand
         }
     }catch(error){
@@ -178,14 +178,14 @@ async function  AvgUser (struct ,peroid , typeDemand){
             .input("typeDemand", sql.VarChar, typeDemand)
             .input("peroidVarchar", sql.VarChar, peroid)
             .execute('AvgDemandByUser')
-            sql.close();
+            //sql.close();
             return {
                  result : 'TG' , //total getted
                  avg : avg.recordset
             }  
         }catch(error){
             console.log('can not get total');
-            sql.close();
+            //sql.close();
             return 'CNGT'; // can not get Demand
         }
     }catch(error){
@@ -217,14 +217,14 @@ async function  getTotalByDemand(struct , date){
                 .execute('TotalByDemandInDay')
             }
             console.log('Total getted');
-            sql.close();
+            //sql.close();
             return {
                  result : 'TG' , //total getted
                  total : total.recordset
             }  
         }catch(error){
             console.log('can not get total');
-            sql.close();
+            //sql.close();
             return 'CNGT'; // can not get Demand
         }
     }catch(error){

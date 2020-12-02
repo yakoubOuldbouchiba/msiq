@@ -50,7 +50,7 @@ async function  setDemandeTirage(Data,io){
                      
                  });
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return  'DI' //Demand inserted
              } if (Data.UT == 'Directeur') {
                 await new sql.Request()
@@ -94,7 +94,7 @@ async function  setDemandeTirage(Data,io){
                      io.emit(Data.userID , Demand)
                  });
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return  'DI' //Demand inserted
              } else {
                 await new sql.Request()
@@ -138,13 +138,13 @@ async function  setDemandeTirage(Data,io){
                      io.emit(Data.userID , Demand)
                  });
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return  'DI' //Demand inserted
              }
         } catch (error) {
             console.log('can not instert Demande');
             console.log(error);
-            sql.close();
+            //sql.close();
             return 'CNID'; // can not insert Demand
         }
     } catch (error) {
@@ -162,7 +162,7 @@ async function  deleteDemandeTirage(id){
             .output('typedelete',sql.Bit)
             .output('recevoir_ID',sql.VarChar)//for notif
             .execute('DeleteDemandeTirage');
-            sql.close();
+            //sql.close();
             console.log("demande deleted")
             return (
                 {
@@ -174,7 +174,7 @@ async function  deleteDemandeTirage(id){
 
         }catch(error){
             console.log('can not delete Demande');
-            sql.close();
+            //sql.close();
             return 'CNDD'; // can not delete Demand
         }
     }catch (error) {
@@ -240,12 +240,12 @@ async function  upDemandeTirage(Data , io){
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             })
             console.log('Demande Inserted');
-            sql.close();
+            //sql.close();
             return  'DE' //Demand inserted
         } catch (error) {
             console.log('can not Edit Demande');
             console.log(error);
-            sql.close();
+            //sql.close();
             return 'CNED'; // can not insert Demand
         }
     } catch (error) {

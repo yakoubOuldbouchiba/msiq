@@ -181,7 +181,7 @@ components:{DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharg
 async created(){
   let ALLDemandes = (await axios.get("/api/demandesATraiter/"+this.$store.state.user.typeUtilisateur+'/'+this.$store.state.user.departement+'/'+this.$store.state.user.structure)).data.demandes
   this.Demandes = ALLDemandes[0].reverse()
-  this.AccDemandes = ALLDemandes[1].reverse()
+  //this.AccDemandes = ALLDemandes[1].reverse()
 },
 mounted(){
   /*** demande on delete */

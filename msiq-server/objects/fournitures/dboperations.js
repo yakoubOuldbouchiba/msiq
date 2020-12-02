@@ -9,7 +9,7 @@ async function  getObjects(){
         await (sql.connect(config));
         try{
             let objets = await (new sql.Request().execute("GETOBJETS"));
-            sql.close();
+            //sql.close();
             return objets.recordset;
         }catch(error){
             console.log(error);
@@ -28,7 +28,7 @@ async function  setObject(objet){
         .input('desig', sql.VarChar, objet.designation)
         .input('qty', sql.Int, parseInt(objet.quantite))
         .execute("SETOBJET");
-        sql.close();
+        //sql.close();
         return true;
     }catch(error){ 
         return false;
@@ -43,7 +43,7 @@ async function  editObject(objet){
         .input('desig', sql.VarChar, objet.designation)
         .input('qty', sql.Int, parseInt(objet.quantite))
         .execute("UPDATEOBJECT")
-        sql.close();
+        //sql.close();
         return true;
     }catch(error){
         console.log(error)
@@ -58,7 +58,7 @@ async function  deleteObject(code_objet){
         .input("code_objet", sql.VarChar, code_objet)
         .output("deleted",sql.Bit)
         .execute("DELETEOBJET")
-        sql.close();
+        //sql.close();
         return  res.output.deleted ;
     
         

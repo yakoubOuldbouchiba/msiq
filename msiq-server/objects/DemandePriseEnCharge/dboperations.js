@@ -53,7 +53,7 @@ async function  setDemandePriseEnCharge(Data,io){
                      
                  });
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return  'DI' //Demand inserted
              } else if (Data.UT == 'Directeur') {
                 await new sql.Request()
@@ -102,7 +102,7 @@ async function  setDemandePriseEnCharge(Data,io){
                      io.emit(Data.D.UserID , Demand )
                  });
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return  'DI' //Demand inserted
              } else {
                 await new sql.Request()
@@ -151,13 +151,13 @@ async function  setDemandePriseEnCharge(Data,io){
                      io.emit(Data.D.UserID , Demand )
                  });
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return  'DI' //Demand inserted
              }
         } catch (error) {
             console.log('can not instert Demande');
             console.log(error);
-            sql.close();
+            //sql.close();
             return 'CNID'; // can not insert Demand
         }
     } catch (error) {
@@ -175,7 +175,7 @@ async function  deleteDemandePriseEnCharge(id){
             .output('typedelete',sql.Bit)
             .output('recevoir_ID',sql.VarChar)//for notif
             .execute('DeleteDemandePEC');
-            sql.close();
+            //sql.close();
             console.log("demande deleted")
             return ({
                 result : "DD",
@@ -185,7 +185,7 @@ async function  deleteDemandePriseEnCharge(id){
 
         }catch(error){
             console.log('can not delete Demande');
-            sql.close();
+            //sql.close();
             return 'CNDD'; // can not delete Demand
         }
     }catch (error) {

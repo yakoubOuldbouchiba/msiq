@@ -47,12 +47,12 @@ async function  setUser(user){
             .input('depart', sql.VarChar, user.departement)
             .execute('setAccountDemand');
             console.log('User Inserted');
-            sql.close();
+            //sql.close();
             return  'UI'   
               //user inserted
         } catch (error) {
             console.log('can not instert user');
-            sql.close();
+            //sql.close();
             return 'CNIU'; // can not insert user
         }
     } catch (error) {

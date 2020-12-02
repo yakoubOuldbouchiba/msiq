@@ -10,14 +10,14 @@ async function getDemandeRelex(id){
             .input("id", sql.VarChar, id)
             .execute('GetDemandeRelex')
             console.log('Demande getted');
-            sql.close();
+            //sql.close();
             return {
                  result : 'DG' , //Demand inserted
                  demande : demande.recordset[0]
             }  
         }catch(error){
             console.log('can not Get Demande');
-            sql.close();
+            //sql.close();
             return 'CNGD'; // can not get Demand
         }
     }catch(err){
@@ -73,7 +73,7 @@ async function  setDemandeRelex(Demande,io){
                      io.emit(Demande.D.userID , Demand )
                  });
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return 'DI' //Demand inserted
              } if (Demande.UT == 'Directeur') {
                 await new sql.Request()
@@ -116,7 +116,7 @@ async function  setDemandeRelex(Demande,io){
                      io.emit(Demande.D.userID , Demand )
                  });
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return 'DI' //Demand inserted
              } else {
                 await new sql.Request()
@@ -159,13 +159,13 @@ async function  setDemandeRelex(Demande,io){
                      io.emit(Demande.D.userID , Demand )
                  });
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return 'DI' //Demand inserted
              }
         } catch (error) {
             console.log(error)
             console.log('can not instert Demande');
-            sql.close();
+            //sql.close();
             return 'CNID'; // can not insert Demand
         }
     } catch (error) {
@@ -206,11 +206,11 @@ async function  editDemandeRelex(Demande ,io){
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             })
             console.log('Demande updated');
-            sql.close();
+            //sql.close();
             return 'DU' //Demand inserted
         } catch (error) {
             console.log('can not update Demande');
-            sql.close();
+            //sql.close();
             return 'CNUD'; // can not insert Demand
         }
     } catch (error) {
@@ -228,7 +228,7 @@ async function  deleteDemandeRelex(id){
             .output('typedelete',sql.Bit)
             .output('recevoir_ID',sql.VarChar)//for notif
             .execute('DeleteDemandeRelex');
-            sql.close();
+            //sql.close();
             console.log("demande deleted")
             return ({
                 result :"DD" ,
@@ -238,7 +238,7 @@ async function  deleteDemandeRelex(id){
 
         }catch(error){
             console.log('can not delete Demande');
-            sql.close();
+            //sql.close();
             return 'CNDD'; // can not delete Demand
         }
     }catch (error) {

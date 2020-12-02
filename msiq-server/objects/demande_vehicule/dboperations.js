@@ -10,14 +10,14 @@ async function getDemandeVehicule(id){
             .input("id", sql.VarChar, id)
             .execute('GetDemandeVehicule')
             console.log('Demande getted');
-            sql.close();
+            //sql.close();
             return {
                  result : 'DG' , //Demand inserted
                  demande : demande.recordset[0]
             }  
         }catch(error){
             console.log('can not Get Demande');
-            sql.close();
+            //sql.close();
             return 'CNGD'; // can not get Demand
         }
     }catch(err){
@@ -77,7 +77,7 @@ async function  setDemandeVehicule(Demande,io){
                 io.emit('NewDemandD'+Demande.D.structure, Demand )
                 io.emit(Demande.D.UserID , Demand )
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return  ({
                     result : 'DI',
                     demande_v_id : result.output.demande_v_id
@@ -127,7 +127,7 @@ async function  setDemandeVehicule(Demande,io){
                 io.emit('NewDemandCP', Demand )
                 io.emit(Demande.D.UserID , Demand )
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return  ({
                     result : 'DI',
                     demande_v_id : result.output.demande_v_id
@@ -175,7 +175,7 @@ async function  setDemandeVehicule(Demande,io){
                 io.emit('NewDemandCD'+Demande.D.structure+Demande.D.departement, Demand )
                 io.emit(Demande.D.UserID , Demand )
                 console.log('Demande Inserted');
-                sql.close();
+                //sql.close();
                 return  ({
                     result : 'DI',
                     demande_v_id : result.output.demande_v_id
@@ -184,7 +184,7 @@ async function  setDemandeVehicule(Demande,io){
         } catch (error) {
             console.log(error);
             console.log('can not instert Demande');
-            sql.close();
+            //sql.close();
             return 'CNID'; // can not insert Demand
         }
     } catch (error) {
@@ -202,7 +202,7 @@ async function  deleteDemandeVehicule(id){
             .output('typedelete',sql.Bit)
             .output('recevoir_ID',sql.VarChar)//for notif
             .execute('DeleteDemandeVehicule');
-            sql.close();
+            //sql.close();
             console.log("demande deleted")
             return ({
                 result :"DD",
@@ -212,7 +212,7 @@ async function  deleteDemandeVehicule(id){
 
         }catch(error){
             console.log('can not delete Demande');
-            sql.close();
+            //sql.close();
             return 'CNDD'; // can not delete Demand
         }
     }catch (error) {
@@ -263,12 +263,12 @@ async function  editDemandeVehicule(Demande ,io){
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             })
             console.log('Demande Inserted');
-            sql.close();
+            //sql.close();
             return  'DU' //Demand inserted
         } catch (error) {
             console.log(error);
             console.log('can not instert Demande');
-            sql.close();
+            //sql.close();
             return 'CNUD'; // can not insert Demand
         }
     } catch (error) {

@@ -5,7 +5,7 @@ async function  getChauffeurs(){
     try{
         let pool = await (sql.connect(config));
         let users = await (pool.request().execute("GETCHAUFFEURS"));
-        sql.close();
+        //sql.close();
         return users.recordsets;
     }catch(error){
         console.log(error);
@@ -18,7 +18,7 @@ async function  getDispoChauffeurs(date){
         let users = await (pool.request()
         .input('date_depart',sql.DateTime,date)
         .execute("GETDISPOCHAUFFEURS"));
-        sql.close();
+        //sql.close();
         return users.recordsets;
     }catch(error){
         console.log(error);
@@ -35,7 +35,7 @@ async function  setChauffeur(chauffeur){
         .input('telephone',sql.VarChar,chauffeur.telephone)
         .input('email',sql.VarChar,chauffeur.email)
         .execute("SETCHAUFFEUR")  
-        sql.close();   
+        //sql.close();   
          return true;
     }catch(error){ 
         return false;
@@ -53,7 +53,7 @@ async function  editChauffeur(id , chauffeur){
        .input('telephone',sql.VarChar,chauffeur.telephone)
        .input('email',sql.VarChar,chauffeur.email)
        .execute("UPDATECHAUFFEUR")  
-       sql.close();   
+       //sql.close();   
         return true;
     }catch(error){
         console.log(error);
@@ -67,7 +67,7 @@ async function  deleteChauffeur(chauffeur_id){
         .input("chauffeur_id", sql.VarChar,chauffeur_id)
         .output('deleted',sql.Bit)
         .execute("DELETECHAUFFEUR");
-        sql.close();
+        //sql.close();
         return res.output.deleted;
     }catch(error){
         return false;
