@@ -1,7 +1,14 @@
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
-
-// get a demande relex
+// getting all demande.
+async function  getDemandesRelex(){
+    try{
+        let pool = await sql.connect(config);
+    }catch(error){
+        console.log(error);
+    }
+}
+// get a demande client 
 async function getDemandeRelex(id){
     try{
         let pool = await (sql.connect(config));
@@ -247,6 +254,7 @@ async function  deleteDemandeRelex(id){
     }
 }
 module.exports = {
+    getDemandesRelex,
     getDemandeRelex,
     setDemandeRelex,
     editDemandeRelex,
