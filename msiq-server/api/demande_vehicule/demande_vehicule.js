@@ -27,8 +27,6 @@ module.exports=(io)=>{
     });
     //add a new demande
     router.post('/DemandeVehicule',auth.requireLogin , (req , res)=>{
-        
-        console.log(req.body);
         dbOperationsDemandes.setDemandeVehicule( req.body,io)
             .then(result => {
                 if(result.result ==='DI'){

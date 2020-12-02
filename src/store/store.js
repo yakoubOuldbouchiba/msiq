@@ -1,9 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import io from 'socket.io-client'
 import jwt from 'jsonwebtoken'
-import {http} from '../services/httpServices'
 Vue.use(Vuex);
 export default new Vuex.Store({
     //strict: true,
@@ -26,7 +24,7 @@ export default new Vuex.Store({
             dateNaissance: '',
 
         },
-        sokect:io(http()),
+        sokect:null,
         messages :[],
         users : [],
         token:!!localStorage.getItem('token')|| '',

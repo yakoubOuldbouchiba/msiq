@@ -3,7 +3,6 @@ const sql = require('mssql');
 // getting all notifications.
 async function  getNotifactions(email){
     try{
-        console.log(email)
         await sql.connect(config);
         try{
             let res = await new sql.Request()

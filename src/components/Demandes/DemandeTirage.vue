@@ -347,7 +347,6 @@ export default {
         await Axios.post('/api/DemandeTirage',formData)
         .then(
             res =>{
-                console.log(res);
             this.loading = false;
             this.msg = res.data.title,
             this.$refs.form.reset(),

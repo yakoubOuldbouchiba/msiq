@@ -23,7 +23,6 @@ const upload = multer({storage: storage});
 module.exports=(io)=>{
    //this part the get the fie 
     router.post('/DemandeTirage', upload.single('FileData'), (req , res)=>{
-            console.log(req.file);
            let infoToSend = {
                 userID: req.body.UserID,
                 OriginalFileName: req.file.originalname,
@@ -38,7 +37,6 @@ module.exports=(io)=>{
                 departement:req.body.departement,
                 structure: req.body.structure,
             };
-            console.log(infoToSend);
             dbOperationsDemandeTirage.setDemandeTirage(infoToSend,io)
             .then(result => {
                 if(result ==='DI'){
@@ -139,7 +137,6 @@ module.exports=(io)=>{
     });
     
     router.get('/DownloadFile', async (req , res)=>{
-        //console.log(req);
     })
     return router;
 }

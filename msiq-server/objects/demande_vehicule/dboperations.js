@@ -1,13 +1,6 @@
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
-// getting all messages.
-async function  getDemandesVehicule(){
-    try{
-        let pool = await sql.connect(config);
-    }catch(error){
-        console.log(error);
-    }
-}
+
 //getting a single demande
 async function getDemandeVehicule(id){
     try{
@@ -18,7 +11,6 @@ async function getDemandeVehicule(id){
             .execute('GetDemandeVehicule')
             console.log('Demande getted');
             sql.close();
-            console.log(demande.recordset[0])
             return {
                  result : 'DG' , //Demand inserted
                  demande : demande.recordset[0]
@@ -39,7 +31,6 @@ async function  setDemandeVehicule(Demande,io){
     try {
         let date_depart = Demande.D.date_depart+" "+Demande.D.heure_depart;
         let date_retour = Demande.D.date_retour+" "+Demande.D.heure_retour;
-        console.log(Demande);
         await sql.connect(config)
         try {
 
@@ -206,7 +197,6 @@ async function  deleteDemandeVehicule(id){
     try{
         await sql.connect(config);
         try{
-            console.log(id);
             let res = await new sql.Request()
             .input('id',sql.Int,id)
             .output('typedelete',sql.Bit)
@@ -238,9 +228,6 @@ async function  editDemandeVehicule(Demande ,io){
     
         await sql.connect(config)
         try {
-            console.log(Demande);
-            console.log(date_depart);
-            console.log(date_retour);
             let result = await new sql.Request()
              .input('demande_v_id',sql.Int , Demande.demande_V_ID)
              .input('lieu',sql.VarChar,Demande.lieu)
@@ -290,7 +277,6 @@ async function  editDemandeVehicule(Demande ,io){
     }
 }
 module.exports = {
-    getDemandesVehicule,
     getDemandeVehicule,
     setDemandeVehicule,
     editDemandeVehicule,

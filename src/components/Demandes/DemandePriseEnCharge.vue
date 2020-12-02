@@ -1,5 +1,4 @@
 <template>
-
     <div>
         <v-dialog :retain-focus="false"  v-model="dialog" persistent width="900">
             <v-card tile >
@@ -222,7 +221,6 @@ export default {
       },
         DPEC : function() {
           if((this.type=="update" || this.type=="Traiter") && this.dialog==true){
-              console.log('here');
            return this.demande
           }else{
             return this.DemandePriseEnCharge

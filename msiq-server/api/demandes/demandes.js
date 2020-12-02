@@ -76,7 +76,6 @@ module.exports=(io)=>{
     });
     // Liste des demandes à traiter 
     router.get('/demandesATraiter/:UserType/:Depart/:Struct',auth.requireLogin,(req , res)=>{
-        console.log(req.params);
         dbOperationsDemandes.getDemandesATraiter(req.params)
         .then(result => {
             if(!!result){
@@ -117,10 +116,8 @@ module.exports=(io)=>{
             motif: req.body.Demande.motif,
             seen: 0,
         }
-        console.log(req.body);
         dbOperationsDemandes.UpdateDemandState(req.params.id,req.body.State,req.body.Demande.motif,req.body.Demande.uID ,req.body.typeD , req.body.UT ,io)
         .then(result => {
-            console.log(req.body.Demande.uID);
             if(result==='DU'){
                 res.status(200).json({
                     demandes : result.demandes,

@@ -118,13 +118,11 @@ module.exports=(io)=>{
         dbOperationsClient.TAccDemande(req.params.email,req.body.msg)
         .then( 
             resu => {
-                console.log(resu);
             if (resu === 'Accept') 
                 res.status(200).json({
                     title: 'Demande de compte a ete accepté'
                 })
             else if (resu === 'Reject') {
-                console.log(req.params.email);
                 io.emit("DeleteCompte"+req.params.email);
                 res.status(200).json({
                     title: 'Demande de compte a ete rejeté'

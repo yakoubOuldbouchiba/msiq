@@ -2,6 +2,6 @@
 
 export function http(){
    return (
-        'http://localhost:3030'    
+        'http://192.168.43.39:3030'    
    );
 }

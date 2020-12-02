@@ -7,13 +7,11 @@ module.exports=()=>{
     //get a list of fournitures
     router.get('/fournitures',auth.requireLogin,(req , res)=>{ 
        dboperationsFournitures.getObjects().then(result=>{
-           console.log(result)
            res.json(result);
        })
     });
     //add a new fourniture
     router.post('/fourniture' ,auth.requireLogin, (req , res)=>{
-        console.log(req.body);
         dboperationsFournitures.setObject(req.body).then(result=>{
             res.json(result);
         })

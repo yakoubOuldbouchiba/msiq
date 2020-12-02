@@ -13,7 +13,6 @@ async function  getProduits(){
 // set new Produit
 async function  setProduit(produit){
     try{
-        console.log(produit);
         let pool = await (sql.connect(config));
         await pool.request()
         .input('cp', sql.VarChar, produit.code_produit)

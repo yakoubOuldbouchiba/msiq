@@ -10,7 +10,6 @@ async function  getObjects(){
         try{
             let objets = await (new sql.Request().execute("GETOBJETS"));
             sql.close();
-            console.log(objets.recordset)
             return objets.recordset;
         }catch(error){
             console.log(error);
@@ -60,7 +59,6 @@ async function  deleteObject(code_objet){
         .output("deleted",sql.Bit)
         .execute("DELETEOBJET")
         sql.close();
-        console.log(res.output.deleted)
         return  res.output.deleted ;
     
         

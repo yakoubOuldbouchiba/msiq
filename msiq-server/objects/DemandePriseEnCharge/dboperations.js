@@ -170,7 +170,6 @@ async function  deleteDemandePriseEnCharge(id){
     try{
         await sql.connect(config);
         try{
-            console.log(id);
            let res = await new sql.Request()
             .input('id',sql.Int,id)
             .output('typedelete',sql.Bit)
@@ -204,7 +203,6 @@ async function  GetDemandePriseEnCharge(id){
             .input('id',sql.Int,id)
             .execute('GetDemandePEC');
             console.log('Your demande has been loaded');
-            console.log( Demande.recordset[0]);
             return Demande.recordset[0]
         }catch(error){
             return  null; // can not delete Demand

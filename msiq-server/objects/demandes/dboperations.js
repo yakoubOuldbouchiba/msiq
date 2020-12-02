@@ -38,7 +38,6 @@ async function  getDemande(id){
     try{
         await sql.connect(config);
         try{
-            console.log(id);
             let res = await new sql.Request()
             .input('id',sql.Int,id)
             .execute('GetDemande');
@@ -62,12 +61,11 @@ async function  getDemande(id){
         return 'CNCTDB';  //can not connect to database
     }
 }
-// delete message
+// delete demande
 async function  deleteDemande(id){
     try{
         await sql.connect(config);
         try{
-            console.log(id);
             await new sql.Request()
             .input('id',sql.Int,id)
             .execute('DeleteDemande');
@@ -96,7 +94,6 @@ async function  getDemandesATraiter(Params){
             .input('Depart',sql.VarChar , Params.Depart)
             .input('Struct', sql.VarChar, Params.Struct)
             .execute('getDemandeATraiter')
-            console.log(demandes.recordsets);
             return  demandes.recordsets
         }catch(err){
             console.log(err);
