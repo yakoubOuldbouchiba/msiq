@@ -3,7 +3,6 @@ const sql = require('mssql');
 // getting all demande.
 async function  getDemandeFourniture(id){
     try{
-        console.log(id);
         let pool = await (sql.connect(config));
         try{
             let demande = await pool.request()
@@ -11,7 +10,6 @@ async function  getDemandeFourniture(id){
             .execute('GetObjetOftDemandeFourniture')
             console.log('Demande getted');
             sql.close();
-            console.log(demande.recordset)
             return {
                  result : 'DG' , //Demand inserted
                  demande : demande.recordset
@@ -31,7 +29,6 @@ async function  setDemandeFourniture(Demande , io){
     try {
         await sql.connect(config)
         try {
-        console.log(Demande);
         if (Demande.UT == 'Chef departement') {
             let objets = await new sql.Request()
             .input('userID',sql.VarChar,Demande.userID)
@@ -69,7 +66,6 @@ async function  setDemandeFourniture(Demande , io){
                 description_notif : 'est effecuté(e) une nouvelle demande fourniture',
                 icon:'edit'
             }
-            console.log(Notif)
             //io.emit(Demande.struct+"FD" , Demand )//for repporting 
             io.emit("NewNotif"+objets.output.recevoir_ID , Notif)//notifier le CD.
             io.emit(Demande.userID , Demand )
@@ -114,7 +110,6 @@ async function  setDemandeFourniture(Demande , io){
                 description_notif : 'est effecuté(e) une nouvelle demande fourniture',
                 icon:'edit'
             }
-            console.log(Notif)
             //io.emit(Demande.struct+"FD" , Demand )//for repporting 
             io.emit("NewNotif"+objets.output.recevoir_ID , Notif)//notifier le CD.
             io.emit(Demande.userID , Demand )
@@ -160,7 +155,6 @@ async function  setDemandeFourniture(Demande , io){
                 description_notif : 'est effecuté(e) une nouvelle demande fourniture',
                 icon:'edit'
             }
-            console.log(Notif)
             //io.emit(Demande.struct+"FD" , Demand )//for repporting 
             io.emit("NewNotif"+objets.output.recevoir_ID , Notif)//notifier le CD.
             io.emit(Demande.userID , Demand )
@@ -186,7 +180,6 @@ async function  editDemandeFourniture(Demande ,io){
     try {
         await sql.connect(config)
         try {
-            console.log(Demande)
             let res = await new sql.Request()
             .input('demande_id',sql.Int ,Demande.demande_id)//notifier le CD.)
             .output('NID',sql.Int)//for notif
@@ -229,7 +222,6 @@ async function  deleteDemandeFourniture(id){
     try{
         await sql.connect(config);
         try{
-            console.log(id);
             let res = await new sql.Request()
             .input('id',sql.Int,id)
             .output('typedelete',sql.Bit)

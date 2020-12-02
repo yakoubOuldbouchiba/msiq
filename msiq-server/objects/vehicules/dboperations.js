@@ -39,7 +39,6 @@ async function getVehicule(matricule){
 
 // set new Vehicule
 async function  setVehicule(vehicule){
-    console.log(vehicule);
     try{
         let pool = await sql.connect(config);
          await pool.request()
@@ -75,7 +74,6 @@ async function  editVehicule(vehicule){
 // delete user
 async function  deleteVehicule(matricule){
     try{
-        console.log(matricule)
         let pool = await (sql.connect(config));
         let res = await pool.request()
         .input("matricule", sql.VarChar, matricule)

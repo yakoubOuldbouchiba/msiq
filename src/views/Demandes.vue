@@ -309,7 +309,7 @@ data(){
      }else{
        type='/demande/'
      }
-     await axios.delete('http://localhost:3030'+type+demande.demande_ID)
+     await axios.delete('api'+type+demande.demande_ID)
           .then(
                 res =>{
                     this.msg = res.data.title,
@@ -379,7 +379,7 @@ data(){
      }else{
        type='/demande/'
      }
-     await axios.get('http://localhost:3030'+type+demande.demande_ID)
+     await axios.get('api'+type+demande.demande_ID)
           .then(
                 res =>{
                   this.demande = res.data.demande;        

@@ -11,7 +11,8 @@
 </template>
 
 <script>
-
+import io from 'socket.io-client'
+import {http} from './services/httpServices'
 import NavBar from '@/components/NavBar.vue'
 export default {
   name: 'App',
@@ -20,6 +21,11 @@ export default {
     return{
 
     }
+  },
+  created(){
+    process.env.NODE_ENV === 'production ' 
+    ? this.$store.state.sokect = io('')
+    : this.$store.state.sokect = io(http())
   },
   mounted(){
     this.$store.state.sokect.on("DeleteCompte"+this.$store.state.user.email, () => {

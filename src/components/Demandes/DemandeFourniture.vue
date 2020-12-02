@@ -95,7 +95,6 @@
                                                     v-model="objet.qty_demande"
                                                     label="Quantite damande"
                                                     type="number"
-                                                    min=0
                                                     :rules="[v => !!v || 'Ce champs est obligatoire']"
                                                 ></v-text-field>
                                             </td>
@@ -352,7 +351,6 @@ export default {
                 qty_demande:null
                 });
         }
-        //console.log(this.demande);
         this.objets = (await Axios.get("/api/fournitures")).data
     },
     data(){

@@ -9,7 +9,6 @@ async function getDemandeClient(id){
             let demande = await pool.request()
             .input("id", sql.VarChar, id)
             .execute('GetDemandeClient')
-            console.log(demande.recordset[0]);
             console.log('Demande has been loaded');
             sql.close();
             return {
@@ -30,10 +29,8 @@ async function getDemandeClient(id){
 // set new message
 async function  setDemandeClient(O,io){
     try {
-        console.log(O);
         await sql.connect(config)
         try {
-            console.log(O.D);
             if (O.UT == 'Chef departement') {
                 await new sql.Request()
                 .input('userID', sql.VarChar, O.D.UserID)    
@@ -165,14 +162,12 @@ async function  deleteDemandeClient(id){
     try{
         await sql.connect(config);
         try{
-            console.log(id);
             let res = await new sql.Request()
             .input('id',sql.Int,id)
             .output('typedelete',sql.Bit)
             .output('recevoir_ID',sql.VarChar)//for notif
             .execute('DeleteDemandeClient');
             sql.close();
-            console.log(res);
             console.log("demande deleted");
             return (
                 {
@@ -197,7 +192,6 @@ async function  updateDemandeClient(Demande , io){
     try {
         await sql.connect(config)
         try {
-            console.log(Demande);
              await new sql.Request()
             .input('demande_C_ID', sql.Int, Demande.demande_C_ID)    
             .input('nature', sql.VarChar, Demande.nature)
@@ -224,7 +218,6 @@ async function  updateDemandeClient(Demande , io){
                     icon:'devices',
                     date_notification :res.output.DDATE
                 }
-                console.log(Notif);
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             });
 

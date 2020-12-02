@@ -6,7 +6,6 @@ async function  setDemandeTirage(Data,io){
     try {
         await sql.connect(config)
         try {
-            console.log(Data);
              if (Data.UT == 'Chef departement') {
                 await new sql.Request()
                 .input('userID', sql.VarChar, Data.userID)    
@@ -193,7 +192,6 @@ async function  GetDemandeTirage(id){
             .input('id',sql.Int,id)
             .execute('GetDemandeTirage');
             console.log("demande has been loaded")
-            console.log(demande.recordset[0]);
             return demande.recordset[0]
 
         }catch(error){

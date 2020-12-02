@@ -6,8 +6,6 @@ import * as auth from '../../services/auth-service.js'
 module.exports=(io)=>{
    //add a new demande
     router.post('/DemandeClient',auth.requireLogin , (req , res)=>{
-
-           console.log(req.body);
             dbOperationsDemandes.setDemandeClient(req.body,io)
             .then(result => {
                 if(result ==='DI'){

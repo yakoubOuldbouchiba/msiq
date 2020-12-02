@@ -6,12 +6,17 @@ const sql = require('mssql');
 // getting all ojects.
 async function  getObjects(){
     try{
-         await (sql.connect(config));
-        let users = await (new sql.Request().execute("GETOBJETS"));
-        sql.close();
-        return users.recordsets;
-    }catch(error){
-        console.log(error);
+        await (sql.connect(config));
+        try{
+            let objets = await (new sql.Request().execute("GETOBJETS"));
+            sql.close();
+            return objets.recordset;
+        }catch(error){
+            console.log(error);
+        }
+    }catch(err){
+        console.log('connection error');
+        return 'CNCTDB';  //can not connect to database
     }
 }
 // set new object
@@ -54,7 +59,6 @@ async function  deleteObject(code_objet){
         .output("deleted",sql.Bit)
         .execute("DELETEOBJET")
         sql.close();
-        console.log(res.output.deleted)
         return  res.output.deleted ;
     
         

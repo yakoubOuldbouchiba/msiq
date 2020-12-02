@@ -1,14 +1,7 @@
 var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
-// getting all demande.
-async function  getDemandesRelex(){
-    try{
-        let pool = await sql.connect(config);
-    }catch(error){
-        console.log(error);
-    }
-}
-// get a demande client 
+
+// get a demande relex
 async function getDemandeRelex(id){
     try{
         let pool = await (sql.connect(config));
@@ -16,7 +9,6 @@ async function getDemandeRelex(id){
             let demande = await pool.request()
             .input("id", sql.VarChar, id)
             .execute('GetDemandeRelex')
-            console.log(demande.recordset[0]);
             console.log('Demande getted');
             sql.close();
             return {
@@ -39,7 +31,6 @@ async function  setDemandeRelex(Demande,io){
         let date_depart = Demande.D.date_depart+" "+Demande.D.heure_depart;
         let date_retour = Demande.D.date_retour+" "+Demande.D.heure_retour;
         await sql.connect(config)
-        console.log(Demande.D)
         try {
              if (Demande.UT == 'Chef departement') {
                 await new sql.Request()
@@ -188,7 +179,6 @@ async function  editDemandeRelex(Demande ,io){
         let date_depart = Demande.date_depart+" "+Demande.heure_depart;
         let date_retour = Demande.date_retour+" "+Demande.heure_retour;
         await sql.connect(config)
-        console.log(Demande)
         try {
             await new sql.Request()
             .input('destination',sql.VarChar,Demande.destination)
@@ -233,14 +223,12 @@ async function  deleteDemandeRelex(id){
     try{
         await sql.connect(config);
         try{
-             console.log(id);
              let res =await new sql.Request()
             .input('id',sql.Int,id)
             .output('typedelete',sql.Bit)
             .output('recevoir_ID',sql.VarChar)//for notif
             .execute('DeleteDemandeRelex');
             sql.close();
-            console.log(res)
             console.log("demande deleted")
             return ({
                 result :"DD" ,
@@ -259,7 +247,6 @@ async function  deleteDemandeRelex(id){
     }
 }
 module.exports = {
-    getDemandesRelex,
     getDemandeRelex,
     setDemandeRelex,
     editDemandeRelex,

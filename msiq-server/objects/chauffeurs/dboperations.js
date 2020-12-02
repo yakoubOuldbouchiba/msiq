@@ -26,7 +26,6 @@ async function  getDispoChauffeurs(date){
 }
 // set new chauffeur
 async function  setChauffeur(chauffeur){
-    console.log(chauffeur);
     try{
         let pool = await sql.connect(config);
          await pool.request()
@@ -39,14 +38,12 @@ async function  setChauffeur(chauffeur){
         sql.close();   
          return true;
     }catch(error){ 
-        console.log("wrong");
         return false;
     }
 }
 //edit chauffeur
 async function  editChauffeur(id , chauffeur){
     try{
-        console.log(id)
         let pool = await sql.connect(config);
         await pool.request()
         .input('chauffeur_id',sql.Int , chauffeur.chauffeur_id)

@@ -352,7 +352,6 @@ export default {
                 qty_demande:null
                 });
         }
-        //console.log(this.demande);
         this.objets = (await Axios.get("/api/fournitures")).data
     },
     data(){

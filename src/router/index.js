@@ -232,7 +232,8 @@ Vue.use(VueRouter)
     }
   },
   {
-    path: '/',
+    path: '*',
+    //component : Login
     beforeEnter: (to, from, next) => {
       console.log(store.state.token);
       if(store.state.token){
