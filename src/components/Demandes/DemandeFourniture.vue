@@ -117,7 +117,7 @@
 
                                 </template>
                             </v-simple-table>   
-                            <v-row justify="center" v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Agent de magasin') || objetsDF[0].etat =='Rejetee'"> 
+                            <v-row justify="center" v-if="type=='Traiter' && ($store.state.user.typeUtilisateur != 'Agent de magasin')"> 
                                 <v-col cols="12" sm="8"> 
                                     <v-textarea
                                     v-model="objetsDF[0].motif"
@@ -211,7 +211,7 @@ export default {
             }
         },
         objetsDF : function() {
-             if(this.type=="update" || this.type== "Traiter"){
+             if(this.type=="update" || this.type== "Traiter" && this.dialog==true){
                 return this.demande
             }else{
                 return this.DemandeFourniture.objetsDemande
@@ -345,13 +345,13 @@ export default {
         }
     },
     async created(){
+        this.objets = (await Axios.get("/api/fournitures")).data
         for(let i=0 ; i<this.totalObject ; i++){
             this.DemandeFourniture.objetsDemande.push({
                 code_object:null,    
                 qty_demande:null
                 });
         }
-        this.objets = (await Axios.get("/api/fournitures")).data
     },
     data(){
         return{

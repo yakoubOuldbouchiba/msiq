@@ -285,6 +285,9 @@ data(){
        this.demande.startDate = this.demande.startDate.substr(0,10)
        this.demande.EndDate = this.demande.EndDate.substr(0,10)
        this.demande.heureDeVol = this.demande.heureDeVol.substr(11,5)
+       if(this.demande.Collegues==null){
+         this.demande.Collegues=[];
+       }
        this.openDialogPEC = true
      }     
    },

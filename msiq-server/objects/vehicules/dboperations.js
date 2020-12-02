@@ -79,7 +79,7 @@ async function  deleteVehicule(matricule){
         .input("matricule", sql.VarChar, matricule)
         .output('deleted',sql.Bit)
         .execute("DELETEVEHICULE");
-        sql.close();
+        //sql.close();
         return res.output.deleted;
     }catch(error){
         return false;

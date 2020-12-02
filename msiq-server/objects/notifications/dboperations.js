@@ -8,7 +8,7 @@ async function  getNotifactions(email){
             let res = await new sql.Request()
             .input('email',sql.VarChar,email)
             .execute('GetNotification');
-            sql.close();
+            //sql.close();
             console.log("notifications getted")
             return (
                 {
@@ -18,7 +18,7 @@ async function  getNotifactions(email){
             )
         }catch(error){
             console.log('can not get notifications');
-            sql.close();
+            //sql.close();
             return 'CNGN'; // can not get notifications
         }
     }catch (error) {
@@ -34,7 +34,7 @@ async function  SeeNotifactions(id){
             await new sql.Request()
             .input('id',sql.Int,id)
             .execute('SeenNotif');
-            sql.close();
+            //sql.close();
             return (
                 {
                     result :"SN",
@@ -42,7 +42,7 @@ async function  SeeNotifactions(id){
             )
         }catch(error){
             console.log('can not seen notification');
-            sql.close();
+            //sql.close();
             return 'CNSN'; // can not get notifications
         }
     }catch (error) {
@@ -58,7 +58,7 @@ async function  UnSeeNotifactions(email){
             let res = await new sql.Request()
             .input('email',sql.VarChar,email)
             .execute('UnSeenNotif');
-            sql.close();
+            //sql.close();
             return (
                 {
                     result :"SN",
@@ -67,7 +67,7 @@ async function  UnSeeNotifactions(email){
             )
         }catch(error){
             console.log('can not seen notification');
-            sql.close();
+            //sql.close();
             return 'CNSN'; // can not get notifications
         }
     }catch (error) {

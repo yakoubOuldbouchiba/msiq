@@ -10,14 +10,14 @@ async function getDemandeClient(id){
             .input("id", sql.VarChar, id)
             .execute('GetDemandeClient')
             console.log('Demande has been loaded');
-            sql.close();
+            //sql.close();
             return {
                  result : 'DG' , //Demand inserted
                  demande : demande.recordset[0]
             }  
         }catch(error){
             console.log('can not Get Demande');
-            sql.close();
+            //sql.close();
             return 'CNGD'; // can not get Demand
         }
     }catch(err){
@@ -144,12 +144,12 @@ async function  setDemandeClient(O,io){
                 })
             }
             console.log('Demande Inserted');
-            sql.close();
+            //sql.close();
             return  'DI' //Demand inserted
         } catch (error) {
             console.log('can not instert Demande');
             console.log(error);
-            sql.close();
+            //sql.close();
             return 'CNID'; // can not insert Demand
         }
     } catch (error) {
@@ -167,7 +167,7 @@ async function  deleteDemandeClient(id){
             .output('typedelete',sql.Bit)
             .output('recevoir_ID',sql.VarChar)//for notif
             .execute('DeleteDemandeClient');
-            sql.close();
+            //sql.close();
             console.log("demande deleted");
             return (
                 {
@@ -179,7 +179,7 @@ async function  deleteDemandeClient(id){
 
         }catch(error){
             console.log('can not delete Demande');
-            sql.close();
+            //sql.close();
             return 'CNDD'; // can not delete Demand
         }
     }catch (error) {
@@ -222,12 +222,12 @@ async function  updateDemandeClient(Demande , io){
             });
 
             console.log('Demande Updated');
-            sql.close();
+            //sql.close();
             return  'DU' //Demand updated
         } catch (error) {
             console.log(error);
             console.log('can not update Demande');
-            sql.close();
+            //sql.close();
             return 'CNUD'; // can not update Demand
         }
     } catch (error) {

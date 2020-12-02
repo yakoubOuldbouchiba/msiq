@@ -9,14 +9,14 @@ async function  getDemandeFourniture(id){
             .input("demande_f_id", sql.Int, id)
             .execute('GetObjetOftDemandeFourniture')
             console.log('Demande getted');
-            sql.close();
+            //sql.close();
             return {
                  result : 'DG' , //Demand inserted
                  demande : demande.recordset
             }  
         }catch(error){
             console.log('can not Get Demande');
-            sql.close();
+            //sql.close();
             return 'CNGD'; // can not get Demand
         }
     }catch(err){
@@ -71,7 +71,7 @@ async function  setDemandeFourniture(Demande , io){
             io.emit(Demande.userID , Demand )
             io.emit('NewDemandD'+Demande.structure, Demand )
             console.log('Demande Inserted');
-            sql.close();
+            //sql.close();
             return  'DI' //Demand inserted
         } if (Demande.UT == 'Directeur') {
             let objets = await new sql.Request()
@@ -115,7 +115,7 @@ async function  setDemandeFourniture(Demande , io){
             io.emit(Demande.userID , Demand )
             io.emit('NewDemandRD', Demand )
             console.log('Demande Inserted');
-            sql.close();
+            //sql.close();
             return  'DI' //Demand inserted
         } else {
             
@@ -160,14 +160,14 @@ async function  setDemandeFourniture(Demande , io){
             io.emit(Demande.userID , Demand )
             io.emit('NewDemandCD'+Demande.structure+Demande.departement, Demand )
             console.log('Demande Inserted');
-            sql.close();
+            //sql.close();
             return  'DI' //Demand inserted
         }
 
         } catch (error) {
             console.log(error);
             console.log('can not instert Demande');
-            sql.close();
+            //sql.close();
             return 'CNID'; // can not insert Demand
         }
     } catch (error) {
@@ -204,12 +204,12 @@ async function  editDemandeFourniture(Demande ,io){
                 .execute('InserObjetOftDemandeFourniture')
             }
             console.log('Demande updated');
-            sql.close();
+            //sql.close();
             return  'DU' //Demand updated
         } catch (error) {
             console.log(error)
             console.log('can not update Demande');
-            sql.close();
+            //sql.close();
             return 'CNUD'; // can not update Demand
         }
     } catch (error) {
@@ -227,7 +227,7 @@ async function  deleteDemandeFourniture(id){
             .output('typedelete',sql.Bit)
             .output('recevoir_ID',sql.VarChar)//for notif
             .execute('deleteDemandeFourniture');
-            sql.close();
+            //sql.close();
             console.log("demande deleted")
             return ({
                 result :"DD" ,
@@ -237,7 +237,7 @@ async function  deleteDemandeFourniture(id){
 
         }catch(error){
             console.log('can not delete Demande');
-            sql.close();
+            //sql.close();
             return 'CNDD'; // can not delete Demand
         }
     }catch (error) {

@@ -14,7 +14,7 @@
                 <v-card-text>
                     <v-form v-model="valid" ref="form">
 
-                        <v-row justify="center" v-if="type == 'Traiter'"> 
+                        <v-row justify="center" v-if="type === 'Traiter'"> 
                                 <v-col cols="12" sm="5"> 
                                     <v-text-field 
                                     :value="DPEC.nomUtilisateur+' '+DPEC.prenomUtilisateur"

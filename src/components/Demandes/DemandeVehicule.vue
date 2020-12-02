@@ -418,7 +418,7 @@ export default {
         this.collegues = this.$store.state.users
     },
     beforeUpdate(){
-
+        if(this.$store.state.typeUtilisateur==='Chef de parc'){
             if (this.DV.matricule != '' ) {
                 let index = this.vehicules.findIndex(x => x.matricule == this.DV.matricule)
                 this.Vehicule = this.vehicules[index].matricule+' '+this.vehicules[index].nom;
@@ -427,7 +427,7 @@ export default {
                 let index = this.chauffeurs.findIndex(x => x.chauffeur_id == this.DV.chauffeur_ID)
                 this.Chaffeur = this.chauffeurs[index].chauffeur_id+' '+this.chauffeurs[index].nom+' '+this.chauffeurs[index].prenom;
             } 
-         
+        }
     },
     data(){
         return{

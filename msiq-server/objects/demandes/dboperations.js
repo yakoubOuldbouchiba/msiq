@@ -8,7 +8,7 @@ async function  getDemandes(email){
             let demandes = await new sql.Request()
             .input('email',sql.VarChar , email)
             .execute('getDemandes')
-            console.log(demandes.recordset);
+            ////sql.close();
             return  {
                 result : 'DG',
                 demandes : demandes.recordset
@@ -16,7 +16,6 @@ async function  getDemandes(email){
         }catch(err){
             console.log('can not get Demandes dashboard');
             console.log(err);
-            sql.close();
             return 'CNGD'; // can not get Demand
         }
     }catch(error){
@@ -41,7 +40,7 @@ async function  getDemande(id){
             let res = await new sql.Request()
             .input('id',sql.Int,id)
             .execute('GetDemande');
-            sql.close();
+            //sql.close();
             console.log("demand get it")
             return(
                 {
@@ -53,7 +52,7 @@ async function  getDemande(id){
 
         }catch(error){
             console.log('can not get Demande');
-            sql.close();
+            //sql.close();
             return 'CNGD'; // can not delete Demand
         }
     }catch (error) {
@@ -69,13 +68,13 @@ async function  deleteDemande(id){
             await new sql.Request()
             .input('id',sql.Int,id)
             .execute('DeleteDemande');
-            sql.close();
+            //sql.close();
             console.log("demande deleted")
             return "DD"
 
         }catch(error){
             console.log('can not delete Demande');
-            sql.close();
+            //sql.close();
             return 'CNDD'; // can not delete Demand
         }
     }catch (error) {
@@ -98,7 +97,7 @@ async function  getDemandesATraiter(Params){
         }catch(err){
             console.log(err);
             console.log('can not get the demandes');
-            sql.close();
+            //sql.close();
             return null; // can not get Demand
         }
     }catch(error){
@@ -177,7 +176,7 @@ async function  UpdateDemandState(DemandeID, state, motif , valider , typeD , UT
         }catch(err){
             console.log(err);
             console.log('can not Edit demande');
-            sql.close();
+            //sql.close();
             return 'CNED'; // can not Edit Demand
         }
     }catch(error){
