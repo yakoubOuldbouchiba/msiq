@@ -164,7 +164,7 @@
                             <v-icon left>send</v-icon>
                             <span  >Envoyer la demande</span> 
                         </v-btn>
-                    </v-row>> 
+                    </v-row>
                 </v-form>
             </v-card-text>
         </v-card>  
@@ -267,7 +267,7 @@ export default {
         },
         async updateDV(){
               this.type_demande = "update";
-              await axios.get('http://localhost:3030/DemandeVehicule/'+this.DR.demande_V_ID)
+              await axios.get('/api/DemandeVehicule/'+this.DR.demande_V_ID)
                 .then(
                         res =>{
                             let demande = res.data.demande; 
@@ -288,7 +288,7 @@ export default {
             
         },
         async deleteDV(){
-            await axios.delete('http://localhost:3030/DemandeVehicule/'+this.DR.demande_V_ID+'/'+this.$store.state.user.structure)
+            await axios.delete('/api/DemandeVehicule/'+this.DR.demande_V_ID+'/'+this.$store.state.user.structure)
             .then(
                     res =>{
                         this.msg = res.data.title,
@@ -311,7 +311,7 @@ export default {
     },
     update(){
         this.$refs.form.validate();
-        axios.post('http://localhost:3030/UpdateDemandeRelex', this.DR)
+        axios.post('/api/UpdateDemandeRelex', this.DR)
         .then(
         res =>{
             this.msg = res.data.title,
@@ -327,7 +327,7 @@ export default {
         })
     },
     async submit(){
-        await axios.post('http://localhost:3030/DemandeRelex', {D: this.DR ,UT :this.$store.state.user.typeUtilisateur} )
+        await axios.post('/api/DemandeRelex', {D: this.DR ,UT :this.$store.state.user.typeUtilisateur} )
         .then(
                 res =>{
                     this.msg = res.data.title,
@@ -365,7 +365,7 @@ export default {
         this.DR.heure_depart=value
     },Reject(){
       this.$refs.form.validate();
-      axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
+      axios.put('/api/UpdateDemandState/'+this.DR.demande_R_ID, 
         {State :'Rejetee',
             Demande: this.DR, typeD: 'Demande activité relex', 
             UT: this.$store.state.user.typeUtilisateur,
@@ -374,13 +374,13 @@ export default {
     },
     Accept(){
       if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
-        axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
+        axios.put('/api/UpdateDemandState/'+this.DR.demande_R_ID, 
             {State :'Directeur',
                 Demande: this.DR, 
                 typeD: 'Demande activité relex', 
                 UT: this.$store.state.user.typeUtilisateur})
       else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
-        axios.put('http://localhost:3030/UpdateDemandState/'+this.DR.demande_R_ID, 
+        axios.put('/api/UpdateDemandState/'+this.DR.demande_R_ID, 
             {State :'Acceptee',
             Demande: this.DR, 
             typeD: 'Demande activité relex',

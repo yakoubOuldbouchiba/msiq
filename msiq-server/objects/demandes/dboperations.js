@@ -8,7 +8,6 @@ async function  getDemandes(email){
             let demandes = await new sql.Request()
             .input('email',sql.VarChar , email)
             .execute('getDemandes')
-            console.log(demandes.recordset);
             return  {
                 result : 'DG',
                 demandes : demandes.recordset
