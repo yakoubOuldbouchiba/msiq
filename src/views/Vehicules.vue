@@ -1,4 +1,5 @@
 <template>
+<div>
     <div class="Vehicules">
         <v-container>
              <v-data-table 
@@ -46,6 +47,45 @@
             </v-data-table>
         </v-container>
     </div>
+    <v-snackbar
+      v-model="Done"
+      :timeout="5000"
+      color="green"
+      outlined
+      class="mb-5"
+    >
+      {{ msg}}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="green"
+          text
+          v-bind="attrs"
+          @click="Done = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+    <v-dialog v-model="Errr" max-width="290">
+      <v-card>
+          <v-card-title class="headline red lighten-2">
+          Error
+        </v-card-title>
+        <v-card-text  class="mt-10 title">{{msg}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="red darken-1"
+            text
+            @click="Errr = false"
+          >
+            OK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+</div>
 </template>
 
 <script>
@@ -54,15 +94,6 @@ import Edit from '../components/Edit'
 export default {
     name : "Vehicules",
     components :{Edit},
-    computed : {
-        newHeaders : function(){ 
-            var newHeaders = []
-            for(let i=0 ; i < this.headers.length - 1;i++){
-                newHeaders.push(this.headers[i])
-            }
-            return newHeaders;
-        }
-    },
     async created(){
         this.Vehicules =(await axios.get("/api/vehicules/")).data
     },
@@ -82,33 +113,54 @@ export default {
             confirm('vous êtes sur que vous voulez supprimer cette véhicule ?') && this.Vehicules.splice(index, 1)
         },
         async ajouterVehicule  (value){
-            (await axios.post("/api/vehicule",value));
-            this.Vehicules.push(value);
-             this.item = {
-                matricule : 'xxxxx-xxx-xx',
-                nom :'xxxx',
-                annee: 'xxxx',
-                type_vehicule : 'xxxx'
-            };
-            this.dialog=false;
+            await axios.post("/api/vehicule",value).then(
+                (res)=>{
+                    if(res.data==false){
+                        this.Errr = true,
+                        this.msg = 'il y a une erreur'
+                    }else{
+                        this.Done = true,
+                        this.msg = 'une nouvelle véhicule est ajoutée'
+                        this.Vehicules.push(value);
+                        this.item = {
+                            matricule : 'xxxxx-xxx-xx',
+                            nom :'xxxx',
+                            annee: 'xxxx',
+                            type_vehicule : 'xxxx'
+                        };
+                        this.dialog=false;
+                    }
+                }
+            )
         },
         async editerVehicule (item){
-            await axios.put("/api/vehicule/"+item.item.matricule, item.item);
-             this.item = {
-                name :'xxxx',
-                matricule : 'xxxxx-xxx-xx',
-                annee: 'xxxx',
-                type : 'xxxx'
-            };
-            this.dialog=false;
+            await axios.put("/api/vehicule/"+item.item.matricule, item.item)
+            .then((res)=>{
+                if(res.data==false){
+                   this.Errr = true,
+                   this.msg = 'il y a un probleme'
+                }else{
+                   this.Done = true,
+                   this.msg = 'mise à jour est fait'
+                    this.item = {
+                        nom :'xxxx',
+                        matricule : 'xxxxx-xxx-xx',
+                        annee: 'xxxx',
+                        type_vehicule : 'xxxx'
+                    };
+                    this.editedIndex='-1'
+                    this.dialog=false;
+                }
+            })
         },
         close :function(){
             this.item = {
-                name :'xxxx',
+                nom :'xxxx',
                 matricule : 'xxxxx-xxx-xx',
                 annee: 'xxxx',
-                type : 'xxxx'
+                type_vehicule : 'xxxx'
             };
+            this.editedIndex='-1'
             this.dialog=false;
         }
     },
@@ -116,6 +168,9 @@ export default {
         return{
         search:'',
         editedIndex:'-1',
+        msg: '',
+        Done: false,
+        Errr: false,
         item : {
             matricule : 'xxxxx-xxx-xx',
             nom :'xxxx',

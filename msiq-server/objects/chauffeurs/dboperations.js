@@ -15,11 +15,11 @@ async function  getChauffeurs(){
 async function  getDispoChauffeurs(date){
     try{
         let pool = await (sql.connect(config));
-        let users = await (pool.request()
+        let chaufrs = await (pool.request()
         .input('date_depart',sql.DateTime,date)
         .execute("GETDISPOCHAUFFEURS"));
         //sql.close();
-        return users.recordsets;
+        return chaufrs.recordsets;
     }catch(error){
         console.log(error);
     }

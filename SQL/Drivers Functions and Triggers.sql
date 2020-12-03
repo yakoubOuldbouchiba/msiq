@@ -5,7 +5,7 @@ BEGIN
 	where shown = 1
 END
 
-CREATE PROCEDURE GETDISPOCHAUFFEURS
+ALTER PROCEDURE GETDISPOCHAUFFEURS
 	@date_depart as datetime
 AS
 BEGIN
@@ -14,10 +14,10 @@ BEGIN
 	AND chauffeur_id not in (
 		select chauffeur_id 
 		from demande_vehicule
-		where @date_depart between date_depart and date_retour
+		where @date_depart between date_retour and date_depart
+		AND chauffeur_ID!=null
 	)
 END
-
 ALTER PROCEDURE SETCHAUFFEUR
 
 @nom AS varchar(50),

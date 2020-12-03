@@ -17,7 +17,7 @@
                     </v-toolbar>
                     <v-card-text>
                         <v-form v-model="valid" ref="form" >
-                            <v-row justify="center" v-if="type == 'Traiter'"> 
+                    <v-row justify="center" v-if="type == 'Traiter'"> 
                       <v-col cols="12" sm="5"> 
                         <v-text-field 
                           :value="objetsDF[0].nomUtilisateur+' '+objetsDF[0].prenomUtilisateur"
@@ -211,7 +211,7 @@ export default {
             }
         },
         objetsDF : function() {
-             if(this.type=="update" || this.type== "Traiter" && this.dialog==true){
+            if((this.type=="update" || this.type=="Traiter") && this.dialog==true){
                 return this.demande
             }else{
                 return this.DemandeFourniture.objetsDemande

@@ -1,4 +1,5 @@
 <template>
+<div>
     <div class="Chauffeurs">
         <v-container>
              <v-data-table 
@@ -45,6 +46,45 @@
             </v-data-table>
         </v-container>
     </div>
+    <v-snackbar
+      v-model="Done"
+      :timeout="5000"
+      color="green"
+      outlined
+      class="mb-5"
+    >
+      {{ msg}}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="green"
+          text
+          v-bind="attrs"
+          @click="Done = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+    <v-dialog v-model="Errr" max-width="290">
+      <v-card>
+          <v-card-title class="headline red lighten-2">
+          Error
+        </v-card-title>
+        <v-card-text  class="mt-10 title">{{msg}}</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="red darken-1"
+            text
+            @click="Errr = false"
+          >
+            OK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+</div>
 </template>
 
 <script>
@@ -64,6 +104,14 @@ export default {
             this.dialog=true;
         },
         close : function(){
+              this.item={
+                nom : "xxxxxx",
+                prenom : "xxxxx",
+                type_permis : "xxxx x",
+                telephone : "x xxx xx xx xx",
+                email : "xxxxxxxxxxxxxxxxx"
+           }
+            this.editedIndex='-1'
             this.dialog=false;
         },
         async deleteItem (item){
@@ -74,29 +122,46 @@ export default {
             this.Chauffeurs.splice(index ,1)
         },
         async ajouterChauffeur(value){
-            console.log(value);
-            (await Axios.post("/api/chauffeur",value));
+            await Axios.post("/api/chauffeur",value)
+            .then(res=>{
+                if(res.data==false){
+                    this.Errr = true,
+                    this.msg = 'il y a un probleme'
+                }else{
+                    this.Done = true,
+                    this.msg = 'une nouveau chauffeur est ajouté'
+                    this.item={
+                        nom : "xxxxxx",
+                        prenom : "xxxxx",
+                        type_permis : "xxxx x",
+                        telephone : "x xxx xx xx xx",
+                        email : "xxxxxxxxxxxxxxxxx"
+                    }
+                    this.dialog=false;
+                }
+            })
             this.Chauffeurs=(await Axios.get("/api/chauffeurs")).data
-            this.item={
-                nom : "xxxxxx",
-                prenom : "xxxxx",
-                type_permis : "xxxx x",
-                telephone : "x xxx xx xx xx",
-                email : "xxxxxxxxxxxxxxxxx"
-           }
-           this.dialog=false;
         },
         editerChauffeur : function(item){
-            console.log(item)
-            Axios.put("/api/chauffeur/"+item.item.chauffeur_id , item.item);
-            this.item={
-                nom : "xxxxxx",
-                prenom : "xxxxx",
-                type_permis : "xxxx x",
-                telephone : "x xxx xx xx xx",
-                email : "xxxxxxxxxxxxxxxxx"
-           }
-           this.dialog=false;  
+            Axios.put("/api/chauffeur/"+item.item.chauffeur_id , item.item)
+            .then(res=>{
+                if(res.data==false){
+                    this.Errr = true,
+                    this.msg = 'il y a un probleme'
+                }else{
+                    this.Done = true,
+                    this.msg = 'mise à jour est fait'
+                    this.item={
+                        nom : "xxxxxx",
+                        prenom : "xxxxx",
+                        type_permis : "xxxx x",
+                        telephone : "x xxx xx xx xx",
+                        email : "xxxxxxxxxxxxxxxxx"
+                    }
+                    this.editedIndex='-1'
+                    this.dialog=false;  
+                }
+            })
         }
     },
     async created(){
@@ -106,6 +171,9 @@ export default {
     data(){
         return{
         search:'',
+        msg: '',
+        Done: false,
+        Errr: false,
         dialog : false,
         editedIndex : '-1',
         item :{

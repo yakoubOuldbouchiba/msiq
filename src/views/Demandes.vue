@@ -193,7 +193,6 @@ mounted(){
       this.AccDemandes.unshift(newDemand)
     })
     this.$store.state.sokect.on('RemoveDemandeAcc'+this.$store.state.user.structure , (Demand)=> {
-      console.log('HERE');
       let index = this.AccDemandes.findIndex(x =>  x.email === Demand.email)
       this.AccDemandes.splice(index , 1)
     })
