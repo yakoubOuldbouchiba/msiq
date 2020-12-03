@@ -81,8 +81,7 @@ export default {
     },
     async created(){
         this.Notifications =(await Axios.get('/api/Notification/'+this.$store.state.user.email)).data.notifications;
-        this.UnSeen =(await Axios.get('/api/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif;
-      
+        this.UnSeen =(await Axios.get('/api/UnSeenNotification/'+this.$store.state.user.email)).data.UnSeenNotif; 
    },
     async mounted(){
      

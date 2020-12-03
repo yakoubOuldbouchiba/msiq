@@ -5,7 +5,7 @@ BEGIN
 	where shown = 1
 END
 
-CREATE PROCEDURE GETDISPOVEHICULE
+ALTER PROCEDURE GETDISPOVEHICULE
 	@date_depart as datetime
 AS
 BEGIN
@@ -14,7 +14,8 @@ BEGIN
 	AND matricule not in (
 		select matricule
 		from demande_vehicule
-		where @date_depart between date_depart and date_retour
+		where @date_depart between date_retour and date_depart
+		AND matricule!=null
 	)
 END
 ------------------------------------------------------------------------
