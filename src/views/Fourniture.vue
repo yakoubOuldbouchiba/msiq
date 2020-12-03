@@ -83,7 +83,8 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    </div>
+    
+</div>
     
 </template>
 
@@ -128,20 +129,39 @@ export default {
            }
         },
         async ajouterFourniture  (value){
-            console.log(value)
-            await axios.post("/api/fourniture",value);
-            this.Fournitures.push(value);
-             this.item = {
-                code_object : 'xxxxx',
-                designation :'xxxx',
-                quantite :'0'
-            };
-            this.dialog=false;
+            await axios.post("/api/fourniture",value)
+            .then(res=>{
+                 if(res.data==false){
+                    this.Errr = true,
+                    this.msg = 'il y a un probleme'
+                }else{
+                    this.Done = true,
+                    this.msg = 'un nouveau fourniture est ajouté'
+                    this.Fournitures.push(value);
+                    this.item = {
+                        code_object : 'xxxxx',
+                        designation :'xxxx',
+                        quantite :'0'
+                    };
+                    this.editedIndex='-1'
+                    this.dialog=false;
+                }
+            })
         },
         async editerFourniture (value){
             // modifier au niveau de data base
-            (await axios.put("/api/fourniture/"+value.Founiture.code_object,value.Founiture));
-             this.dialog=false;
+            await axios.put("/api/fourniture/"+value.Founiture.code_object,value.Founiture)
+            .then(res=>{
+                 if(res.data==false){
+                    this.Errr = true,
+                    this.msg = 'il y a un probleme'
+                }else{
+                    this.Done = true,
+                    this.msg = 'mise à jour est fait'
+                    this.editedIndex='-1'
+                    this.dialog=false;
+                }
+            })
         },
         close :function(){
             this.item = {
@@ -149,6 +169,7 @@ export default {
                 designation :'xxxx',
                 quantite :'0'
             };
+            this.editedIndex='-1'
             this.dialog=false;
         }
     },

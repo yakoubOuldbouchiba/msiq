@@ -129,7 +129,7 @@ export default {
                     this.msg = 'il y a un probleme'
                 }else{
                     this.Done = true,
-                    this.msg = 'une nouveau chauffeur est ajouté'
+                    this.msg = 'un nouveau chauffeur est ajouté'
                     this.item={
                         nom : "xxxxxx",
                         prenom : "xxxxx",
