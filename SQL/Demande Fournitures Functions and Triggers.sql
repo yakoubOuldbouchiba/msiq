@@ -1,23 +1,52 @@
-CREATE PROCEDURE GETOBJETS
+ALTER PROCEDURE [dbo].[GETOBJETS]
 AS
 BEGIN 
 	SELECT * FROM objet
+	WHERE shown = 1
 END
 
-CREATE PROCEDURE SEOJETS
-@co as varchar(50),
+ALTER PROCEDURE [dbo].[SETOBJET]
+@co as varchar(6),
 @desig as varchar(50),
 @qty as int 
 AS
 BEGIN
- INSERT INTO objet VALUES(@co,@desig,@qty)
+	 DECLARE @exist as bit
+	 DECLARE @shown as bit
+	 select @exist = 1 , @shown=shown
+	 FROM objet
+	 WHERE code_object = @co
+	 IF (@exist = 1 and @shown=0)
+	 BEGIN
+		UPDATE objet
+		 set
+		 code_object = @co,
+		 designation = @desig,
+		 quantite = @qty,
+		 shown=1
+		 Where code_object = @co
+	 END
+	 ELSE
+	 BEGIN
+		INSERT INTO objet VALUES(@co,@desig,@qty,1)
+	 END
 END
 
-CREATE PROCEDURE DELETEOBJET
-@code_objet as varchar(50)
+ALTER PROCEDURE [dbo].[DELETEOBJET]
+@code_objet as varchar(50),
+@deleted as bit output
 AS
 BEGIN
-	DELETE FROM objet where code_objet = @code_objet
+	update objet set shown=0
+	where code_object=@code_objet
+	AND quantite<=0;
+	
+	set @deleted = 1;
+	
+	select @deleted = 0
+	FROM objet
+	WHERE @code_objet = code_object
+	AND quantite>0;
 END
  
 /*Create type objet*/
