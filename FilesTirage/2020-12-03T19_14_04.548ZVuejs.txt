@@ -1,0 +1,11 @@
+/*
+	Condition :
+	v-if="item.price<=Number(maximum)"
+	<!--Number() is a javascrpit function to convert string to number-->
+	
+*/
+/*
+	:value="maximum" is use to show the value of maximun not change it
+	v:bind="maximum" is setting the value of input field into maximum
+
+*/

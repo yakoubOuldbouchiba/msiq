@@ -57,7 +57,7 @@ sent
               </v-flex>
               <br/>
               <v-flex>
-                <a class="float-left"  >Mot de passe oublié ?</a>
+                <v-btn text color="blue" class="float-left" route :to="'/ForgetPw'"  >Mot de passe oublié ?</v-btn>
                  <v-spacer></v-spacer>
                 <Register/>
                 <br/>

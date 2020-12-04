@@ -1,5 +1,7 @@
 const express = require("express");
+var nodemailer = require('nodemailer');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
 const dbOperationsClient = require('../../objects/users/dboperations.js');
 import * as auth from '../../services/auth-service.js'
 
@@ -45,6 +47,82 @@ module.exports=(io)=>{
         let user  = (req.body);
         dbOperationsClient.Login(user).then(result=>{
             res.json(result);
+        })
+    })
+    //forget password
+    router.post('/forget' , (req , res)=>{
+       dbOperationsClient.getUser(req.body.email).then(
+            (result , err) =>{
+                if(result===undefined || err){
+                    res.json({
+                        ok : false,
+                        title : 'utiliseur n\'est pas'
+                    });
+                }else{
+                    res.status(200).json({
+                        ok : true,
+                        title : 'vérifiez votre email'
+                    });
+                    const token = jwt.sign(result , 'KEY/**/Secret' , {expiresIn : '5m'});
+                    const ClientURL = 'http://192.168.43.39:8080'
+                    var transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: {
+                          user: 'yakoubouldbouchiba@gmail.com',
+                          pass: 'MEFTAHPASSEYAKOUB'
+                        }
+                      });
+                    const data = {
+                        from : 'yakoubouldbouchiba@gmail.com',
+                        to :req.body.email,
+                        subject : 'Lien de réinitialiser mot de pass',
+                        html :
+                        `
+                        <p>
+                            <span>veuillez cliquer sur le lien donné pour réinitialiser votre mot de passe</span>
+                            <a href="${ClientURL}/ResetPassword/${token}">${ClientURL}/ResetPassword/${token}</a>
+                        </p>
+                        `
+                    }
+                    transporter.sendMail(data , function(error, info){
+                        if (error) {
+                          console.log(error);
+                        } else {
+                          console.log('Email sent: ' + info.response);
+                        }
+                    });
+                }
+            }
+        );
+        
+    })
+    //reset de mot de pass
+   router.post('/Reset', (req,res) => {
+        jwt.verify(req.body.token,'KEY/**/Secret',  function(err){
+            if(err) {
+                res.status(401).json({
+                    title: 'Le lien est mort',
+                    error: 'CNCTDB'
+                })
+            }else{
+                let data={
+                    UserName:(jwt.decode(req.body.token,'KEY/**/Secret')).email,
+                    pw : req.body.pw
+                }
+                dbOperationsClient.changePW(data)
+                .then( 
+                    resu => {
+                    if (resu === 'G') 
+                        res.status(200).json({
+                            title: 'Votre mot de passe ont été changé'
+                        })
+                    else 
+                        res.status(401).json({
+                        title: 'Quel que chose est mal passée coté serveur',
+                        error: 'CNCTDB'
+                        })
+                    })
+            }
         })
     })
     //update a user
