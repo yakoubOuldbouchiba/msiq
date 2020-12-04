@@ -207,7 +207,6 @@ async function  GetDemandeTirage(id){
 // Edit a demand
 async function  upDemandeTirage(Data , io){
     try {
-        console.log(Data);
         await sql.connect(config)
         try {
              await new sql.Request()
@@ -236,7 +235,6 @@ async function  upDemandeTirage(Data , io){
                     icon:'print',
                     date_notification :res.output.DDATE
                 }
-                console.log(res)
                 io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
             })
             console.log('Demande Inserted');

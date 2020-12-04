@@ -14,6 +14,8 @@ import Produit from '../views/Produit.vue'
 import Demandes from '../views/Demandes'
 import User from '../views/User.vue'
 import Test from '../views/Test.vue'
+import ForgetPw from '../views/ForgetPw.vue'
+import ResetPw from '../views/ResetPw.vue'
 import store from '../store/store'
 import InvalideSessions from '../views/InvalideSessions'
 import jwt from 'jsonwebtoken'
@@ -33,10 +35,20 @@ Vue.use(VueRouter)
       component: Login
     }  
     ,{
-    path: '/register',
-    name: 'Register',
-    component: Register
-  },
+      path: '/register',
+      name: 'Register',
+      component: Register
+    }
+    ,{
+      path: '/ForgetPW',
+      name: 'ForgetPW',
+      component: ForgetPw
+    },
+    {
+      path: '/ResetPassword/:token',
+      name: 'ResetPw',
+      component: ResetPw
+    },
   {
     path: '/dashboard',
     name: 'Dashboard',
