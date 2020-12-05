@@ -164,7 +164,7 @@
                             <v-icon left>send</v-icon>
                             <span  >Envoyer la demande</span> 
                         </v-btn>
-                    </v-row>> 
+                    </v-row>
                 </v-form>
             </v-card-text>
         </v-card>  

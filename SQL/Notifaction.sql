@@ -78,7 +78,7 @@ END
 
 SELECT dbo.GetNotifID(227);
 
-CREATE FUNCTION GetChefDepartement (@userID	as varchar(Max))
+ALTER FUNCTION GetChefDepartement (@userID	as varchar(Max))
 RETURNS varchar(Max)
 AS
 BEGIN
@@ -92,10 +92,11 @@ BEGIN
 	WHERE I.structure = U.structure
 	AND I.departement = U.departement
 	AND U.typeUtilisateur = 'Chef departement'
+	AND U.shown = 1
 	return @email
 END
 
-CREATE FUNCTION GetUserByDI (@id	as int)
+ALTER FUNCTION GetUserByDI (@id	as int)
 RETURNS varchar(Max)
 AS
 BEGIN
@@ -104,6 +105,7 @@ BEGIN
 	FROM utilisateurs U ,demande D
 	WHERE U.email = D.utilisateurs_ID
 	AND D.demande_ID = @id
+	AND U.shown=1
 	return @email
 END
 
@@ -120,7 +122,7 @@ END
 Select dbo.GetRecevoirByDI(358)
 
 SELECT dbo.GetUserByDI(2)
-CREATE FUNCTION GetChefDepartementByDI (@demande_ID	as int)
+ALTER FUNCTION GetChefDepartementByDI (@demande_ID	as int)
 RETURNS varchar(Max)
 AS
 BEGIN
@@ -135,9 +137,10 @@ BEGIN
 	WHERE I.structure = U.structure
 	AND I.departement = U.departement
 	AND U.typeUtilisateur = 'Chef departement'
+	AND U.shown = 1
 	return @email
 END
-CREATE FUNCTION GetDirecteurByDI (@demande_ID	as int)
+ALTER FUNCTION GetDirecteurByDI (@demande_ID	as int)
 RETURNS varchar(Max)
 AS
 BEGIN
@@ -152,6 +155,7 @@ BEGIN
 	WHERE I.structure = U.structure
 	AND I.departement = U.departement
 	AND U.typeUtilisateur = 'Directeur'
+	AND U.shown = 1
 	return @email
 END
 CREATE FUNCTION GetUserByType(@type	as varchar(max))

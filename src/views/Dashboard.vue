@@ -234,7 +234,6 @@ data(){
      }else if(demande.type_demande== 'Demande de tirage'){
           type='/DemandeTirage/' 
      }else if(demande.type_demande== 'Demande activité relex'){
-          console.log("here")
           type='/DemandeRelex/' 
      }else{
        type='/demande/'

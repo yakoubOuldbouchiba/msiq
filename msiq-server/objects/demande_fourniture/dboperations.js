@@ -38,7 +38,6 @@ async function  setDemandeFourniture(Demande , io){
             .output('DDATE',sql.DateTime)
             .input('etat', sql.VarChar,'Directeur')
             .execute('InsertDemandeFourniture');
-            let notification_ID = objets.output.FID;
             let demande_id=objets.output.demande_id;//id of demande insert it 
             for(let i = 0 ; i <Demande.objetsDemande.length ; i++){
                 let objet = Demande.objetsDemande[i]
@@ -58,16 +57,8 @@ async function  setDemandeFourniture(Demande , io){
                 seen: 0
 
             }
-            let Notif = {// notification Info 
-                userID : Demande.userID,
-                notification_ID : notification_ID,
-                demande_ID: demande_id,
-                seen : 0,
-                description_notif : 'est effecuté(e) une nouvelle demande fourniture',
-                icon:'edit'
-            }
-            //io.emit(Demande.struct+"FD" , Demand )//for repporting 
-            io.emit("NewNotif"+objets.output.recevoir_ID , Notif)//notifier le CD.
+            io.emit(Demande.struct+"FD" , Demand )//for repporting 
+            io.emit("NewNotif"+objets.output.recevoir_ID )//notifier le CD.
             io.emit(Demande.userID , Demand )
             io.emit('NewDemandD'+Demande.structure, Demand )
             console.log('Demande Inserted');
@@ -82,7 +73,6 @@ async function  setDemandeFourniture(Demande , io){
             .output('DDATE',sql.DateTime)
             .input('etat', sql.VarChar,'DAM')
             .execute('InsertDemandeFourniture');
-            let notification_ID = objets.output.FID;
             let demande_id=objets.output.demande_id;//id of demande insert it 
             for(let i = 0 ; i <Demande.objetsDemande.length ; i++){
                 let objet = Demande.objetsDemande[i]
@@ -102,16 +92,8 @@ async function  setDemandeFourniture(Demande , io){
                 seen: 0
 
             }
-            let Notif = {// notification Info 
-                userID : Demande.userID,
-                notification_ID : notification_ID,
-                demande_ID: demande_id,
-                seen : 0,
-                description_notif : 'est effecuté(e) une nouvelle demande fourniture',
-                icon:'edit'
-            }
-            //io.emit(Demande.struct+"FD" , Demand )//for repporting 
-            io.emit("NewNotif"+objets.output.recevoir_ID , Notif)//notifier le CD.
+            io.emit(Demande.struct+"FD" , Demand )//for repporting 
+            io.emit("NewNotif"+objets.output.recevoir_ID )//notifier le CD.
             io.emit(Demande.userID , Demand )
             io.emit('NewDemandRD', Demand )
             console.log('Demande Inserted');
@@ -127,7 +109,6 @@ async function  setDemandeFourniture(Demande , io){
             .output('DDATE',sql.DateTime)
             .input('etat', sql.VarChar,'Chef Departement')
             .execute('InsertDemandeFourniture');
-            let notification_ID = objets.output.FID;
             let demande_id=objets.output.demande_id;//id of demande insert it 
             for(let i = 0 ; i <Demande.objetsDemande.length ; i++){
                 let objet = Demande.objetsDemande[i]
@@ -147,16 +128,9 @@ async function  setDemandeFourniture(Demande , io){
                 seen: 0
 
             }
-            let Notif = {// notification Info 
-                userID : Demande.userID,
-                notification_ID : notification_ID,
-                demande_ID: demande_id,
-                seen : 0,
-                description_notif : 'est effecuté(e) une nouvelle demande fourniture',
-                icon:'edit'
-            }
-            //io.emit(Demande.struct+"FD" , Demand )//for repporting 
-            io.emit("NewNotif"+objets.output.recevoir_ID , Notif)//notifier le CD.
+            
+            io.emit(Demande.struct+"FD" , Demand )//for repporting 
+            io.emit("NewNotif"+objets.output.recevoir_ID )//notifier le CD.
             io.emit(Demande.userID , Demand )
             io.emit('NewDemandCD'+Demande.structure+Demande.departement, Demand )
             console.log('Demande Inserted');
@@ -186,15 +160,7 @@ async function  editDemandeFourniture(Demande ,io){
             .output('recevoir_ID',sql.VarChar)// for notif
             .input('etat' ,sql.VarChar ,Demande.objetsDemande[0].etat)
             .execute('deleteObjetOftDemandeFourniture'); //id of demande insert it 
-            let Notif = {// notification Info 
-                userID : Demande.uID,
-                notification_ID : res.output.NID,
-                demande_ID: Demande.demande_id,
-                seen : 0,
-                description_notif : 'est modifé(e) la demande fourniture numéro '+Demande.demande_id,
-                icon:'edit'
-            }
-            io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+            io.emit("UpdateNotif"+res.output.recevoir_ID)//notifier le CD.
             for(let i = 0 ; i <Demande.objetsDemande.length ; i++){
                 let objet = Demande.objetsDemande[i]
                 await new sql.Request()

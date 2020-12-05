@@ -36,18 +36,9 @@ async function  setDemandePriseEnCharge(Data,io){
                          etat: 'Directeur',
                          motif: '',
                          seen: 0,
-                     }// i have to check from to
-                     let Notif = {// notification Info 
-                        userID : Data.D.UserID,
-                        notification_ID : res.output.FID,
-                        demande_ID: res.output.DID,
-                        seen : 0,
-                        description_notif : 'est effecuté(e) une nouvelle demande de prise en charge',
-                        icon:'flight',
-                        date_notification : res.output.DDATE
-                   }
+                     }
                    io.emit(Data.D.structure+"PD" , Demand )//for reporting 
-                   io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                   io.emit("NewNotif"+res.output.recevoir_ID)//notifier le CD.
                      io.emit('NewDemandD'+Data.D.structure, Demand )
                      io.emit(Data.D.UserID , Demand )
                      
@@ -86,18 +77,8 @@ async function  setDemandePriseEnCharge(Data,io){
                          motif: '',
                          seen: 0,
                      }
-                     // i have to check from to
-                     let Notif = {// notification Info 
-                        userID : Data.D.UserID,
-                        notification_ID : res.output.FID,
-                        demande_ID: res.output.DID,
-                        seen : 0,
-                        description_notif : 'est effecuté(e) une nouvelle demande de prise en charge',
-                        icon:'flight',
-                        date_notification : res.output.DDATE
-                   }
                    io.emit(Data.structure+"PD" , Demand )//for reporting 
-                   io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                   io.emit("NewNotif"+res.output.recevoir_ID)//notifier le CD.
                      io.emit('NewDemandRPEC', Demand )
                      io.emit(Data.D.UserID , Demand )
                  });
@@ -135,18 +116,8 @@ async function  setDemandePriseEnCharge(Data,io){
                          motif: '',
                          seen: 0,
                      }
-                     // i have to check from to
-                     let Notif = {// notification Info 
-                        userID : Data.D.UserID,
-                        notification_ID : res.output.FID,
-                        demande_ID: res.output.DID,
-                        seen : 0,
-                        description_notif : 'est effecuté(e) une nouvelle demande de prise en charge',
-                        icon:'flight',
-                        date_notification : res.output.DDATE
-                   }
                    io.emit(Data.structure+"PD" , Demand )//for reporting 
-                   io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                   io.emit("NewNotif"+res.output.recevoir_ID)//notifier le CD.
                      io.emit('NewDemandCD'+Data.D.structure+Data.D.departement, Demand )
                      io.emit(Data.D.UserID , Demand )
                  });

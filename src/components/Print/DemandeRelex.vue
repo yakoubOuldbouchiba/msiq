@@ -73,8 +73,7 @@ export default {
                         this.demande.prise_en_charge = 'Oui'
                     } else{
                         this.demande.prise_en_charge = 'Non'
-                    }
-                    console.log(this.demande)     
+                    }     
                     },
                     err => {
                         this.Errr = true,

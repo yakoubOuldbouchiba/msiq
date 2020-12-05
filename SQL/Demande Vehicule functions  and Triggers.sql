@@ -195,7 +195,7 @@ BEGIN
 END
 
 --------------------------------------------------------
-CREATE PROCEDURE UpdateDemandeVehicule
+ALTER PROCEDURE UpdateDemandeVehicule
 	@demande_v_id AS int,
 	@lieu AS varchar(100),
 	@organisme As varchar(50),
@@ -217,6 +217,11 @@ CREATE PROCEDURE UpdateDemandeVehicule
 	@DDATE AS datetime OUTPUT
 AS
 BEGIN
+	Declare @state as varchar(max);
+	select @state = etat
+	FROM demande
+	Where demande_ID=@demande_v_id
+
 	update demande_vehicule
 	set
 	lieu = @lieu,
@@ -240,7 +245,7 @@ BEGIN
 	BEGIN
 		select	@recevoir_ID = dbo.GetDirecteurByDI(@demande_v_id);
 	END
-	ELSE IF (@etat = 'Chef de parc')
+	ELSE IF (@etat = 'Chef de parc' and @state !='Acceptee')
 	BEGIN
 		select	@recevoir_ID  = dbo.GetUserByType('Chef de parc');
 	END
@@ -248,8 +253,11 @@ BEGIN
 	BEGIN
 		select	@recevoir_ID = dbo.GetChefDepartementByDI(@demande_v_id);
 	END
-	SELECT @NID = dbo.GetNotifID(@demande_v_id);-- for notif
-	SELECT @describ = 'est modifé(e) la demande véhicule numéro '+ CONVERT(Varchar(max) , @demande_v_id)    
-	Execute Update_NOTIFICATION @demande_v_id , @recevoir_ID , @describ
+	IF (@state !='Acceptee')
+	BEGIN
+		SELECT @NID = dbo.GetNotifID(@demande_v_id);-- for notif
+		SELECT @describ = 'est modifé(e) la demande véhicule numéro '+ CONVERT(Varchar(max) , @demande_v_id)    
+		Execute Update_NOTIFICATION @demande_v_id , @recevoir_ID , @describ
+	END
 	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 END
