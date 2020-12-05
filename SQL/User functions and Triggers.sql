@@ -1,9 +1,13 @@
 
-CREATE PROCEDURE GetUsers 
+ALTER PROCEDURE GetUsers 
+    @struct as Varchar(Max),
+	@user as Varchar(Max)
 AS
 BEGIN
 	SELECT email,nomUtilisateur,prenomUtilisateur,typeUtilisateur,dateNaissance,mobile,fonction,structure,posteTelephonique,departement,shown 
 	FROM utilisateurs
+	Where structure = @struct
+	AND email != @user
 END
 
 /*----------------------------------------------------------------------------------*/
@@ -134,13 +138,14 @@ LOGIN 'Yacinelalmi19@gmail.com'
 
 /*----------------------------------------------------------------------------------*/
 
-CREATE PROCEDURE GetUser
+ALTER PROCEDURE GetUser
 	@email  AS VarChar(50)
 AS
 BEGIN
-SELECT email,nomUtilisateur,prenomUtilisateur,typeUtilisateur,dateNaissance,mobile,fonction,structure,posteTelephonique,departement 
+SELECT *
 FROM utilisateurs
 WHERE email=@email
+AND shown = 1
 END
 
 /*----------------------------------------------------------------------------------*/
