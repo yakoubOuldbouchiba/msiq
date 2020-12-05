@@ -125,50 +125,9 @@ async function  UpdateDemandState(DemandeID, state, motif , valider , typeD , UT
             .output('DDATE',sql.DateTime)
             .execute('UpdateDemandState').then((res , err)=>{
                 if(err) console.log(err)
-                let Notif = {// notification Info 
-                    userID : res.output.userID,
-                    notification_ID : res.output.NID,
-                    demande_ID: DemandeID,
-                    seen : 0,
-                    description_notif : res.output.desc,
-                    date_notification : res.output.DDATE
-                
-                }
-                let Notif2 = {// notification Info 
-                    userID : res.output.userID_C,
-                    notification_ID : res.output.NID,
-                    demande_ID: DemandeID,
-                    seen : 0,
-                    description_notif : res.output.desc_C,
-                    date_notification : res.output.DDATE
-                
-                }
-                if (typeD == 'Demande client'){
-                    Notif.icon = 'devices'
-                    Notif2.icon = 'devices'
-                }              
-                else if (typeD == 'Demande véhicule'){
-                    Notif.icon = 'commute'
-                    Notif2.icon = 'commute' 
-                } 
-                else if (typeD == 'Demande fourniture'){
-                    Notif.icon = 'edit' 
-                    Notif2.icon = 'edit' 
-                }  
-                else if (typeD == 'Demande de prise en charge') {
-                    Notif.icon = 'flight'
-                    Notif2.icon = 'flight'
-                }
-                else if (typeD == 'Demande de tirage') {
-                    Notif.icon = 'print'
-                    Notif2.icon = 'print'}
-                else {
-                    Notif.icon = 'hotel'
-                    Notif2.icon = 'hotel'
-                } 
-                io.emit("addNotif"+res.output.userID_C , Notif2)//notifier le C.       
-                io.emit("addNotif"+res.output.userID , Notif)//notifier le C.
-                io.emit("DeleteNofit"+valider , DemandeID)//notifier le valideur.
+                io.emit("addNotif"+res.output.userID_C )//notifier le C.       
+                io.emit("addNotif"+res.output.userID)//notifier le C.
+                io.emit("DeleteNofit"+valider )//notifier le valideur.
             })
             return 'DU'
            

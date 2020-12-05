@@ -7,8 +7,8 @@ import * as auth from '../../services/auth-service.js'
 
 module.exports=(io)=>{
     //get a list of users
-    router.get('/team',auth.requireLogin,(req , res)=>{ 
-        dbOperationsClient.getUsers().then(result=>{
+    router.get('/team/:struct/:user',auth.requireLogin,(req , res)=>{ 
+        dbOperationsClient.getUsers(req.params.struct , req.params.user).then(result=>{
             res.send(result[0]);
         }); 
     });

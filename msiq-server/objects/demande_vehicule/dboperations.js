@@ -63,17 +63,8 @@ async function  setDemandeVehicule(Demande,io){
                         seen: 0,
                     }
                  // check from to
-                 let Notif = {// notification Info 
-                    userID : Demande.D.UserID,
-                    notification_ID : result.output.FID,
-                    demande_ID: result.output.demande_v_id,
-                    seen : 0,
-                    description_notif : 'est effecuté(e) une nouvelle demande véhicule',
-                    icon:'commute',
-                    date_notification :result.output.DDATE
-                }
                 io.emit(Demande.structure+"VD" , Demand )//notifier reporting
-                io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
+                io.emit("NewNotif"+result.output.recevoir_ID )//notifier le CD.
                 io.emit('NewDemandD'+Demande.D.structure, Demand )
                 io.emit(Demande.D.UserID , Demand )
                 console.log('Demande Inserted');
@@ -111,18 +102,8 @@ async function  setDemandeVehicule(Demande,io){
                         motif: '',
                         seen: 0,
                     }
-                // check from to
-                let Notif = {// notification Info 
-                        userID : Demande.D.UserID,
-                        notification_ID : result.output.FID,
-                        demande_ID: result.output.demande_v_id,
-                        seen : 0,
-                        description_notif : 'est effecuté(e) une nouvelle demande véhicule',
-                        icon:'commute',
-                        date_notification :result.output.DDATE
-                    }
                 io.emit(Demande.structure+"VD" , Demand )//notifier reporting
-                io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
+                io.emit("NewNotif"+result.output.recevoir_ID )//notifier le CD.
                 io.emit('NewDemandCD', Demand )
                 io.emit('NewDemandCP', Demand )
                 io.emit(Demande.D.UserID , Demand )
@@ -160,18 +141,8 @@ async function  setDemandeVehicule(Demande,io){
                         motif: '',
                         seen: 0,
                     }
-                 // check from to
-                 let Notif = {// notification Info 
-                    userID : Demande.D.UserID,
-                    notification_ID : result.output.FID,
-                    demande_ID: result.output.demande_v_id,
-                    seen : 0,
-                    description_notif : 'est effecuté(e) une nouvelle demande véhicule',
-                    icon:'commute',
-                    date_notification :result.output.DDATE
-                }
                 io.emit(Demande.structure+"VD" , Demand )//notifier reporting
-                io.emit("NewNotif"+result.output.recevoir_ID , Notif)//notifier le CD.
+                io.emit("NewNotif"+result.output.recevoir_ID )//notifier le CD.
                 io.emit('NewDemandCD'+Demande.D.structure+Demande.D.departement, Demand )
                 io.emit(Demande.D.UserID , Demand )
                 console.log('Demande Inserted');
@@ -251,16 +222,7 @@ async function  editDemandeVehicule(Demande ,io){
             .execute('UpdateDemandeVehicule')
             .then((res , err)=>{
                 if(err)return 'CNUD';
-                let Notif = {// notification Info 
-                    userID : Demande.uID,
-                    notification_ID : res.output.NID,
-                    demande_ID: Demande.demande_V_ID,
-                    seen : 0,
-                    description_notif : 'est modifé(e) la demande véhicule numéro '+Demande.demande_V_ID,
-                    icon:'commute',
-                    date_notification :res.output.DDATE
-                }
-                io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                io.emit("UpdateNotif"+res.output.recevoir_ID)//notifier le CD.
             })
             console.log('Demande Inserted');
             //sql.close();

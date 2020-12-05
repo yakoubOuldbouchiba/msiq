@@ -33,18 +33,8 @@ async function  setDemandeTirage(Data,io){
                          motif: '',
                          seen: 0,
                      }
-                    // need to check from to
-                    let Notif = {// notification Info 
-                      userID :Data.userID,
-                      notification_ID : res.output.FID,
-                      demande_ID: res.output.DID,
-                      seen : 0,
-                      description_notif : 'est effecuté(e) une nouvelle demande de tirage',
-                      icon:'print',
-                      date_notification : res.output.DDATE
-                    }
                     io.emit(Data.structure+"TD" , Demand )// for notification
-                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                      io.emit("NewNotif"+res.output.recevoir_ID )//notifier le CD.
                      io.emit('NewDemandD'+Data.structure, Demand)
                      io.emit(Data.userID , Demand)
                      
@@ -79,17 +69,8 @@ async function  setDemandeTirage(Data,io){
                          motif: '',
                          seen: 0,
                      }
-                     let Notif = {// notification Info 
-                        userID :Data.userID,
-                        notification_ID : res.output.FID,
-                        demande_ID: res.output.DID,
-                        seen : 0,
-                        description_notif : 'est effecuté(e) une nouvelle demande de tirage',
-                        icon:'print',
-                        date_notification : res.output.DDATE
-                      }
                       io.emit(Data.structure+"TD" , Demand )// for notification
-                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                      io.emit("NewNotif"+res.output.recevoir_ID)//notifier le CD.
                      io.emit('NewDemandAT', Demand)
                      io.emit(Data.userID , Demand)
                  });
@@ -123,17 +104,8 @@ async function  setDemandeTirage(Data,io){
                          motif: '',
                          seen: 0,
                      }
-                     let Notif = {// notification Info 
-                        userID :Data.userID,
-                        notification_ID : res.output.FID,
-                        demande_ID: res.output.DID,
-                        seen : 0,
-                        description_notif : 'est effecuté(e) une nouvelle demande de tirage',
-                        icon:'print',
-                        date_notification : res.output.DDATE
-                      }
                       io.emit(Data.structure+"TD" , Demand )// for notification
-                     io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                     io.emit("NewNotif"+res.output.recevoir_ID)//notifier le CD.
                      io.emit('NewDemandCD'+Data.structure+Data.departement, Demand)
                      io.emit(Data.userID , Demand)
                  });
@@ -226,16 +198,7 @@ async function  upDemandeTirage(Data , io){
             .execute('UpdatetDemandeTirage')
             .then((res , err)=>{
                 if(err)return 'CNUD';
-                let Notif = {// notification Info 
-                    userID : Data.uID,
-                    notification_ID : res.output.NID,
-                    demande_ID: Data.demande_T_ID,
-                    seen : 0,
-                    description_notif : res.output.describ,
-                    icon:'print',
-                    date_notification :res.output.DDATE
-                }
-                io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                io.emit("UpdateNotif"+res.output.recevoir_ID)//notifier le CD.
             })
             console.log('Demande Inserted');
             //sql.close();

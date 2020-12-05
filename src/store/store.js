@@ -83,8 +83,8 @@ export default new Vuex.Store({
             (await axios.post("/api/messages",msg)).data; 
 
         },
-        async getTeam ({commit}){
-            let users  =  (await  axios.get("/api/team")).data
+        async getTeam ({commit , state}){
+            let users  =  (await  axios.get("/api/team/"+state.user.structure+'/'+state.user.email)).data
             commit('updateTeam',users);
         },
         async deleteUser({state},item){

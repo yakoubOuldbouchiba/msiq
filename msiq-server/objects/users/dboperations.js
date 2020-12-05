@@ -5,10 +5,13 @@ var config = require('../../config/dbconfig.js');
 const sql = require('mssql');
 const {generateJWT} = require ('../../services/auth-service.js')
 // getting all users.
-async function getUsers(){
+async function getUsers(struct , user){
     try{
         let pool = await (sql.connect(config));
-        let users = await (pool.request().execute("GetUsers"));
+        let users = await (pool.request()
+        .input('struct', sql.VarChar , struct)
+        .input('user', sql.VarChar , user)
+        .execute("GetUsers"));
         return users.recordsets;
     }catch(error){
         console.log(error);

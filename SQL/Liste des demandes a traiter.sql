@@ -86,7 +86,7 @@ BEGIN
 		AND		type_demande = 'Demande activité relex'
 END
 
-CREATE PROCEDURE UpdateDemandState 
+ ALTER PROCEDURE UpdateDemandState 
 	@Demand_ID	AS int,
 	@motif		AS varchar(max),
 	@State		AS varchar(50),
@@ -113,7 +113,7 @@ BEGIN
 		SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' est rejetée' 
 		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
 	END
-	ELSE IF (@State = 'Acceptee' and (@UT='Directeur' or @UT='Responsable DAM'))
+	ELSE IF (@State = 'Acceptee')
 	BEGIN
 		IF (@DT = 'Demande activité relex')
 		BEGIN
@@ -126,8 +126,9 @@ BEGIN
 		END 
 		ELSE IF (@DT = 'Demande de tirage' )
 		BEGIN
-			SELECT @userID =dbo.GetUserByType('Agent de Tirage')
-			SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
+			Update notification
+			set seen = 1
+			where notification_ID = @NID
 			SELECT @userID_C = dbo.GetUserByDI(@Demand_ID);
 			SELECT @desc_C =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' est acceptée'
 			Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
@@ -144,11 +145,11 @@ BEGIN
 		END
 		ELSE IF (@DT = 'Demande véhicule')
 		BEGIN
-			SELECT @userID =dbo.GetUserByType('Chef de parc')
-			SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
+			Update notification
+			set seen = 1
+			where notification_ID = @NID
 			SELECT @userID_C = dbo.GetUserByDI(@Demand_ID);
 			SELECT @desc_C =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+'est acceptée'
-			Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
 			Execute CREE_NOTIFICATION @Demand_ID , @userID_C , @desc_C , 'commute'
 		END
 		ELSE IF (@DT = 'Demande client' )
@@ -166,8 +167,8 @@ BEGIN
 			SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
 			SELECT @userID_C = dbo.GetUserByDI(@Demand_ID);
 			SELECT @desc_C =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' est acceptée'
-			Execute CREE_NOTIFICATION @Demand_ID , @userID_C , @desc_C , 'edit';
 			Execute Update_NOTIFICATION @Demand_ID , @userID , @desc;
+			Execute CREE_NOTIFICATION @Demand_ID , @userID_C , @desc_C , 'edit';
 		END
 	END
 	ELSE IF (@State = 'Directeur')
@@ -181,6 +182,18 @@ BEGIN
 		SELECT @userID =dbo.GetUserByType('Responsable DAM')
 		SELECT @desc =  'Il y a une '+dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
 		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+	END
+	ELSE IF (@State = 'Chef de parc')
+	BEGIN
+			SELECT @userID =dbo.GetUserByType('Chef de parc')
+			SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
+			Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+	END
+	ELSE IF (@State = 'Agent de Tirage')
+	BEGIN
+			SELECT @userID =dbo.GetUserByType('Agent de Tirage')
+			SELECT @desc =  dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
+			Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
 	END
 	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 END

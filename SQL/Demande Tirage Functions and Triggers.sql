@@ -110,7 +110,8 @@ BEGIN
 	AND		DT.demande_T_ID = @id
 END
 GetDemandeTirage 1
-CREATE PROCEDURE UpdatetDemandeTirage
+
+ALTER PROCEDURE UpdatetDemandeTirage
 	@id AS int,
 	@NF AS int,
 	@NE AS int,
@@ -126,6 +127,11 @@ CREATE PROCEDURE UpdatetDemandeTirage
 	@DDATE AS datetime OUTPUT
 AS
 BEGIN
+	Declare @state as varchar(max);
+	select @state = etat
+	FROM demande
+	Where demande_ID=@id
+
 	UPDATE 	document
 	SET 	nombre_feuille		= @NF,
 			nombre_exemplaire	= @NE,
@@ -143,6 +149,13 @@ BEGIN
 	IF (@etat = 'Directeur')
 	BEGIN
 		select	@recevoir_ID = dbo.GetDirecteurByDI(@id);
+		SELECT @NID = dbo.GetNotifID(@id);-- for notif
+		SELECT @describ = 'est modifé(e) la demande de tirage numéro '+ CONVERT(Varchar(max) , @id)    
+		Execute Update_NOTIFICATION @id , @recevoir_ID , @describ
+	END
+	ELSE IF (@etat = 'Agent de Tirage' and @state !='Acceptee')
+	BEGIN
+		select	@recevoir_ID  = dbo.GetUserByType('Agent de Tirage');
 		SELECT @NID = dbo.GetNotifID(@id);-- for notif
 		SELECT @describ = 'est modifé(e) la demande de tirage numéro '+ CONVERT(Varchar(max) , @id)    
 		Execute Update_NOTIFICATION @id , @recevoir_ID , @describ

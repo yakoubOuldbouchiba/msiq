@@ -57,18 +57,8 @@ async function  setDemandeRelex(Demande,io){
                          motif: '',
                          seen: 0,
                      }
-                    // i need check from to
-                    let Notif = {// notification Info 
-                      userID : Demande.D.userID,
-                      notification_ID : res.output.FID,
-                      demande_ID: res.output.DID,
-                      seen : 0,
-                      description_notif : 'est effecuté(e) une nouvelle demande activité relex',
-                      icon:'hotel',
-                      date_notification : res.output.DID
-                    }
                     io.emit(Demande.structure+"RD" , Demand )//for repporting 
-                    io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                    io.emit("NewNotif"+res.output.recevoir_ID)//notifier le CD.
                      io.emit('NewDemandD'+Demande.D.structure, Demand )
                      io.emit(Demande.D.userID , Demand )
                  });
@@ -100,18 +90,8 @@ async function  setDemandeRelex(Demande,io){
                          motif: '',
                          seen: 0,
                      }
-                     // i need check from to
-                    let Notif = {// notification Info 
-                        userID : Demande.D.userID,
-                        notification_ID : res.output.FID,
-                        demande_ID: res.output.DID,
-                        seen : 0,
-                        description_notif : 'est effecuté(e) une nouvelle demande activité relex',
-                        icon:'hotel',
-                        date_notification : res.output.DID
-                      }
                       io.emit(Demande.structure+"RD" , Demand )//for repporting 
-                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                      io.emit("NewNotif"+res.output.recevoir_ID)//notifier le CD.
                      io.emit('NewDemandRR', Demand )
                      io.emit(Demande.D.userID , Demand )
                  });
@@ -143,18 +123,8 @@ async function  setDemandeRelex(Demande,io){
                          motif: '',
                          seen: 0,
                      }
-                     // i need check from to
-                    let Notif = {// notification Info 
-                        userID : Demande.D.userID,
-                        notification_ID : res.output.FID,
-                        demande_ID: res.output.DID,
-                        seen : 0,
-                        description_notif : 'est effecuté(e) une nouvelle demande activité relex',
-                        icon:'hotel',
-                        date_notification : res.output.DID
-                      }
                       io.emit(Demande.structure+"RD" , Demand )//for repporting 
-                      io.emit("NewNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                      io.emit("NewNotif"+res.output.recevoir_ID)//notifier le CD.
                      io.emit('NewDemandCD'+Demande.D.structure+Demande.D.departement, Demand )
                      io.emit(Demande.D.userID , Demand )
                  });
@@ -194,16 +164,7 @@ async function  editDemandeRelex(Demande ,io){
             .execute('UpdateDemandeRelex')
             .then((res , err)=>{
                 if(err)return 'CNUD';
-                let Notif = {// notification Info 
-                    userID : Demande.uID,
-                    notification_ID : res.output.NID,
-                    demande_ID: Demande.demande_R_ID,
-                    seen : 0,
-                    description_notif : 'est modifé(e) la demande activité relex numéro '+Demande.demande_R_ID,
-                    icon:'hotel',
-                    date_notification :res.output.DDATE
-                }
-                io.emit("UpdateNotif"+res.output.recevoir_ID , Notif)//notifier le CD.
+                io.emit("UpdateNotif"+res.output.recevoir_ID)//notifier le CD.
             })
             console.log('Demande updated');
             //sql.close();
