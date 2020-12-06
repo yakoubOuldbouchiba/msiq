@@ -1,7 +1,3 @@
-
-Highly recommend
-sent
-44 minutes ago
 <template>
     <div class="LoginPage">
     <v-container class="fill-height" >
@@ -57,7 +53,7 @@ sent
               </v-flex>
               <br/>
               <v-flex>
-                <v-btn text color="blue" class="float-left" route :to="'/ForgetPw'"  >Mot de passe oublié ?</v-btn>
+                <v-btn small text color="indigo" class="float-left" route :to="'/ForgetPw'"  >Mot de passe oublié ?</v-btn>
                  <v-spacer></v-spacer>
                 <Register/>
                 <br/>

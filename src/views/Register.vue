@@ -2,7 +2,7 @@
 <div>
     <v-dialog v-model="dialog" persistent  width="800px">
       <template v-slot:activator="{on}">
-        <a class="float-right"  v-on="on">Enregistez-vous</a>
+        <v-btn class="float-right" text small color="indigo"  v-on="on">Enregistez-vous</v-btn>
       </template>
       <v-card>
         <v-toolbar flat dark color='indigo pl-5'  >
