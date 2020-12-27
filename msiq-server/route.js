@@ -10,6 +10,7 @@ const fournitures = require('./api/fournitures/fourniture.js')
 const produits = require('./api/produits/produit.js');
 const users = require('./api/users/user');
 const vehicules = require('./api/vehicules/vehicules.js');
+const structures = require('./api/structures/structures.js');
 const DemandeClient = require('./api/DemandeClient/DemandeClient.js');
 const DemandeTirage = require('./api/DemandeTirage/DemandeTirage.js');
 const reporting = require('./api/reporting/reporting');
@@ -35,6 +36,7 @@ module.exports = (io)=>{
     router.use('/api',reporting());
     router.use('/api',notifications(io));
     router.use('/api',vehicules());
+    router.use('/api',structures());
     router.use('/api',DemandeClient(io));
     router.use('/api',DemandeTirage(io));
     router.use('/api',DemandePriseEnCharge(io));

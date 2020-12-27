@@ -1,0 +1,18 @@
+1	390	Cellule Comminication
+2	393	Direction Administration & Moyen
+3	3E3	Direction Audit
+4	390	Direction Branche
+5	3T3	Direction Canalisation
+6	3T2	Direction DED
+7	3E1	Direction EPP
+8	395	Direction Exploitation
+9	391	Direction Finance
+10	396	Direction HSE
+11	3E2	Direction Informatique
+12	394	Direction Juridique
+13	398	Direction Marketing
+14	39Q	Direction Qualité
+15	392	Direction RH
+16	3T1	Direction Technique
+17	397	Direction Transport
+NULL	NULL	NULL

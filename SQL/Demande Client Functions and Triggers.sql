@@ -1,9 +1,10 @@
-CREATE PROCEDURE InsertDemandeClient
+ALTER PROCEDURE InsertDemandeClient
 	@userID AS varchar(50),
 	@nature AS varchar(50),
 	@objet AS varchar(50),
 	@etat AS varchar(50),
 	@description AS varchar(max),
+	@destination AS varchar(max),
 	@DID AS int OUTPUT,
 	@FID AS int OUTPUT,--For notif
 	@recevoir_ID as varchar(max) OUTPUT,--For notif
@@ -30,7 +31,8 @@ BEGIN
 				null, 
 				null,
 				null,
-				null
+				null,
+				@destination
 	)	
 	SELECT @DID = IDENT_CURRENT('demande')
 	DECLARE @email as varchar(max) 
@@ -105,7 +107,7 @@ END
 ----------------------------------------------------------------
 
 
-CREATE PROCEDURE updateDemandeClient
+ALTER PROCEDURE updateDemandeClient
 	@demande_C_ID AS INT,
 	@nature AS varchar(50),
 	@objet 	AS varchar(50),
@@ -117,6 +119,7 @@ CREATE PROCEDURE updateDemandeClient
 	@Dachat AS Date,
 	@oAchat AS varchar(max),
 	@etat AS varchar(max),-- for notif
+	@destination AS varchar(max),
 	@NID AS int OUTPUT,--For notif
 	@recevoir_ID as varchar(max) OUTPUT,--For notif
 	@DDATE AS datetime OUTPUT
@@ -131,7 +134,8 @@ BEGIN
 			achat	= @achat,
 			nAchat	= @nAchat,
 			date_achat = @Dachat,
-			oAchats	= @oAchat
+			oAchats	= @oAchat,
+			destination_id =@destination
 	WHERE 	demande_C_ID = @demande_C_ID
 	--for notif
 		DECLARE @describ  varchar(max);

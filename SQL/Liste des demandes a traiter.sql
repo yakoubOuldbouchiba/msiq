@@ -19,7 +19,7 @@ CREATE VIEW 	Demandes_A_Traiter
 getDemandeATraiter 'Directeur',  'Informatqiue',  'DAM'
 
 SELECT * FROM demande_compte
-
+EXECUTE getDemandeATraiter 'Directeur', null, '11'
 ALTER PROCEDURE getDemandeATraiter 
 	@UserType AS varchar(50),
 	@Depart   AS varchar(50),
@@ -33,7 +33,14 @@ BEGIN
 		WHERE	etat = 'Chef Departement' 
 		AND		departement = @Depart
 
-	if(@UserType = 'Directeur')
+	if(@UserType = 'Directeur' and @Struct='11')
+	BEGIN
+		SELECT	* 
+		FROM	Demandes_A_Traiter
+		WHERE	(etat='Informatique') 
+	END
+
+	else if(@UserType = 'Directeur')
 	BEGIN
 		SELECT	* 
 		FROM	Demandes_A_Traiter

@@ -2,18 +2,19 @@
 DROP TABLE structure
 CREATE TABLE structure(
  id int IDENTITY(1, 1) PRIMARY KEY NOT NULL, 
- design varchar(3) unique,
- description varchar(Max)
-);
+ design varchar(3),
+ description varchar(250) unique
+)
 --destination--
 CREATE TABLE destination(
  id int IDENTITY(1, 1) PRIMARY KEY NOT NULL, 
  design varchar(3) unique,
- description varchar(Max)
+ description varchar(250) unique 
 );
 --add column into DC--
 ALTER TABLE demande_client
 ADD destination_id int;
+
 
 ALTER TABLE demande_client
 ADD CONSTRAINT FK_demande_client_destination FOREIGN KEY (destination_id) REFERENCES destination(id)
