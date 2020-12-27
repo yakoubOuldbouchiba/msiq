@@ -50,6 +50,20 @@
                           value="Prestation de service"></v-radio>
                       </v-radio-group>
                     </v-row>
+                    <!--Destination-->
+                    <v-row justify="space-around"> 
+                      <v-col cols="12" sm="8"> 
+                       <v-autocomplete
+                          v-model="DC.destination_id"
+                          :items="destinations"
+                          :readonly="!Editable"
+                          item-text="description"
+                          item-value="id"
+                          prepend-icon="location_on"
+                        >
+                        </v-autocomplete>
+                      </v-col>
+                    </v-row>
                     <!----- Objet et la description de la demande------------>
                     <v-row justify="center"> 
                       <v-col cols="12" sm="8"> 
@@ -235,6 +249,7 @@ export default {
           Done: false,
           Errr: false,
           valid:false,
+          destinations : null,
           DemandeClient:{
             departement: this.$store.state.user.departement,
             structure: this.$store.state.user.structure,
@@ -251,8 +266,13 @@ export default {
             oAchats: null,
             motif: null,
             etat: 'Chef Departement',
+            destination_id : null
           },
       }
+  },
+  async created(){
+        this.destinations = (await Axios.get("/api/destination")).data
+        console.log(this.destinations)
   },
   methods:{
     close:function(){
@@ -309,12 +329,20 @@ export default {
             Demande: this.DC, 
             typeD: 'Demande client', 
             UT: this.$store.state.user.typeUtilisateur})
-      else if(this.$store.state.user.typeUtilisateur == 'Directeur') 
+      else if(this.$store.state.user.typeUtilisateur == 'Directeur') {
+        let tmpState=null;
+        if(this.DC.destination_id==1){
+          tmpState='DAM';
+        }else if(this.DC.destination_id==2){
+          tmpState='Informatique'
+        }
+      
         Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
-          { State :'DAM',
+          { State :tmpState,
             Demande: this.DC,
             typeD: 'Demande client', 
-            UT: this.$store.state.user.typeUtilisateur})    
+            UT: this.$store.state.user.typeUtilisateur}) 
+      }   
       else if(this.$store.state.user.typeUtilisateur == 'Responsable DAM'){
         this.DC.etat='Acceptee';
         Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
