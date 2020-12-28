@@ -6,10 +6,12 @@ CREATE TABLE structure(
  description varchar(250) unique
 )
 --destination--
+DROP TABLE destination
 CREATE TABLE destination(
- id int IDENTITY(1, 1) PRIMARY KEY NOT NULL, 
+ id int  PRIMARY KEY , 
  design varchar(3) unique,
  description varchar(250) unique 
+ CONSTRAINT FK_dest_struct FOREIGN KEY (id) REFERENCES structure(id)
 );
 --add column into DC--
 ALTER TABLE demande_client

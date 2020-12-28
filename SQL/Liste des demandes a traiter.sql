@@ -190,6 +190,12 @@ BEGIN
 		SELECT @desc =  'Il y a une '+dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
 		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
 	END
+	ELSE IF (@State = 'Informatique')
+	BEGIN
+		SELECT @userID =dbo.GestDestinationMail(@Demand_ID)
+		SELECT @desc =  'Il y a une '+dbo.DemandeType(@Demand_ID)+' '+CONVERT(Varchar(max) , @Demand_ID)+' a traiter' 
+		Execute Update_NOTIFICATION @Demand_ID , @userID , @desc
+	END
 	ELSE IF (@State = 'Chef de parc')
 	BEGIN
 			SELECT @userID =dbo.GetUserByType('Chef de parc')

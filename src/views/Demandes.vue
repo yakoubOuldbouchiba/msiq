@@ -209,6 +209,7 @@ mounted(){
     this.$store.state.sokect.on('NewDemandD'+this.$store.state.user.structure, (newDemand) => {
       this.Demandes.unshift(newDemand)
     })  
+    console.log(this.$store.state.user.structure);
     this.$store.state.sokect.on('RemoveDemandD'+this.$store.state.user.structure, (Demand) => {
       let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
       this.Demandes.splice(index , 1)

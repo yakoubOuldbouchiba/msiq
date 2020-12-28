@@ -331,18 +331,25 @@ export default {
             UT: this.$store.state.user.typeUtilisateur})
       else if(this.$store.state.user.typeUtilisateur == 'Directeur') {
         let tmpState=null;
-        if(this.DC.destination_id==1){
+        if(this.DC.destination_id==2){
           tmpState='DAM';
-        }else if(this.DC.destination_id==2){
+        }else if(this.DC.destination_id==11){
           tmpState='Informatique'
         }
-      
         Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
           { State :tmpState,
             Demande: this.DC,
             typeD: 'Demande client', 
             UT: this.$store.state.user.typeUtilisateur}) 
-      }   
+      } 
+      else if(this.$store.state.user.typeUtilisateur == 'Directeur' && this.DC.etat=='Informatique') {
+        this.DC.etat='Acceptee';
+        Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
+          { State :'Acceptee',
+            Demande: this.DC,
+            typeD: 'Demande client', 
+            UT: this.$store.state.user.typeUtilisateur}) 
+      }  
       else if(this.$store.state.user.typeUtilisateur == 'Responsable DAM'){
         this.DC.etat='Acceptee';
         Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 

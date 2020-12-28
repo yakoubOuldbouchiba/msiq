@@ -136,7 +136,7 @@ module.exports=(io)=>{
             io.emit(req.body.Demande.structure+'ECD', Demand )
         }              
         else if (req.body.typeD == 'Demande véhicule'){
-            io.emit(req.body.Demande.structure+'ETD', Demand )
+            io.emit(req.body.Demande.structure+'ETD', Demand )//to change 
         } 
         else if (req.body.typeD == 'Demande fourniture'){
             io.emit(req.body.Demande.structure+'EFD', Demand )
@@ -151,7 +151,11 @@ module.exports=(io)=>{
         if (req.body.State == 'Directeur'){ 
             io.emit('NewDemandD'+req.body.Demande.structure, Demand )
             io.emit('RemoveDemandCD'+req.body.Demande.structure+req.body.Demande.departement, Demand)
-        }else if (req.body.State == 'DAM'){
+        }else if (req.body.State == 'Informatique'){  
+            console.log('here'+req.body.Demande.structure)
+            io.emit('RemoveDemandD'+req.body.Demande.destination_id, Demand)
+        }
+        else if (req.body.State == 'DAM'){
             io.emit('NewDemandRD', Demand )  
             io.emit('RemoveDemandD'+req.body.Demande.structure, Demand )       
         }else if (req.body.State == 'Chef de parc') {
