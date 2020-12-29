@@ -266,7 +266,7 @@ export default {
             oAchats: null,
             motif: null,
             etat: 'Chef Departement',
-            struct_id: null
+            destination_id: null
           },
       }
   },
