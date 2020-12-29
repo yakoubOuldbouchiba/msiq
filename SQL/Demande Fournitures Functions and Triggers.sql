@@ -51,6 +51,7 @@ END
  
 /*Create type objet*/
 select	dbo.GetChefDepartementByDI(331);
+
 ALTER PROCEDURE InsertDemandeFourniture
 	@userID AS varchar(50),
 	@demande_id AS int output,
@@ -67,8 +68,16 @@ BEGIN
 				null,
 				0,
 				1,
-				null --to update
+				null, --dest
+				null -- reciever
 				)
+
+	DECLARE @reciever as varchar(max) 
+	select @reciever = dbo.GestDestinationMail (null , (SELECT IDENT_CURRENT('demande')) , @etat);
+	UPDATE demande
+	set reciever = @reciever
+	where demande_ID = (SELECT IDENT_CURRENT('demande'))
+
 	SELECT @DDATE = CONVERT (datetime, SYSDATETIME())
 	INSERT INTO demande_fourniture 
 	VALUES (	(SELECT IDENT_CURRENT('demande')), 
