@@ -89,9 +89,7 @@ async function  getDemandesATraiter(Params){
         await sql.connect(config);
         try{
             let demandes = await new sql.Request()
-            .input('UserType',sql.VarChar , Params.UserType)
-            .input('Depart',sql.VarChar , Params.Depart)
-            .input('Struct', sql.VarChar, Params.Struct)
+            .input('email',sql.VarChar , Params.email)
             .execute('getDemandeATraiter')
             return  demandes.recordsets
         }catch(err){
