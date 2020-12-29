@@ -126,12 +126,16 @@ ALTER PROCEDURE updateDemandeClient
 	@Dachat AS Date,
 	@oAchat AS varchar(max),
 	@etat AS varchar(max),-- for notif
-	@destination AS varchar(max),
 	@NID AS int OUTPUT,--For notif
 	@recevoir_ID as varchar(max) OUTPUT,--For notif
-	@DDATE AS datetime OUTPUT
+	@DDATE AS datetime OUTPUT,
+	@destination_id AS INT
 AS
 BEGIN
+	update demande
+	set destination_id = @destination_id
+	WHERE demande_ID=@demande_C_ID
+
 	update 	demande_client 
 	set 	nature	= @nature,
 			objet	= @objet ,
@@ -141,8 +145,7 @@ BEGIN
 			achat	= @achat,
 			nAchat	= @nAchat,
 			date_achat = @Dachat,
-			oAchats	= @oAchat,
-			destination_id =@destination
+			oAchats	= @oAchat
 	WHERE 	demande_C_ID = @demande_C_ID
 	--for notif
 		DECLARE @describ  varchar(max);
