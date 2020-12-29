@@ -179,7 +179,7 @@ export default {
 name: 'ListeDAT',
 components:{DemandeVehicule , DemandeTirage , DemandeRelex , DemandePriseEnCharge, DemandeClient, DemandeFourniture, AccDemande},
 async created(){
-  let ALLDemandes = (await axios.get("/api/demandesATraiter/"+this.$store.state.user.typeUtilisateur+'/'+this.$store.state.user.departement+'/'+this.$store.state.user.structure)).data.demandes
+  let ALLDemandes = (await axios.get("/api/demandesATraiter/"+this.$store.state.user.typeUtilisateur+'/'+this.$store.state.user.departement+'/'+this.$store.state.user.structure+'/'+this.$store.state.user.email)).data.demandes
   this.Demandes = ALLDemandes[0].reverse()
   //this.AccDemandes = ALLDemandes[1].reverse()
 },
@@ -209,6 +209,7 @@ mounted(){
     this.$store.state.sokect.on('NewDemandD'+this.$store.state.user.structure, (newDemand) => {
       this.Demandes.unshift(newDemand)
     })  
+    console.log(this.$store.state.user.structure);
     this.$store.state.sokect.on('RemoveDemandD'+this.$store.state.user.structure, (Demand) => {
       let index = this.Demandes.findIndex(x =>  x.demande_ID === Demand.demande_ID)
       this.Demandes.splice(index , 1)

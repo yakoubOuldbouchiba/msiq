@@ -1,4 +1,4 @@
-CREATE PROCEDURE InsertDemandeRelex
+ALTER PROCEDURE InsertDemandeRelex
 	@userID AS varchar(50),
 	@destination AS varchar(max),
 	@objet_mission as varchar(max),
@@ -19,7 +19,9 @@ BEGIN
 				@etat, 
 				null,
 				0,
-				1)
+				1,
+				null --to update
+				)
 	SELECT 		@DDATE = CONVERT (datetime, SYSDATETIME())
 	INSERT INTO demande_relex 
 	VALUES (	(SELECT IDENT_CURRENT('demande')), 

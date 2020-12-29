@@ -18,7 +18,8 @@ BEGIN
 				@etat, 
 				null, 
 				0,
-				1
+				1,
+				null --to update
 	)
 	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 	INSERT INTO demande_client 
