@@ -19,7 +19,8 @@ BEGIN
 				null, 
 				0,
 				1,
-				null --to update
+				@destination, --to dest
+				null -- reciever
 	)
 	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 	INSERT INTO demande_client 
@@ -32,8 +33,7 @@ BEGIN
 				null, 
 				null,
 				null,
-				null,
-				@destination
+				null
 	)	
 	SELECT @DID = IDENT_CURRENT('demande')
 	DECLARE @email as varchar(max) 

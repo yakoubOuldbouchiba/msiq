@@ -104,7 +104,8 @@ BEGIN
 				null,
 				0,
 				1,
-				null --to update
+				null, --dest
+				null
 				)
 	SELECT @DDATE = CONVERT (datetime, SYSDATETIME())
 	INSERT INTO demande_vehicule 
