@@ -228,3 +228,27 @@ BEGIN
 		DELETE FROM demande_compte WHERE email = @email
 	END
 END
+
+CREATE PROCEDURE GetCDPT 
+	@email as Varchar(Max)
+AS
+BEGIN
+	SELECT email
+	FROM utilisateurs
+	Where	structure =(SELECT structure
+						FROM utilisateurs
+						WHERE email = @email) 
+	AND		typeUtilisateur = 'Chef departement'
+END
+
+CREATE PROCEDURE GetLEmp 
+	@email as Varchar(Max)
+AS
+BEGIN
+	SELECT email
+	FROM utilisateurs
+	Where	departement =(SELECT departement
+						FROM utilisateurs
+						WHERE email = @email) 
+	AND		typeUtilisateur = 'Client'
+END

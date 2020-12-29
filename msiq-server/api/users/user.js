@@ -214,5 +214,14 @@ module.exports=(io)=>{
         })
    })
    
+    router.put('/ListCDPT/:email', (req,res) => {
+        dbOperationsClient.GetCDPT(req.params.email)
+        .then()
+    })
+
+    router.put('/ListEmp/:email', (req,res) => {
+        dbOperationsClient.GetCDPT(req.params.email)
+        .then()
+    })
    return router;
 }

@@ -4,7 +4,6 @@ ALTER PROCEDURE InsertDemandeClient
 	@objet AS varchar(50),
 	@etat AS varchar(50),
 	@description AS varchar(max),
-	@destination AS varchar(max),
 	@DID AS int OUTPUT,
 	@FID AS int OUTPUT,--For notif
 	@recevoir_ID as varchar(max) OUTPUT,--For notif
@@ -19,6 +18,7 @@ BEGIN
 				null, 
 				0,
 				1,
+				null,
 				null --to update
 	)
 	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
@@ -33,7 +33,6 @@ BEGIN
 				null,
 				null,
 				null,
-				@destination
 	)	
 	SELECT @DID = IDENT_CURRENT('demande')
 	DECLARE @email as varchar(max) 
