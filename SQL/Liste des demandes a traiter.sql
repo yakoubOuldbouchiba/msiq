@@ -7,90 +7,26 @@ CREATE VIEW 	Demandes_A_Traiter
 	FROM	demande D, utilisateurs U
 	where	D.utilisateurs_ID = U.email;
 
-CREATE VIEW 	Demandes_A_Traiter 
+ALTER VIEW 	Demandes_A_Traiter 
 	AS
-	SELECT 	U.departement, 
-			U.structure,
-			dbo.DemandeType(D.demande_ID) as type_demande, 
+	SELECT dbo.DemandeType(D.demande_ID) as type_demande, 
 			D.*
 	FROM	demande D, utilisateurs U
 	where	D.utilisateurs_ID = U.email;
 
-getDemandeATraiter 'Directeur',  'Informatqiue',  'DAM'
 
 SELECT * FROM demande_compte
-EXECUTE getDemandeATraiter 'Directeur', null, '11'
-ALTER PROCEDURE getDemandeATraiter 
-	@UserType AS varchar(50),
-	@Depart   AS varchar(50),
-	@Struct		AS varchar(50)
 
+EXECUTE getDemandeATraiter 'chefdepart@gmail.com'
+
+
+ALTER PROCEDURE getDemandeATraiter 
+	@email as varchar(max)
 AS
 BEGIN
-	if(@UserType = 'Chef departement')
-		SELECT	* 
-		FROM	Demandes_A_Traiter
-		WHERE	etat = 'Chef Departement' 
-		AND		departement = @Depart
-
-	if(@UserType = 'Directeur' and @Struct='11')
-	BEGIN
-		SELECT	* 
-		FROM	Demandes_A_Traiter
-		WHERE	(etat='Informatique') 
-	END
-
-	else if(@UserType = 'Directeur')
-	BEGIN
-		SELECT	* 
-		FROM	Demandes_A_Traiter
-		WHERE	etat = 'Directeur' 
-		AND		structure = @Struct
-
-		SELECT	email, 
-				nomUtilisateur, 
-				prenomUtilisateur,
-				typeUtilisateur,
-				structure,
-				departement
-		FROM demande_compte
-	END
-
-	if(@UserType = 'Responsable DAM')
-		SELECT	* 
-		FROM	Demandes_A_Traiter
-		WHERE	etat = 'DAM'
-
-	if(@UserType = 'Agent de magasin')
-		SELECT	* 
-		FROM	Demandes_A_Traiter
-		WHERE	(type_demande = 'Demande client'
-		OR		type_demande = 'Demande fourniture')
-		AND		etat = 'Acceptee'
-
-	if(@UserType = 'Agent de Tirage')
-		SELECT	* 
-		FROM	Demandes_A_Traiter
-		WHERE	type_demande = 'Demande de tirage'
-		AND		etat = 'Agent de Tirage'
-
-	if(@UserType = 'Chef de parc')
-		SELECT	* 
-		FROM	Demandes_A_Traiter
-		WHERE	etat = 'Chef de parc'
-		AND		type_demande = 'Demande véhicule'
-
-	if(@UserType = 'Responsable PEC')
-		SELECT	* 
-		FROM	Demandes_A_Traiter
-		WHERE	etat = 'Acceptee'
-		AND		type_demande = 'Demande de prise en charge'
-
-	if(@UserType = 'Responsable AR')
-		SELECT	* 
-		FROM	Demandes_A_Traiter
-		WHERE	etat = 'Acceptee'
-		AND		type_demande = 'Demande activité relex'
+	SELECT * 
+	from Demandes_A_Traiter
+	where reciever = @email
 END
 
  ALTER PROCEDURE UpdateDemandState 
