@@ -24,9 +24,6 @@ INSERT INTO [dbo].[structure]
 			('397',	'Direction Transport')
 GO
 
-INSERT INTO destination
-     VALUES
-            (2,'393',	'Direction Administration & Moyen'),
-			(11,'3E2',	'Direction Informatique')
+
 
 

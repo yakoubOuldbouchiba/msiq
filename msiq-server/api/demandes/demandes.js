@@ -75,7 +75,7 @@ module.exports=(io)=>{
         })
     });
     // Liste des demandes à traiter 
-    router.get('/demandesATraiter/:UserType/:Depart/:Struct',auth.requireLogin,(req , res)=>{
+    router.get('/demandesATraiter/:UserType/:Depart/:Struct/:email',auth.requireLogin,(req , res)=>{
         dbOperationsDemandes.getDemandesATraiter(req.params)
         .then(result => {
             if(!!result){
@@ -151,8 +151,12 @@ module.exports=(io)=>{
         if (req.body.State == 'Directeur'){ 
             io.emit('NewDemandD'+req.body.Demande.structure, Demand )
             io.emit('RemoveDemandCD'+req.body.Demande.structure+req.body.Demande.departement, Demand)
-        }else if (req.body.State == 'Informatique'){  
-            console.log('here'+req.body.Demande.structure)
+        }else if (req.body.State == 'Chef departement destination'){  
+            console.log('Chef departement destination : '+req.body.Demande.structure)
+            io.emit('RemoveDemandD'+req.body.Demande.destination_id, Demand)
+        }
+        else if (req.body.State == 'Informatique'){  
+            console.log('Informatique : '+req.body.Demande.structure)
             io.emit('RemoveDemandD'+req.body.Demande.destination_id, Demand)
         }
         else if (req.body.State == 'DAM'){

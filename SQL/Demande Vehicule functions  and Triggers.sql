@@ -77,7 +77,7 @@ END
 
 /*--------------------------------------------*/
 
-CREATE PROCEDURE InsertDemandeVehicule
+ALTER PROCEDURE InsertDemandeVehicule
 	@userID AS varchar(50),
 	@lieu AS varchar(100),
 	@organisme As varchar(50),
@@ -103,7 +103,9 @@ BEGIN
 				@etat, 
 				null,
 				0,
-				1)
+				1,
+				null --to update
+				)
 	SELECT @DDATE = CONVERT (datetime, SYSDATETIME())
 	INSERT INTO demande_vehicule 
 	VALUES (	(SELECT IDENT_CURRENT('demande')), 

@@ -1,4 +1,4 @@
-CREATE PROCEDURE InsertDemandeTirage
+ALTER PROCEDURE InsertDemandeTirage
 	@userID AS varchar(50),
 	@FN		AS varchar(max),
 	@NF		AS int,
@@ -21,7 +21,9 @@ BEGIN
 				@etat, 
 				null,
 				0,
-				1)
+				1,
+				null --to update
+				)
 	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 	INSERT INTO document 
 	VALUES (	@FN, 

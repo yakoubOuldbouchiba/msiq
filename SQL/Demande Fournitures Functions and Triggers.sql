@@ -51,7 +51,7 @@ END
  
 /*Create type objet*/
 select	dbo.GetChefDepartementByDI(331);
-CREATE PROCEDURE InsertDemandeFourniture
+ALTER PROCEDURE InsertDemandeFourniture
 	@userID AS varchar(50),
 	@demande_id AS int output,
 	@FID AS int OUTPUT,--for notif
@@ -66,7 +66,9 @@ BEGIN
 				@etat, 
 				null,
 				0,
-				1)
+				1,
+				null --to update
+				)
 	SELECT @DDATE = CONVERT (datetime, SYSDATETIME())
 	INSERT INTO demande_fourniture 
 	VALUES (	(SELECT IDENT_CURRENT('demande')), 

@@ -1,4 +1,4 @@
-CREATE PROCEDURE InsertDemandePriseEnCharge
+ALTER PROCEDURE InsertDemandePriseEnCharge
 	@userID 	AS varchar(50), 
     @Col1_ID 	AS varchar(50), 
     @Col2_ID 	AS varchar(50), 
@@ -25,7 +25,9 @@ BEGIN
 				@etat, 
 				null,
 				0,
-				1)
+				1,
+				null --to update
+				)
 	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 	INSERT INTO demande_priseEnCharge 
 	VALUES(		(SELECT IDENT_CURRENT('demande')),

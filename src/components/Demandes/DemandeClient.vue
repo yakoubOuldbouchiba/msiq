@@ -54,11 +54,11 @@
                     <v-row justify="space-around"> 
                       <v-col cols="12" sm="8"> 
                        <v-autocomplete
-                          v-model="DC.destination_id"
+                          v-model="DC.struct_id"
                           :items="destinations"
                           :readonly="!Editable"
                           item-text="description"
-                          item-value="id"
+                          item-value="struct_id"
                           prepend-icon="location_on"
                         >
                         </v-autocomplete>
@@ -266,12 +266,12 @@ export default {
             oAchats: null,
             motif: null,
             etat: 'Chef Departement',
-            destination_id : null
+            struct_id: null
           },
       }
   },
   async created(){
-        this.destinations = (await Axios.get("/api/destination")).data
+        this.destinations = (await Axios.get("/api/structure")).data
         console.log(this.destinations)
   },
   methods:{
@@ -323,12 +323,25 @@ export default {
       this.dialog = false
     },
     Accept(){
+      console.log("accept");
+      console.log(this.$store.state.user.typeUtilisateur);
+      console.log(this.DC.etat);
       if (this.$store.state.user.typeUtilisateur == 'Chef departement') 
         Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
           { State :'Directeur',
             Demande: this.DC, 
             typeD: 'Demande client', 
             UT: this.$store.state.user.typeUtilisateur})
+       else if(this.$store.state.user.typeUtilisateur == 'Directeur' && this.DC.etat=='Informatique') {
+        console.log(this.$store.state.user.typeUtilisateur);
+        console.log(this.DC.etat);
+        console.log('Informatique');
+        Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
+          { State :'Chef departement destination',
+            Demande: this.DC,
+            typeD: 'Demande client', 
+            UT: this.$store.state.user.typeUtilisateur}) 
+      }  
       else if(this.$store.state.user.typeUtilisateur == 'Directeur') {
         let tmpState=null;
         if(this.DC.destination_id==2){
@@ -342,14 +355,6 @@ export default {
             typeD: 'Demande client', 
             UT: this.$store.state.user.typeUtilisateur}) 
       } 
-      else if(this.$store.state.user.typeUtilisateur == 'Directeur' && this.DC.etat=='Informatique') {
-        this.DC.etat='Acceptee';
-        Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
-          { State :'Acceptee',
-            Demande: this.DC,
-            typeD: 'Demande client', 
-            UT: this.$store.state.user.typeUtilisateur}) 
-      }  
       else if(this.$store.state.user.typeUtilisateur == 'Responsable DAM'){
         this.DC.etat='Acceptee';
         Axios.put('/api/UpdateDemandState/'+this.DC.demande_C_ID, 
