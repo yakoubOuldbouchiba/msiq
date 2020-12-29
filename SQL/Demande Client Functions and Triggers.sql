@@ -11,7 +11,6 @@ ALTER PROCEDURE InsertDemandeClient
 	@DDATE AS datetime OUTPUT
 AS
 BEGIN
-	
 	INSERT INTO	demande 
 	VALUES(		(SELECT CONVERT (datetime, SYSDATETIME())),
 				@userID,
@@ -22,6 +21,13 @@ BEGIN
 				@destination, --to dest
 				null -- reciever
 	)
+	
+	DECLARE @reciever as varchar(max) 
+	select @reciever = dbo.GestDestinationMail (null , (SELECT IDENT_CURRENT('demande')) , @etat);
+	UPDATE demande
+	set reciever = @reciever
+	where demande_ID = (SELECT IDENT_CURRENT('demande')) 
+	
 	SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
 	INSERT INTO demande_client 
 	VALUES(		(SELECT IDENT_CURRENT('demande')),
