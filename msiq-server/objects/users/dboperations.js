@@ -202,6 +202,41 @@ async function  TAccDemande(UserID,Msg){
     }
 }
 
+async function  GetCDPT(UserID){
+    try{
+        await sql.connect(config);
+        try {
+            var ListCDPT = await new sql.Request()
+            .input('email', sql.VarChar, UserID)
+            .execute('GetCDPT');
+            return ListCDPT.recordsets;
+        } catch (error) {
+            console.log(error);
+            console.log('Something went wrong');
+            return 'SomeThing went wrong'
+        }
+    }catch(error){
+        return 'CNCTDB';
+    }
+}
+
+async function  GetLEmp(UserID){
+    try{
+        await sql.connect(config);
+        try {
+            var ListEmp = await new sql.Request()
+            .input('email', sql.VarChar, UserID)
+            .execute('GetLEmp');
+            return ListEmp.recordsets;
+        } catch (error) {
+            console.log(error);
+            console.log('Something went wrong');
+            return 'SomeThing went wrong'
+        }
+    }catch(error){
+        return 'CNCTDB';
+    }
+}
 module.exports = {
     getUsers,
     getUser,
@@ -212,5 +247,7 @@ module.exports = {
     confirm,
     changePW,
     TAccDemande,
+    GetCDPT,
+    GetLEmp,
 
 }

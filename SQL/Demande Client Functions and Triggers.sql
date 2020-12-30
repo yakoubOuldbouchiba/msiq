@@ -4,7 +4,6 @@ ALTER PROCEDURE InsertDemandeClient
 	@objet AS varchar(50),
 	@etat AS varchar(50),
 	@description AS varchar(max),
-	@destination AS varchar(max),
 	@DID AS int OUTPUT,
 	@FID AS int OUTPUT,--For notif
 	@recevoir_ID as varchar(max) OUTPUT,--For notif
@@ -55,7 +54,7 @@ BEGIN
 	BEGIN
 		select	@email = dbo.GetChefDepartementByDI(@DID);
 	END
-	EXECUTE CREE_NOTIFICATION @DID, @email ,'est effecuté(e) une nouvelle demande client' , 'devices'
+	EXECUTE CREE_NOTIFICATION @DID, @email ,'est effecutÃ©(e) une nouvelle demande client' , 'devices'
 	SELECT @FID = IDENT_CURRENT('notification')
 	set @recevoir_ID = @email
 END
@@ -153,21 +152,21 @@ BEGIN
 		BEGIN
 			select	@recevoir_ID = dbo.GetDirecteurByDI(@demande_C_ID);
 			SELECT @NID = dbo.GetNotifID(@demande_C_ID);-- for notif
-			SELECT @describ = 'est modifé(e) la demande client numéro '+ CONVERT(Varchar(max) , @demande_C_ID)    
+			SELECT @describ = 'est modifÃ©(e) la demande client numÃ©ro '+ CONVERT(Varchar(max) , @demande_C_ID)    
 			Execute Update_NOTIFICATION @demande_C_ID , @recevoir_ID , @describ
 		END
 		ELSE IF (@etat = 'DAM')
 		BEGIN
 			select	@recevoir_ID = dbo.GetUserByType('Responsable DAM');
 			SELECT @NID = dbo.GetNotifID(@demande_C_ID);-- for notif
-			SELECT @describ = 'est modifé(e) la demande client numéro '+ CONVERT(Varchar(max) , @demande_C_ID)    
+			SELECT @describ = 'est modifÃ©(e) la demande client numÃ©ro '+ CONVERT(Varchar(max) , @demande_C_ID)    
 			Execute Update_NOTIFICATION @demande_C_ID , @recevoir_ID , @describ
 		END
 		ELSE IF (@etat = 'Chef Departement')
 		BEGIN
 			select	@recevoir_ID = dbo.GetChefDepartementByDI(@demande_C_ID);
 			SELECT @NID = dbo.GetNotifID(@demande_C_ID);-- for notif
-			SELECT @describ = 'est modifé(e) la demande client numéro '+ CONVERT(Varchar(max) , @demande_C_ID)    
+			SELECT @describ = 'est modifÃ©(e) la demande client numÃ©ro '+ CONVERT(Varchar(max) , @demande_C_ID)    
 			Execute Update_NOTIFICATION @demande_C_ID , @recevoir_ID , @describ
 		END
 		SELECT @DDATE = (CONVERT (datetime, SYSDATETIME()))
