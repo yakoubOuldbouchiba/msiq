@@ -75,7 +75,7 @@ module.exports=(io)=>{
         })
     });
     // Liste des demandes à traiter 
-    router.get('/demandesATraiter/:UserType/:Depart/:Struct/:email',auth.requireLogin,(req , res)=>{
+    router.get('/demandesATraiter/:email',auth.requireLogin,(req , res)=>{
         dbOperationsDemandes.getDemandesATraiter(req.params)
         .then(result => {
             if(!!result){

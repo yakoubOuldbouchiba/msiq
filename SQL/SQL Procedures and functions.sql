@@ -5,7 +5,7 @@ BEGIN
 END
 EXECUTE GETSTRUCTURE 
 
-ALTER Function GestDestinationMail (@DIST  as int , @DID as int , @DE as varchar(max) )
+ALTER Function GestDestinationMail (@DIST  as int , @DID as varchar , @DE as varchar(max) )
 	RETURNS varchar(max)
 AS
 BEGIN

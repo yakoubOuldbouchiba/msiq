@@ -54,7 +54,7 @@
                     <v-row justify="space-around"> 
                       <v-col cols="12" sm="8"> 
                        <v-autocomplete
-                          v-model="DC.struct_id"
+                          v-model="DC.destination_id"
                           :items="destinations"
                           :readonly="!Editable"
                           item-text="description"
@@ -266,7 +266,7 @@ export default {
             oAchats: null,
             motif: null,
             etat: 'Chef Departement',
-            struct_id: null
+            destination_id: null
           },
       }
   },

@@ -38,7 +38,7 @@ async function  setDemandeClient(O,io){
                 .input('objet', sql.VarChar, O.D.objet)
                 .input('etat', sql.VarChar, 'Directeur')
                 .input('description', sql.VarChar, O.D.demande_C_description)
-                .input('destination', sql.VarChar, O.D.struct_id)
+                .input('destination', sql.VarChar, O.D.destination_id)
                 .output('DID', sql.Int)
                 .output('FID', sql.Int)
                 .output('recevoir_ID', sql.VarChar)
@@ -60,7 +60,7 @@ async function  setDemandeClient(O,io){
                     io.emit(O.D.UserID , Demand )
                 })
             }else if(O.UT == 'Directeur') {
-                let tmpState=null;
+                let tmpState=null
                 if(O.D.destination_id==2){
                     tmpState='Directeur DAM';
                 }else {
@@ -72,7 +72,7 @@ async function  setDemandeClient(O,io){
                 .input('objet', sql.VarChar, O.D.objet)
                 .input('etat', sql.VarChar, tmpState)
                 .input('description', sql.VarChar, O.D.demande_C_description)
-                .input('destination', sql.VarChar, O.D.struct_id)
+                .input('destination', sql.VarChar, O.D.destination_id)
                 .output('DID', sql.Int)
                 .output('FID', sql.Int)
                 .output('recevoir_ID', sql.VarChar)
@@ -100,7 +100,7 @@ async function  setDemandeClient(O,io){
                 .input('objet', sql.VarChar, O.D.objet)
                 .input('etat', sql.VarChar, 'Chef Departement')
                 .input('description', sql.VarChar, O.D.demande_C_description)
-                .input('destination', sql.VarChar, O.D.struct_id)
+                .input('destination', sql.VarChar, O.D.destination_id)
                 .output('DID', sql.Int)
                 .output('DDATE', sql.DateTime)
                 .output('FID', sql.Int)
@@ -183,7 +183,7 @@ async function  updateDemandeClient(Demande , io){
             .input('Dachat', sql.Date, Demande.date_achat)
             .input('oAchat', sql.VarChar, Demande.oAchats)
             .input('etat', sql.VarChar,Demande.etat)
-            .input('destination', sql.VarChar, Demande.struct_id)
+            .input('destination_id', sql.VarChar, Demande.destination_id)
             .output('NID',sql.Int)//for notif
             .output('recevoir_ID',sql.VarChar)// for notif
             .output('DDATE', sql.DateTime)
