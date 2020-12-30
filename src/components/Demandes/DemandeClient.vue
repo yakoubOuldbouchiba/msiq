@@ -58,7 +58,7 @@
                           :items="destinations"
                           :readonly="!Editable"
                           item-text="description"
-                          item-value="struct_id"
+                          item-value="destination_id"
                           prepend-icon="location_on"
                         >
                         </v-autocomplete>
